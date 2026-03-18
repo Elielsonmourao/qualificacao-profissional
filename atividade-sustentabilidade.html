@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustentabilidade na Indústria - Guia do Projeto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4;
+            color: #1c1917;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .theme-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .nav-active {
+            background-color: #047857;
+            color: white;
+        }
+        .section-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Chosen Palette: Warm Neutrals with Forest Green and Teal Accents (Stone-100 bg, Emerald-700 primary, Teal-600 secondary) -->
+    <!-- Application Structure Plan: A dashboard-style SPA with a top navigation bar to switch between views (Visão Geral, Temas, Entregas, Avaliação). This structure chunks the project instructions into digestible, task-oriented sections, preventing information overload. The 'Temas' section uses an interactive master-detail view to encourage exploration, and 'Avaliação' uses a dynamic chart for instant comprehension of grading weights. -->
+    <!-- Visualization & Content Choices: 
+         1. Objective -> Hero section with clear typography -> Goal: Inform & Inspire -> HTML/CSS. 
+         2. Themes -> Interactive Cards with Unicode Icons -> Goal: Organize & Explore -> JS Click Events (NO SVG). 
+         3. Guidelines -> Step-by-step accordion/list -> Goal: Organize -> HTML/Tailwind grids. 
+         4. Evaluation Criteria -> Doughnut Chart -> Goal: Proportions -> Chart.js Canvas. 
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <span class="text-3xl">&#127807;</span>
+                    <span class="font-bold text-xl text-emerald-800">Sustentabilidade Industrial</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button data-target="visao-geral" class="nav-btn nav-active px-4 py-2 rounded-md font-medium transition-colors hover:bg-emerald-100 hover:text-emerald-800">Visão Geral</button>
+                    <button data-target="temas" class="nav-btn px-4 py-2 rounded-md text-stone-600 font-medium transition-colors hover:bg-emerald-100 hover:text-emerald-800">Temas</button>
+                    <button data-target="entregas" class="nav-btn px-4 py-2 rounded-md text-stone-600 font-medium transition-colors hover:bg-emerald-100 hover:text-emerald-800">Entregas</button>
+                    <button data-target="avaliacao" class="nav-btn px-4 py-2 rounded-md text-stone-600 font-medium transition-colors hover:bg-emerald-100 hover:text-emerald-800">Avaliação & Datas</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto w-full px-4 py-8">
+
+        <section id="visao-geral" class="section-content active">
+            <div class="bg-white rounded-xl shadow-sm p-8 border-t-4 border-emerald-600">
+                <h1 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Projeto de Pesquisa</h1>
+                <p class="text-lg text-stone-600 mb-6 border-l-4 border-emerald-300 pl-4">
+                    Bem-vindos ao portal do nosso projeto! Esta seção introduz o propósito fundamental do trabalho. Nosso objetivo central é analisar como os processos industriais modernos podem ser adaptados para reduzir o impacto ambiental e promover o desenvolvimento econômico e social. Explore as abas acima para descobrir seu tema, entender as regras e ver como você será avaliado.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <div class="bg-stone-50 p-6 rounded-lg text-center border border-stone-200">
+                        <div class="text-4xl mb-3">&#128269;</div>
+                        <h3 class="font-semibold text-lg mb-2">Pesquise</h3>
+                        <p class="text-sm text-stone-600">Investigue a fundo os impactos ambientais do nicho escolhido.</p>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-lg text-center border border-stone-200">
+                        <div class="text-4xl mb-3">&#128161;</div>
+                        <h3 class="font-semibold text-lg mb-2">Inove</h3>
+                        <p class="text-sm text-stone-600">Descubra tecnologias e crie propostas práticas para mitigar os danos.</p>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-lg text-center border border-stone-200">
+                        <div class="text-4xl mb-3">&#128226;</div>
+                        <h3 class="font-semibold text-lg mb-2">Apresente</h3>
+                        <p class="text-sm text-stone-600">Compartilhe suas descobertas com a turma de forma dinâmica e visual.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="temas" class="section-content">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Explorador de Temas</h2>
+                <p class="text-stone-600">Nesta seção, você pode explorar as áreas sugeridas para a sua pesquisa. Clique em um dos cartões abaixo para revelar o foco principal que seu grupo deve investigar. Escolha um tema ou converse com o professor para propor uma alternativa correlata.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+                <button class="theme-card bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500" onclick="showThemeDetails('textil')">
+                    <div class="text-4xl mb-2">&#128085;</div>
+                    <h3 class="font-semibold">Indústria Têxtil</h3>
+                </button>
+                <button class="theme-card bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500" onclick="showThemeDetails('alimentos')">
+                    <div class="text-4xl mb-2">&#127822;</div>
+                    <h3 class="font-semibold">Alimentos</h3>
+                </button>
+                <button class="theme-card bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500" onclick="showThemeDetails('automobilistica')">
+                    <div class="text-4xl mb-2">&#128663;</div>
+                    <h3 class="font-semibold">Automobilística</h3>
+                </button>
+                <button class="theme-card bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500" onclick="showThemeDetails('construcao')">
+                    <div class="text-4xl mb-2">&#127959;&#65039;</div>
+                    <h3 class="font-semibold">Construção Civil</h3>
+                </button>
+                <button class="theme-card bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500" onclick="showThemeDetails('energia')">
+                    <div class="text-4xl mb-2">&#9881;&#65039;</div>
+                    <h3 class="font-semibold">Energia</h3>
+                </button>
+            </div>
+
+            <div id="theme-display" class="bg-emerald-50 rounded-xl p-8 border border-emerald-200 hidden">
+                <div class="flex items-start gap-4">
+                    <div id="theme-icon" class="text-5xl"></div>
+                    <div>
+                        <h3 id="theme-title" class="text-2xl font-bold text-emerald-900 mb-2"></h3>
+                        <p id="theme-desc" class="text-lg text-emerald-800 bg-white p-4 rounded-lg shadow-sm"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="entregas" class="section-content">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Diretrizes de Entrega</h2>
+                <p class="text-stone-600">Aqui detalhamos exatamente o que é esperado do grupo. O projeto é dividido em duas partes principais: o documento acadêmico escrito e a apresentação em sala de aula. Siga esta estrutura para garantir nota máxima.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-stone-200">
+                    <div class="flex items-center gap-3 mb-6 border-b pb-4">
+                        <span class="text-3xl">&#128196;</span>
+                        <h3 class="text-2xl font-bold text-stone-800">Trabalho Escrito (PDF)</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex gap-4">
+                            <div class="bg-stone-100 text-stone-600 font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">1</div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Capa</h4>
+                                <p class="text-sm text-stone-600">Título do trabalho, nomes dos integrantes, disciplina e data.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="bg-stone-100 text-stone-600 font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">2</div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Introdução</h4>
+                                <p class="text-sm text-stone-600">Contextualização do problema (por que a sustentabilidade é necessária nesta indústria?).</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="bg-emerald-100 text-emerald-700 font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">3</div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Desenvolvimento</h4>
+                                <ul class="text-sm text-stone-600 list-disc pl-5 mt-1">
+                                    <li>Principais impactos ambientais atuais do setor escolhido.</li>
+                                    <li>Tecnologias ou métodos inovadores para mitigar esses impactos.</li>
+                                    <li>Estudo de caso (exemplo de uma empresa real que aplica práticas sustentáveis).</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="bg-stone-100 text-stone-600 font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">4</div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Conclusão</h4>
+                                <p class="text-sm text-stone-600">Reflexão do grupo sobre os desafios para a implementação dessas soluções em larga escala.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="bg-stone-100 text-stone-600 font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">5</div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Referências</h4>
+                                <p class="text-sm text-stone-600">Lista de sites, livros ou vídeos consultados (links e fontes).</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-stone-200">
+                    <div class="flex items-center gap-3 mb-6 border-b pb-4">
+                        <span class="text-3xl">&#128187;</span>
+                        <h3 class="text-2xl font-bold text-stone-800">Apresentação</h3>
+                    </div>
+                    <p class="mb-4 text-stone-600">A apresentação deve ser visual e dinâmica. Evite ler os slides!</p>
+                    
+                    <div class="bg-teal-50 border border-teal-200 rounded-lg p-4 mb-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-2">
+                                <span>&#9201;&#65039;</span>
+                                <strong>Tempo:</strong> 10 a 15 minutos por grupo.
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span>&#128202;</span>
+                                <strong>Formato:</strong> Slides (PowerPoint, Canva ou Google Slides).
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h4 class="font-semibold text-lg mb-2">Conteúdo Obrigatório nos Slides:</h4>
+                    <ul class="space-y-2 text-stone-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-500 mt-1">&#10004;</span>
+                            <span>Uso de <strong>gráficos ou dados estatísticos</strong> sobre o tema.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-500 mt-1">&#10004;</span>
+                            <span>Imagens ilustrativas (evite slides com muito texto).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-500 mt-1">&#10004;</span>
+                            <span class="font-bold text-emerald-700">Pelo menos uma proposta prática/solução criada pelo grupo para o setor estudado.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="avaliacao" class="section-content">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Critérios & Cronograma</h2>
+                <p class="text-stone-600">Entenda o peso de cada aspecto do seu trabalho. O gráfico abaixo ilustra interativamente os critérios de avaliação. Passe o mouse ou toque nas fatias para ver detalhes. À direita, acompanhe os prazos importantes do projeto.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-stone-200">
+                    <h3 class="text-xl font-bold text-center mb-4">Composição da Nota</h3>
+                    <div class="chart-container">
+                        <canvas id="criteriosChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-stone-500 mt-4" id="chart-hint">Passe o mouse no gráfico para ver detalhes de cada critério.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-stone-200">
+                    <div class="flex items-center gap-3 mb-6 border-b pb-4">
+                        <span class="text-3xl">&#128197;</span>
+                        <h3 class="text-2xl font-bold text-stone-800">Cronograma</h3>
+                    </div>
+                    
+                    <div class="relative border-l-2 border-emerald-200 ml-3 space-y-8 pb-4">
+                        <div class="relative pl-6">
+                            <div class="absolute w-4 h-4 bg-emerald-500 rounded-full -left-[9px] top-1 border-2 border-white shadow"></div>
+                            <h4 class="font-bold text-lg">Definição dos grupos e temas</h4>
+                            <p class="text-stone-500 inline-block bg-stone-100 px-2 py-1 rounded text-sm mt-1 border border-stone-200">[A Definir pelo Professor]</p>
+                        </div>
+                        
+                        <div class="relative pl-6">
+                            <div class="absolute w-4 h-4 bg-teal-400 rounded-full -left-[9px] top-1 border-2 border-white shadow"></div>
+                            <h4 class="font-bold text-lg">Entrega do rascunho</h4>
+                            <span class="text-xs font-bold bg-teal-100 text-teal-800 px-2 py-0.5 rounded ml-2 uppercase">Opcional</span>
+                            <p class="text-stone-500 inline-block bg-stone-100 px-2 py-1 rounded text-sm mt-1 border border-stone-200">[A Definir pelo Professor]</p>
+                        </div>
+
+                        <div class="relative pl-6">
+                            <div class="absolute w-4 h-4 bg-red-500 rounded-full -left-[9px] top-1 border-2 border-white shadow"></div>
+                            <h4 class="font-bold text-lg text-red-700">Entrega Final e Apresentações</h4>
+                            <p class="text-red-600 font-medium inline-block bg-red-50 px-2 py-1 rounded text-sm mt-1 border border-red-200">[Data Limite]</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-stone-400 py-6 text-center mt-auto">
+        <p>Projeto de Pesquisa - Sustentabilidade na Indústria</p>
+    </footer>
+
+    <script>
+        const themesData = {
+            'textil': {
+                title: 'Indústria Têxtil',
+                icon: '&#128085;',
+                desc: 'Foco da Pesquisa: Investigar o impacto ambiental do <strong>fast fashion</strong>, poluição de águas por tinturarias e explorar inovações como o uso de tecidos sustentáveis e processos circulares na moda.'
+            },
+            'alimentos': {
+                title: 'Indústria de Alimentos',
+                icon: '&#127822;',
+                desc: 'Foco da Pesquisa: Analisar a cadeia produtiva com foco na <strong>redução de desperdício</strong> de recursos naturais e alimentos, além do desenvolvimento e adoção de embalagens biodegradáveis e compostáveis.'
+            },
+            'automobilistica': {
+                title: 'Indústria Automobilística',
+                icon: '&#128663;',
+                desc: 'Foco da Pesquisa: Estudar os impactos da <strong>transição para veículos elétricos</strong>, os desafios na mineração de componentes e criar propostas eficientes para a reciclagem de baterias no fim da vida útil.'
+            },
+            'construcao': {
+                title: 'Construção Civil',
+                icon: '&#127959;&#65039;',
+                desc: 'Foco da Pesquisa: Pesquisar sobre o desenvolvimento e uso de <strong>materiais de baixo impacto</strong> (como cimento ecológico) e soluções arquitetônicas para eficiência energética e hídrica em edifícios.'
+            },
+            'energia': {
+                title: 'Setor de Energia',
+                icon: '&#9881;&#65039;',
+                desc: 'Foco da Pesquisa: Avaliar a dependência atual de combustíveis fósseis e o papel fundamental das <strong>fontes renováveis</strong> (solar, eólica, biomassa) no abastecimento direto e autossuficiência de grandes fábricas.'
+            }
+        };
+
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section-content');
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navBtns.forEach(b => {
+                    b.classList.remove('nav-active', 'text-white', 'bg-emerald-700');
+                    b.classList.add('text-stone-600', 'bg-transparent');
+                });
+                btn.classList.add('nav-active', 'text-white');
+                btn.classList.remove('text-stone-600', 'bg-transparent');
+                btn.style.backgroundColor = '#047857';
+
+                const targetId = btn.getAttribute('data-target');
+                sections.forEach(sec => {
+                    sec.classList.remove('active');
+                    if(sec.id === targetId) {
+                        sec.classList.add('active');
+                    }
+                });
+
+                if(targetId === 'avaliacao' && !window.chartInitialized) {
+                    initChart();
+                    window.chartInitialized = true;
+                }
+            });
+        });
+
+        function showThemeDetails(themeKey) {
+            const displayArea = document.getElementById('theme-display');
+            const titleEl = document.getElementById('theme-title');
+            const descEl = document.getElementById('theme-desc');
+            const iconEl = document.getElementById('theme-icon');
+            
+            const data = themesData[themeKey];
+            
+            titleEl.innerHTML = data.title;
+            descEl.innerHTML = data.desc;
+            iconEl.innerHTML = data.icon;
+            
+            displayArea.classList.remove('hidden');
+            displayArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('criteriosChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'Qualidade da pesquisa (40%)', 
+                        'Domínio na apresentação (30%)', 
+                        'Qualidade visual dos slides (20%)', 
+                        'Criatividade na solução (10%)'
+                    ],
+                    datasets: [{
+                        data: [40, 30, 20, 10],
+                        backgroundColor: [
+                            '#059669',
+                            '#0d9488',
+                            '#14b8a6',
+                            '#5eead4'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    size: 13
+                                },
+                                padding: 20,
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map(function(label, i) {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const style = meta.controller.getStyle(i);
+                                            let wrappedLabel = label;
+                                            if (label.length > 25) {
+                                                wrappedLabel = label.substring(0, 25) + '...';
+                                            }
+                                            return {
+                                                text: wrappedLabel,
+                                                fillStyle: style.backgroundColor,
+                                                strokeStyle: style.borderColor,
+                                                lineWidth: style.borderWidth,
+                                                hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' Peso: ' + context.raw + '% da nota final';
+                                }
+                            },
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            titleFont: { size: 14, family: "'Inter', sans-serif" },
+                            bodyFont: { size: 14, family: "'Inter', sans-serif" },
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

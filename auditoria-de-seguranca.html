@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploração: Os 5 Riscos da Segurança</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        
+        .risk-card { transition: all 0.3s ease; cursor: pointer; border-left-width: 8px; }
+        .risk-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        .bg-sst-verde { background-color: #22c55e; border-color: #166534; }
+        .bg-sst-vermelho { background-color: #ef4444; border-color: #991b1b; }
+        .bg-sst-castanho { background-color: #78350f; border-color: #451a03; }
+        .bg-sst-amarelo { background-color: #eab308; border-color: #854d0e; }
+        .bg-sst-azul { background-color: #3b82f6; border-color: #1e40af; }
+
+        .search-box { border-bottom: 2px solid #e2e8f0; transition: border-color 0.3s; }
+        .search-box:focus { border-color: #3b82f6; outline: none; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Chosen Palette: Slate and Sky. Minimalist background to highlight the 5 normative colors. -->
+    
+    <!-- Application Structure Plan: 
+         1. Intro: Welcome the student to the "World of Prevention".
+         2. Exploration Hub: 5 large, interactive cards representing the risks.
+         3. Research Notebook: A dynamic area where clicking a card gives "Research Missions" (questions they need to answer).
+         4. Visual Summary: Chart.js showing which risks are most common to give perspective.
+    -->
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-10">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-4xl">🕵️‍♂️</span>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Missão de Pesquisa: Os 5 Riscos</h1>
+            </div>
+            <p class="text-xl text-slate-600 max-w-2xl">
+                Antes de instalarmos qualquer rede, precisamos de aprender a "ler" o ambiente. Cada cor abaixo esconde um tipo de perigo. A tua missão é descobrir quais são.
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto px-6 py-12 space-y-16">
+
+        <!-- 1. O Painel de Descoberta -->
+        <section>
+            <div class="mb-8 text-center">
+                <h2 class="text-2xl font-bold text-slate-800">Escolha uma cor para começar a sua investigação</h2>
+                <p class="text-slate-500">Cada cor representa um grupo de riscos definido por lei.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Verde -->
+                <div onclick="revealMission('fisico')" class="risk-card bg-white p-6 rounded-xl border border-slate-200 bg-sst-verde">
+                    <span class="text-3xl mb-4 block">🔊</span>
+                    <h3 class="font-bold text-white">Grupo 1</h3>
+                    <p class="text-green-100 text-xs font-bold uppercase">Físicos</p>
+                </div>
+                <!-- Vermelho -->
+                <div onclick="revealMission('quimico')" class="risk-card bg-white p-6 rounded-xl border border-slate-200 bg-sst-vermelho">
+                    <span class="text-3xl mb-4 block">🧪</span>
+                    <h3 class="font-bold text-white">Grupo 2</h3>
+                    <p class="text-red-100 text-xs font-bold uppercase">Químicos</p>
+                </div>
+                <!-- Castanho -->
+                <div onclick="revealMission('biologico')" class="risk-card bg-white p-6 rounded-xl border border-slate-200 bg-sst-castanho">
+                    <span class="text-3xl mb-4 block">🦠</span>
+                    <h3 class="font-bold text-white">Grupo 3</h3>
+                    <p class="text-amber-100 text-xs font-bold uppercase">Biológicos</p>
+                </div>
+                <!-- Amarelo -->
+                <div onclick="revealMission('ergonomico')" class="risk-card bg-white p-6 rounded-xl border border-slate-200 bg-sst-amarelo">
+                    <span class="text-3xl mb-4 block">🧘</span>
+                    <h3 class="font-bold text-white">Grupo 4</h3>
+                    <p class="text-yellow-100 text-xs font-bold uppercase">Ergonómicos</p>
+                </div>
+                <!-- Azul -->
+                <div onclick="revealMission('acidente')" class="risk-card bg-white p-6 rounded-xl border border-slate-200 bg-sst-azul">
+                    <span class="text-3xl mb-4 block">⚡</span>
+                    <h3 class="font-bold text-white">Grupo 5</h3>
+                    <p class="text-blue-100 text-xs font-bold uppercase">Acidentes</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Caderno de Pesquisa Dinâmico -->
+        <section id="research-notebook" class="hidden">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden transition-all duration-500">
+                <div id="notebook-header" class="p-8 text-white">
+                    <h2 id="notebook-title" class="text-3xl font-bold">Iniciando Pesquisa...</h2>
+                </div>
+                <div class="p-8 space-y-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <span>📖</span> O que deves pesquisar:
+                        </h3>
+                        <ul id="mission-list" class="mt-4 space-y-3 text-slate-600">
+                            <!-- JS will inject questions here -->
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-700 mb-2">💡 Dica para Técnicos de Redes:</h4>
+                        <p id="network-tip" class="text-slate-600 text-sm italic"></p>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-6 border-t border-slate-100">
+                        <p class="text-xs text-slate-400">Anota as tuas descobertas no teu caderno físico ou digital.</p>
+                        <button onclick="window.print()" class="bg-slate-900 text-white px-6 py-2 rounded-lg font-bold hover:bg-slate-800 transition">Imprimir Roteiro</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Por que pesquisar isso? -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">A Importância do Conhecimento</h2>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Sabias que a maioria dos afastamentos de técnicos de informática e redes acontece por riscos que parecem "inofensivos"? Ao pesquisar, foca-te em entender como o ambiente afeta a saúde a longo prazo.
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 font-bold">1º</div>
+                        <p class="text-sm text-slate-500">Os riscos <strong>Ergonómicos</strong> são os mais comuns em escritórios.</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">2º</div>
+                        <p class="text-sm text-slate-500">Riscos de <strong>Acidente</strong> são os que causam danos imediatos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-80">
+                <canvas id="researchChart"></canvas>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 py-12 mt-auto">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <p class="text-slate-500 text-sm">Este guia é uma ferramenta de apoio à pesquisa inicial sobre SST (Saúde e Segurança no Trabalho).</p>
+        </div>
+    </footer>
+
+    <script>
+        const missionData = {
+            fisico: {
+                title: "Riscos Físicos (Verde)",
+                color: "bg-sst-verde",
+                questions: [
+                    "O que são riscos físicos? (Define com as tuas palavras)",
+                    "Dá 3 exemplos de riscos físicos presentes num servidor de rede.",
+                    "Como é que o ruído excessivo pode afetar um técnico?",
+                    "Qual o equipamento (EPI) usado para proteger a audição?"
+                ],
+                tip: "Em Datacenters, o barulho constante das ventoinhas e o frio do ar condicionado são os principais riscos físicos."
+            },
+            quimico: {
+                title: "Riscos Químicos (Vermelho)",
+                color: "bg-sst-vermelho",
+                questions: [
+                    "Que tipos de substâncias químicas podem ser perigosas?",
+                    "Como é que uma poeira acumulada pode ser considerada um risco químico?",
+                    "Onde encontramos produtos químicos na limpeza de componentes eletrónicos?",
+                    "O que significa o símbolo de 'inflamável' num spray de limpeza?"
+                ],
+                tip: "Cuidado com o álcool isopropílico e sprays de ar comprimido; a inalação ou contacto inadequado pode ser perigoso."
+            },
+            biologico: {
+                title: "Riscos Biológicos (Castanho)",
+                color: "bg-sst-castanho",
+                questions: [
+                    "Quais são os microrganismos que representam este risco?",
+                    "Como é que um rato num forro de teto pode contaminar um técnico de redes?",
+                    "Por que é que partilhar teclados e ratos sem limpeza é um risco biológico?",
+                    "Qual a importância de lavar as mãos após mexer em cablagens antigas?"
+                ],
+                tip: "Ao passar cabos em tetos falsos ou caves, podes encontrar dejetos de animais ou fungos acumulados."
+            },
+            ergonomico: {
+                title: "Riscos Ergonómicos (Amarelo)",
+                color: "bg-sst-amarelo",
+                questions: [
+                    "O que significa a palavra 'Ergonomia'?",
+                    "Como deve ser a postura correta para quem trabalha sentado ao computador?",
+                    "Quais os riscos de passar 8 horas a olhar para cima para instalar calhas?",
+                    "O que é uma LER (Lesão por Esforço Repetitivo)?"
+                ],
+                tip: "A altura da bancada e a cadeira onde vais configurar os equipamentos são fundamentais para não teres dores nas costas."
+            },
+            acidente: {
+                title: "Riscos de Acidente (Azul)",
+                color: "bg-sst-azul",
+                questions: [
+                    "O que diferencia um risco de acidente dos outros riscos?",
+                    "Quais os perigos de uma escada mal posicionada numa instalação?",
+                    "Como evitar choques elétricos ao abrir um computador ou rack?",
+                    "Por que é que ferramentas espalhadas pelo chão são um risco azul?"
+                ],
+                tip: "Cabos soltos pelo chão no escritório não são apenas feios, são armadilhas para quedas graves."
+            }
+        };
+
+        function revealMission(type) {
+            const notebook = document.getElementById('research-notebook');
+            const data = missionData[type];
+            
+            notebook.classList.remove('hidden');
+            
+            // Update UI
+            document.getElementById('notebook-header').className = `p-8 text-white ${data.color}`;
+            document.getElementById('notebook-title').innerText = data.title;
+            document.getElementById('network-tip').innerText = data.tip;
+            
+            const list = document.getElementById('mission-list');
+            list.innerHTML = '';
+            data.questions.forEach(q => {
+                const li = document.createElement('li');
+                li.className = "flex gap-3 items-start border-b border-slate-50 pb-2";
+                li.innerHTML = `<span class="text-blue-500 font-bold">?</span> <span>${q}</span>`;
+                list.appendChild(li);
+            });
+
+            // Smooth Scroll
+            notebook.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Chart ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('researchChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Físicos', 'Químicos', 'Biológicos', 'Ergonómicos', 'Acidentes'],
+                    datasets: [{
+                        label: 'Nível de Atenção Necessário',
+                        data: [70, 40, 30, 95, 85],
+                        backgroundColor: ['#22c55e', '#ef4444', '#78350f', '#eab308', '#3b82f6'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Arquiteto de Hardware - Atividade Interativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fafaf9; /* Tailwind stone-50 */
+            color: #1c1917; /* Tailwind stone-900 */
+        }
+        
+        /* Required Chart Container Styling */
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 40vh; 
+            max-height: 400px; 
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+
+        /* Animations and Transitions */
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        /* Navigation Styles */
+        .nav-btn { transition: all 0.2s; border-left: 4px solid transparent; }
+        .nav-active { 
+            background-color: #292524; /* stone-800 */
+            color: #f5f5f4; /* stone-100 */
+            border-left: 4px solid #3b82f6; /* blue-500 accent */
+            font-weight: 600;
+        }
+
+        /* Fullscreen Loader */
+        .loading-overlay { 
+            position: fixed; inset: 0; background: rgba(28, 25, 23, 0.9); 
+            display: none; align-items: center; justify-content: center; 
+            z-index: 9999; color: white; flex-direction: column; gap: 1rem; 
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row overflow-hidden">
+
+<!-- Chosen Palette: Warm Neutrals (Stone) with minimal accents (Blue, Pink, Emerald) to differentiate the hardware profiles without overwhelming the professional tone. -->
+<!-- Application Structure Plan: The SPA uses a functional dashboard layout. A persistent left sidebar allows quick, non-linear navigation between the activity's stages (Context, 3 Profiles, Reflection). The main content area dynamically swaps sections, providing a focused, step-by-step experience that prevents cognitive overload while keeping the overall goal clear. A global save function ensures work is persisted. -->
+<!-- Visualization & Content Choices: 
+1. Goal: Inform & Compare -> Viz: Radar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Visually demonstrates how hardware demands (CPU, RAM, GPU, etc.) differ across the 3 user profiles, providing immediate context before the student starts specifying parts. -> Library: Chart.js (NO SVG/Mermaid).
+2. Goal: Organize & Collect Data -> Viz: Interactive Forms -> Interaction: Text input & textareas -> Justification: Converts static markdown tables into a digital worksheet.
+3. Goal: Synthesize -> Viz: Reflection Textareas -> Interaction: Long-form text input -> Justification: Captures the final qualitative analysis required by the source report. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <div id="loader" class="loading-overlay">
+        <div class="spinner"></div>
+        <span class="font-medium tracking-wide">A sincronizar com a Nuvem...</span>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-72 bg-stone-900 text-stone-300 flex flex-col shadow-2xl z-20 h-auto md:h-screen">
+        <div class="p-6 border-b border-stone-700 bg-stone-950">
+            <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                <span class="text-2xl">💻</span> Arquiteto PC
+            </h1>
+            <p id="user-display" class="text-xs text-stone-500 mt-2 font-mono truncate">A conectar ao servidor...</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button id="btn-intro" class="nav-btn w-full text-left px-6 py-3 nav-active flex items-center gap-3 hover:text-white">
+                        <span>📋</span> Contexto & Visão Geral
+                    </button>
+                </li>
+                <li><div class="px-6 py-2 text-[10px] font-bold text-stone-500 uppercase tracking-widest mt-4">Consultoria (Perfis)</div></li>
+                <li>
+                    <button id="btn-prof" class="nav-btn w-full text-left px-6 py-3 flex items-center gap-3 hover:text-white hover:bg-stone-800">
+                        <span>👨‍🏫</span> 1. O Professor
+                    </button>
+                </li>
+                <li>
+                    <button id="btn-designer" class="nav-btn w-full text-left px-6 py-3 flex items-center gap-3 hover:text-white hover:bg-stone-800">
+                        <span>🎨</span> 2. O Designer
+                    </button>
+                </li>
+                <li>
+                    <button id="btn-server" class="nav-btn w-full text-left px-6 py-3 flex items-center gap-3 hover:text-white hover:bg-stone-800">
+                        <span>🖥️</span> 3. O Servidor
+                    </button>
+                </li>
+                <li><div class="px-6 py-2 text-[10px] font-bold text-stone-500 uppercase tracking-widest mt-4">Avaliação</div></li>
+                <li>
+                    <button id="btn-reflexao" class="nav-btn w-full text-left px-6 py-3 flex items-center gap-3 hover:text-white hover:bg-stone-800">
+                        <span>✍️</span> Questões de Reflexão
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-stone-700 bg-stone-950">
+            <button id="save-progress" class="w-full bg-stone-700 hover:bg-stone-600 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm">
+                <span>💾</span> Guardar Rascunho
+            </button>
+            <p class="text-[10px] text-center text-stone-500 mt-2">Progresso guardado no seu ID.</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 relative overflow-y-auto bg-stone-100 h-screen">
+        
+        <!-- SECTION: Contexto -->
+        <section id="sec-intro" class="content-sec p-6 md:p-10 lg:p-16 max-w-6xl mx-auto fade-in">
+            <div class="mb-10">
+                <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-800 text-xs font-bold tracking-wider uppercase mb-4">Módulo de Atividade</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 mb-4">A Consultoria de Hardware</h2>
+                <p class="text-lg text-stone-600 leading-relaxed max-w-3xl">
+                    Bem-vindo! Esta secção contextualiza a sua missão. Como consultor de TI, o seu objetivo é analisar as necessidades de três clientes completamente distintos e especificar as melhores configurações de computadores para cada um, justificando as suas escolhas técnicas.
+                </p>
+            </div>
+
+            <div class="bg-white border border-blue-200 p-6 rounded-xl mb-10 shadow-sm shadow-blue-100/50">
+                <label for="student_name" class="block text-blue-900 font-bold mb-2">Identificação do Aluno (Obrigatório):</label>
+                <input type="text" id="student_name" data-field="student_name" placeholder="Digite o seu nome completo para associar a este relatório..." class="w-full p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-shadow text-stone-800 bg-blue-50/30">
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-bold text-xl text-stone-800 mb-4">📋 As Suas Tarefas</h3>
+                    <ul class="text-stone-600 space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="mt-1 text-blue-500">👉</span>
+                            <span><strong>Analisar os Perfis:</strong> Navegue pelo menu lateral para descobrir as exigências do Professor, da Designer e da Pequena Empresa.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-1 text-blue-500">👉</span>
+                            <span><strong>Especificar Componentes:</strong> Preencha os formulários com modelos de CPU, RAM, GPU, etc. Use sites como <em>UserBenchmark</em> para ajudar.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-1 text-blue-500">👉</span>
+                            <span><strong>Justificar:</strong> A parte mais importante! Explique <em>porquê</em> que aquela peça é a ideal e apresenta o melhor custo-benefício.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="font-bold text-xl text-stone-800 mb-2 text-center">📊 Comparativo de Exigências Técnicas</h3>
+                    <p class="text-xs text-stone-500 text-center mb-6">Explore o gráfico para entender como o foco técnico muda radicalmente entre os clientes.</p>
+                    <div class="chart-container">
+                        <canvas id="demandChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Perfil 1 - Professor -->
+        <section id="sec-prof" class="content-sec p-6 md:p-10 lg:p-16 max-w-5xl mx-auto fade-in hidden">
+            <div class="mb-8 border-b border-stone-200 pb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">👨‍🏫</div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-stone-900">Perfil 1: O Professor</h2>
+                        <p class="text-stone-500 font-medium">Uso Doméstico / Educacional</p>
+                    </div>
+                </div>
+                <p class="text-stone-600 mt-4">Nesta secção, irá construir um PC económico, focado em multitarefa leve e fiabilidade. Evite gastos desnecessários com componentes de alto desempenho gráfico.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">🎯 Necessidades</h4>
+                    <p class="text-sm text-stone-600">Navegação em várias abas, videochamadas, edição de textos e apresentações, consumo de streaming e armazenamento de materiais de aula.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">⚠️ Foco & Desafio</h4>
+                    <ul class="text-sm text-stone-600 space-y-1">
+                        <li><strong>Foco:</strong> Durabilidade, silêncio e rapidez na inicialização.</li>
+                        <li><strong>Desafio:</strong> Custo-benefício. Não gastar em GPUs dedicadas potentes.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="bg-stone-50 px-6 py-4 border-b border-stone-200">
+                    <h3 class="font-bold text-stone-800">Especificação do Sistema</h3>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Processador</label><input type="text" data-field="prof_cpu" placeholder="Ex: Intel Core i3 12100" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="prof_cpu_just" placeholder="Porquê esta CPU?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Memória RAM</label><input type="text" data-field="prof_ram" placeholder="Ex: 8GB DDR4 3200MHz" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="prof_ram_just" placeholder="Capacidade suficiente?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Armazenamento</label><input type="text" data-field="prof_storage" placeholder="Ex: SSD 500GB SATA" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="prof_storage_just" placeholder="SSD ou HD? Porquê?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Placa de Vídeo</label><input type="text" data-field="prof_gpu" placeholder="Integrada ou Dedicada?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="prof_gpu_just" placeholder="Necessita de GPU extra?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Monitor</label><input type="text" data-field="prof_monitor" placeholder="Ex: 24'' Full HD IPS" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="prof_monitor_just" placeholder="Foco na leitura e conforto." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-blue-500 outline-none transition-all"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-right">
+                <button class="nav-trigger bg-stone-900 text-white px-6 py-2 rounded-lg hover:bg-stone-700 transition" data-target="btn-designer">Próximo: O Designer ➔</button>
+            </div>
+        </section>
+
+        <!-- SECTION: Perfil 2 - Designer -->
+        <section id="sec-designer" class="content-sec p-6 md:p-10 lg:p-16 max-w-5xl mx-auto fade-in hidden">
+            <div class="mb-8 border-b border-stone-200 pb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">🎨</div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-stone-900">Perfil 2: O Designer Gráfico</h2>
+                        <p class="text-stone-500 font-medium">Profissional Criativo</p>
+                    </div>
+                </div>
+                <p class="text-stone-600 mt-4">Nesta secção, o foco é o desempenho puro e a fidelidade visual. Aplicações pesadas exigem uma forte sinergia entre o processador, a memória e a placa de vídeo gráfica.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">🎯 Necessidades</h4>
+                    <p class="text-sm text-stone-600">Uso intensivo de Adobe Creative Cloud (Photoshop, Illustrator, Premiere), renderização de arquivos pesados, multitarefa pesada e fidelidade de cor.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">⚠️ Foco & Desafio</h4>
+                    <ul class="text-sm text-stone-600 space-y-1">
+                        <li><strong>Foco:</strong> Processamento multi-core, memória de alta velocidade e imagem.</li>
+                        <li><strong>Desafio:</strong> Equilibrar CPU com uma placa de vídeo com aceleração de hardware.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="bg-stone-50 px-6 py-4 border-b border-stone-200">
+                    <h3 class="font-bold text-stone-800">Especificação do Sistema</h3>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Processador</label><input type="text" data-field="design_cpu" placeholder="Ex: Ryzen 7 ou Core i7" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="design_cpu_just" placeholder="Importância dos núcleos/threads." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Memória RAM</label><input type="text" data-field="design_ram" placeholder="Ex: 32GB DDR5" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="design_ram_just" placeholder="Porquê tanta memória?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Armazenamento</label><input type="text" data-field="design_storage" placeholder="Ex: SSD NVMe 1TB" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="design_storage_just" placeholder="Velocidade de leitura p/ ficheiros grandes." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Placa de Vídeo</label><input type="text" data-field="design_gpu" placeholder="Ex: NVIDIA RTX 4060" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="design_gpu_just" placeholder="Aceleração de hardware (CUDA, etc)." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Monitor</label><input type="text" data-field="design_monitor" placeholder="Ex: 27'' 4K 100% sRGB" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="design_monitor_just" placeholder="Fidelidade de cor e espaço de trabalho." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-pink-500 outline-none transition-all"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-right">
+                <button class="nav-trigger bg-stone-900 text-white px-6 py-2 rounded-lg hover:bg-stone-700 transition" data-target="btn-server">Próximo: O Servidor ➔</button>
+            </div>
+        </section>
+
+        <!-- SECTION: Perfil 3 - Servidor -->
+        <section id="sec-server" class="content-sec p-6 md:p-10 lg:p-16 max-w-5xl mx-auto fade-in hidden">
+            <div class="mb-8 border-b border-stone-200 pb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">🖥️</div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-stone-900">Perfil 3: O Servidor de Arquivos</h2>
+                        <p class="text-stone-500 font-medium">Pequena Empresa</p>
+                    </div>
+                </div>
+                <p class="text-stone-600 mt-4">Nesta secção, o paradigma muda: gráficos não importam. A prioridade máxima é a retenção de dados, tolerância a falhas (redundância) e estabilidade 24 horas por dia.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">🎯 Necessidades</h4>
+                    <p class="text-sm text-stone-600">Ficar ligado 24/7, gerenciar acesso de 20 funcionários aos arquivos, realizar backups automáticos e garantir a integridade dos dados.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm">
+                    <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">⚠️ Foco & Desafio</h4>
+                    <ul class="text-sm text-stone-600 space-y-1">
+                        <li><strong>Foco:</strong> Confiabilidade (Redundância), eficiência energética.</li>
+                        <li><strong>Desafio:</strong> Priorizar segurança dos dados (RAID) e estabilidade.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="bg-stone-50 px-6 py-4 border-b border-stone-200">
+                    <h3 class="font-bold text-stone-800">Especificação do Sistema</h3>
+                </div>
+                <div class="p-6 space-y-6">
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Processador</label><input type="text" data-field="serv_cpu" placeholder="Suficiente para rede." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="serv_cpu_just" placeholder="Consumo vs Eficiência." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Memória RAM</label><input type="text" data-field="serv_ram" placeholder="Ex: 16GB ECC" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="serv_ram_just" placeholder="Vantagem da memória com correção de erros (ECC)." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Armazenamento</label><input type="text" data-field="serv_storage" placeholder="Ex: 2x 4TB HDD NAS" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="serv_storage_just" placeholder="Discos projetados para NAS e configuração em rede." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Fonte de Alimentação</label><input type="text" data-field="serv_psu" placeholder="Ex: 500W 80+ Gold" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="serv_psu_just" placeholder="Porquê investir numa fonte de alta eficiência e qualidade?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1"><label class="block text-sm font-bold text-stone-700 mb-1">Sistema de Backup</label><input type="text" data-field="serv_backup" placeholder="Cloud ou HD Externo?" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                        <div class="md:col-span-2"><label class="block text-sm font-bold text-stone-700 mb-1">Justificativa</label><input type="text" data-field="serv_backup_just" placeholder="Garantia extra além do RAID." class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-right">
+                <button class="nav-trigger bg-stone-900 text-white px-6 py-2 rounded-lg hover:bg-stone-700 transition" data-target="btn-reflexao">Ir para Avaliação Final ➔</button>
+            </div>
+        </section>
+
+        <!-- SECTION: Reflexão Final -->
+        <section id="sec-reflexao" class="content-sec p-6 md:p-10 lg:p-16 max-w-4xl mx-auto fade-in hidden pb-24">
+            <div class="mb-10 text-center">
+                <span class="inline-block p-4 bg-amber-100 text-amber-600 rounded-full mb-4 shadow-inner text-4xl">✍️</span>
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">Questões de Reflexão</h2>
+                <p class="text-stone-600">Sintetize os conceitos práticos respondendo às questões baseadas no seu projeto.</p>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 focus-within:ring-2 ring-blue-100 transition-all">
+                    <label class="block font-bold text-stone-800 mb-3 text-lg">1. Placa de Vídeo (GPU)</label>
+                    <p class="text-sm text-stone-500 mb-3">Por que o computador do Professor não precisa de uma placa de vídeo dedicada (GPU), enquanto a do Designer é essencial?</p>
+                    <textarea data-field="q_gpu" rows="4" class="w-full p-4 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all" placeholder="Digite a sua resposta analítica aqui..."></textarea>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 focus-within:ring-2 ring-blue-100 transition-all">
+                    <label class="block font-bold text-stone-800 mb-3 text-lg">2. Velocidade de Armazenamento</label>
+                    <p class="text-sm text-stone-500 mb-3">Qual a importância de um SSD (NVMe) para o Designer em comparação a um HD convencional?</p>
+                    <textarea data-field="q_ssd" rows="4" class="w-full p-4 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all" placeholder="Compare taxas de transferência e impacto no fluxo de trabalho..."></textarea>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 focus-within:ring-2 ring-blue-100 transition-all">
+                    <label class="block font-bold text-stone-800 mb-3 text-lg">3. Infraestrutura Física</label>
+                    <p class="text-sm text-stone-500 mb-3">No caso do Servidor, por que a escolha da Fonte de Alimentação e do Gabinete (ventilação) é mais crítica do que nos outros dois perfis?</p>
+                    <textarea data-field="q_power" rows="4" class="w-full p-4 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all" placeholder="Pense no fator 24/7 e desgaste térmico..."></textarea>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 focus-within:ring-2 ring-blue-100 transition-all">
+                    <label class="block font-bold text-stone-800 mb-3 text-lg">4. Segurança de Dados (RAID)</label>
+                    <p class="text-sm text-stone-500 mb-3">O que é a tecnologia RAID e por que ela seria recomendada para o perfil do Servidor?</p>
+                    <textarea data-field="q_raid" rows="4" class="w-full p-4 border border-stone-300 rounded-lg bg-stone-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all" placeholder="Explique os conceitos de redundância ou espelhamento de discos..."></textarea>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-blue-600 text-white rounded-2xl p-8 text-center shadow-lg shadow-blue-500/30">
+                <h3 class="text-2xl font-bold mb-2">Pronto para finalizar?</h3>
+                <p class="text-blue-100 mb-6">Certifique-se de que todas as justificativas estão corretas. O relatório será gravado definitivamente no sistema.</p>
+                <button id="submit-final" class="bg-white text-blue-700 hover:bg-stone-100 px-8 py-4 rounded-xl font-bold text-lg shadow transition-transform transform hover:scale-105">
+                    🚀 SUBMETER RELATÓRIO FINAL
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS Logic: Navigation, Chart.js, and Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Setup - System Provided Rules
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'hardware-architect-activity';
+        let app, auth, db;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (e) {
+            console.error("Firebase initialization skipped (Preview Env).", e);
+        }
+
+        let currentUserId = null;
+        const loader = document.getElementById('loader');
+
+        // Rule 3: Auth First
+        async function initializeAuth() {
+            if (!auth) return;
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Authentication Error:", err);
+            }
+        }
+
+        if (auth) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserId = user.uid;
+                    document.getElementById('user-display').innerText = `ID: ${user.uid.substring(0,8)}...`;
+                    await loadSavedState();
+                } else {
+                    initializeAuth();
+                }
+            });
+        } else {
+            document.getElementById('user-display').innerText = "Modo Local (Sem Nuvem)";
+        }
+
+        // Rule 1: Strict Paths - Firestore Save
+        async function handleSaveData(isFinalSubmission = false) {
+            const studentNameInput = document.getElementById('student_name');
+            const studentName = studentNameInput.value.trim();
+
+            if (!studentName) {
+                alert("⚠️ Obrigatório: Por favor, insira o seu Nome Completo na secção 'Contexto' antes de prosseguir.");
+                document.getElementById('btn-intro').click();
+                studentNameInput.focus();
+                return;
+            }
+
+            if (!auth || !currentUserId) {
+                alert("O sistema de gravação na nuvem não está disponível no momento.");
+                return;
+            }
+
+            loader.style.display = 'flex';
+
+            const payload = {
+                student_name: studentName,
+                status: isFinalSubmission ? 'FINALIZADO' : 'RASCUNHO',
+                last_updated: new Date().toISOString()
+            };
+
+            document.querySelectorAll('[data-field]').forEach(element => {
+                payload[element.getAttribute('data-field')] = element.value;
+            });
+
+            try {
+                // strict path rule
+                const documentRef = doc(db, 'artifacts', appId, 'public', 'data', 'entregas_alunos', currentUserId);
+                await setDoc(documentRef, payload, { merge: true });
+                
+                if (isFinalSubmission) {
+                    alert("✅ Relatório Final submetido com sucesso! Excelente trabalho, Arquiteto.");
+                } else {
+                    alert("💾 Rascunho guardado na nuvem. Pode continuar mais tarde.");
+                }
+            } catch (error) {
+                console.error("Firestore Write Error:", error);
+                alert("❌ Ocorreu um erro ao guardar os dados. Verifique a consola técnica.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        async function loadSavedState() {
+            if (!auth || !currentUserId) return;
+            try {
+                const documentRef = doc(db, 'artifacts', appId, 'public', 'data', 'entregas_alunos', currentUserId);
+                const snapshot = await getDoc(documentRef);
+                
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    document.querySelectorAll('[data-field]').forEach(element => {
+                        const fieldName = element.getAttribute('data-field');
+                        if (data[fieldName] !== undefined) {
+                            element.value = data[fieldName];
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Firestore Read Error:", error);
+            }
+        }
+
+        // UI & Navigation Logic
+        window.onload = () => {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.content-sec');
+
+            // Setup Sidebar Navigation
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetSectionId = btn.id.replace('btn-', 'sec-');
+                    
+                    // Hide all, remove active class
+                    sections.forEach(s => s.classList.add('hidden'));
+                    navButtons.forEach(b => b.classList.remove('nav-active'));
+                    
+                    // Show target, add active class
+                    document.getElementById(targetSectionId).classList.remove('hidden');
+                    btn.classList.add('nav-active');
+                    
+                    // Mobile: scroll to top
+                    document.querySelector('main').scrollTo(0, 0);
+                });
+            });
+
+            // Setup Next Buttons (in-page)
+            document.querySelectorAll('.nav-trigger').forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    const targetBtnId = e.target.getAttribute('data-target');
+                    if (targetBtnId) {
+                        document.getElementById(targetBtnId).click();
+                    }
+                });
+            });
+
+            // Setup Save Triggers
+            document.getElementById('save-progress').addEventListener('click', () => handleSaveData(false));
+            document.getElementById('submit-final').addEventListener('click', () => handleSaveData(true));
+
+            // Initialize Radar Chart
+            initRadarChart();
+        };
+
+        function initRadarChart() {
+            const canvas = document.getElementById('demandChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['CPU Multi-Core', 'Desempenho GPU', 'RAM Capacidade', 'Armazenamento', 'Redundância/RAID'],
+                    datasets: [
+                        {
+                            label: 'O Professor',
+                            data: [3, 2, 4, 4, 1],
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue
+                            borderColor: 'rgb(59, 130, 246)',
+                            pointBackgroundColor: 'rgb(59, 130, 246)'
+                        },
+                        {
+                            label: 'A Designer',
+                            data: [9, 10, 9, 8, 3],
+                            backgroundColor: 'rgba(236, 72, 153, 0.2)', // Pink
+                            borderColor: 'rgb(236, 72, 153)',
+                            pointBackgroundColor: 'rgb(236, 72, 153)'
+                        },
+                        {
+                            label: 'O Servidor',
+                            data: [5, 1, 7, 10, 10],
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald
+                            borderColor: 'rgb(16, 185, 129)',
+                            pointBackgroundColor: 'rgb(16, 185, 129)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: {
+                                font: { family: 'Inter', size: 11 },
+                                color: '#444'
+                            },
+                            ticks: { display: false, min: 0, max: 10 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 }, padding: 20 } },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            titleFont: { family: 'Inter', size: 13 },
+                            bodyFont: { family: 'Inter', size: 13 },
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

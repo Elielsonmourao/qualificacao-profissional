@@ -396,13 +396,21 @@
 
     <!-- JS Logic: Navigation, Chart.js, and Firebase Integration -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase Setup - System Provided Rules
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'hardware-architect-activity';
+       const firebaseConfig = {
+  apiKey: "AIzaSyDFeeau4kFJSydnpgtwvo-mV4Fc3uEymko",
+  authDomain: "montando-computador.firebaseapp.com",
+  projectId: "montando-computador",
+  storageBucket: "montando-computador.firebasestorage.app",
+  messagingSenderId: "460426886679",
+  appId: "1:460426886679:web:718b09877a0ec6b1186652"
+};
+
+const appId = "montando-computador";
         let app, auth, db;
 
         try {

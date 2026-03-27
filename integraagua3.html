@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IntegraÁgua - Simulador de Condensado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Animação da Gota */
+        @keyframes dropFall {
+            0% { transform: translateY(0) scaleX(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(160px) scaleX(0.8); opacity: 0; }
+        }
+
+        .drop-anim {
+            width: 8px;
+            height: 12px;
+            background: #3b82f6;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            left: 50%;
+            top: 60px;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .is-dropping {
+            animation: dropFall linear infinite;
+        }
+
+        /* Ondulação no Balde */
+        @keyframes ripple {
+            0% { transform: translateX(-50%) scale(0.8); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.5); opacity: 0; }
+        }
+
+        .ripple {
+            position: absolute;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 10px;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .ripple-anim {
+            animation: ripple 0.6s ease-out infinite;
+        }
+
+        .water-fill {
+            transition: all 0.5s ease;
+        }
+
+        .tick-mark {
+            height: 1px;
+            background: #cbd5e1;
+            position: absolute;
+            right: 0;
+            width: 8px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">INTEGRAÁGUA 💧</h1>
+            <p class="text-blue-600 font-medium italic">Sustentabilidade gota a gota</p>
+        </header>
+
+        <div class="space-y-8">
+            
+            <!-- CONFIGURAÇÕES -->
+            <div class="glass-card rounded-3xl p-8 shadow-xl">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <span class="bg-blue-100 p-2 rounded-lg mr-3">⚙️</span> Parâmetros de Operação
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Potência (BTUs)</label>
+                            <select id="btu" onchange="inputAutomatico()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 focus:border-blue-500 focus:bg-white rounded-xl transition-all outline-none text-gray-700 font-medium cursor-pointer">
+                                <option value="9000">9.000 BTU</option>
+                                <option value="12000" selected>12.000 BTU</option>
+                                <option value="18000">18.000 BTU</option>
+                                <option value="24000">24.000 BTU</option>
+                                <option value="30000">30.000 BTU</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Temperatura Ajustada (°C)</label>
+                            <select id="temp" onchange="inputAutomatico()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 focus:border-blue-500 focus:bg-white rounded-xl transition-all outline-none text-gray-700 font-medium cursor-pointer">
+                                <option value="16">16°C (Frio Máximo)</option>
+                                <option value="18">18°C</option>
+                                <option value="20">20°C</option>
+                                <option value="22" selected>22°C</option>
+                                <option value="24">24°C (Economia)</option>
+                                <option value="26">26°C</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Umidade (%)</label>
+                                <div class="relative">
+                                    <input type="number" id="hum" value="20" oninput="inputAutomatico()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 focus:border-blue-500 rounded-xl outline-none">
+                                    <span class="absolute right-3 top-3 text-gray-400 text-sm">%</span>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Uso (h/dia)</label>
+                                <div class="relative">
+                                    <input type="number" id="horas" value="8" oninput="inputAutomatico()" class="w-full p-3 bg-gray-50 border-2 border-gray-100 focus:border-blue-500 rounded-xl outline-none">
+                                    <span class="absolute right-3 top-3 text-gray-400 text-sm">h</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide">Intervalo entre gotas (s)</label>
+                            <div class="flex space-x-2">
+                                <input type="number" id="manualInt" step="0.01" oninput="inputManual()" placeholder="Sincronizar" class="flex-1 p-4 bg-gray-50 border-2 border-gray-100 focus:border-blue-500 rounded-2xl outline-none font-bold text-blue-600 text-lg">
+                            </div>
+                            <p class="text-[11px] text-gray-500 leading-tight">O intervalo é calculado dinamicamente conforme a umidade relativa do ar (RH).</p>
+                        </div>
+                        
+                        <button onclick="reiniciarSimulacao()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-2xl shadow-lg shadow-blue-200 transition-all transform active:scale-95">
+                            REINICIAR MEDIÇÃO
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIMULADOR VISUAL -->
+            <div id="simuladorArea" class="glass-card rounded-3xl p-8 relative overflow-hidden flex flex-col items-center">
+                <div class="w-full flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-blue-900">Painel de Observação</h3>
+                        <p class="text-sm text-blue-400 font-semibold uppercase tracking-widest">Monitoramento Ativo</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="labelStatus" class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full">SIMULANDO</span>
+                    </div>
+                </div>
+                
+                <div class="relative w-full max-w-lg flex flex-col items-center">
+                    <div class="relative w-full max-w-md">
+                        <svg viewBox="0 0 400 120" class="w-full drop-shadow-md">
+                            <rect x="10" y="10" width="380" height="90" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+                            <rect x="30" y="85" width="340" height="5" rx="2" fill="#f1f5f9"/>
+                            <rect x="300" y="40" width="40" height="25" rx="4" fill="#1e293b"/>
+                            <text id="displayTemp" x="320" y="58" text-anchor="middle" fill="#10b981" font-family="monospace" font-weight="bold" font-size="14">22°</text>
+                            <path d="M40 40 H280 M40 55 H280 M40 70 H280" stroke="#f8fafc" stroke-width="2"/>
+                            <circle id="statusLed" cx="360" cy="30" r="4" fill="#10b981" class="animate-pulse"/>
+                        </svg>
+                        <div id="drop" class="drop-anim"></div>
+                    </div>
+
+                    <div class="flex items-end space-x-6 mt-16 mb-6">
+                        <div class="relative h-48 w-12 flex flex-col justify-between text-[10px] font-bold text-gray-400 pb-2">
+                            <div class="flex items-center justify-end"><span>100ml</span><div class="tick-mark w-3"></div></div>
+                            <div class="flex items-center justify-end"><span>75ml</span><div class="tick-mark w-2"></div></div>
+                            <div class="flex items-center justify-end"><span>50ml</span><div class="tick-mark w-3"></div></div>
+                            <div class="flex items-center justify-end"><span>25ml</span><div class="tick-mark w-2"></div></div>
+                            <div class="flex items-center justify-end"><span>0ml</span><div class="tick-mark w-3"></div></div>
+                        </div>
+
+                        <div class="relative w-40 h-48">
+                            <svg viewBox="0 0 100 120" class="w-full h-full">
+                                <defs>
+                                    <clipPath id="bucketClip">
+                                        <path d="M10 10 L90 10 L80 110 L20 110 Z" />
+                                    </clipPath>
+                                </defs>
+                                <path d="M10 10 L90 10 L80 110 L20 110 Z" fill="#f8fafc" />
+                                <rect id="waterLevel" x="0" y="110" width="100" height="0" fill="#3b82f6" clip-path="url(#bucketClip)" class="water-fill" />
+                                <path d="M10 10 L90 10 L80 110 L20 110 Z" fill="none" stroke="#cbd5e1" stroke-width="2" />
+                            </svg>
+                            <div id="ripple" class="ripple"></div>
+                        </div>
+
+                        <div class="w-24 text-left pb-2">
+                            <span class="block text-[10px] font-bold text-gray-400 uppercase leading-tight">Volume<br>Acumulado</span>
+                            <span id="volAtual" class="text-xl font-black text-blue-600 leading-none">0.00 ml</span>
+                            <div class="mt-2 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                                <div id="progressLine" class="h-full bg-blue-400 transition-all" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                    <div class="bg-white border border-blue-50 p-6 rounded-2xl text-center">
+                        <span class="block text-xs font-bold text-blue-400 uppercase mb-2">Vazão Estimada</span>
+                        <div class="flex items-center justify-center space-x-1">
+                            <span id="resHora" class="text-3xl font-black text-blue-700">0.00</span>
+                            <span class="text-blue-300 font-bold">L/h</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-600 p-6 rounded-2xl shadow-xl shadow-blue-200 text-center transform scale-105">
+                        <span class="block text-xs font-bold text-blue-100 uppercase mb-2">Total em <span id="labelHoras">8</span>h de Uso</span>
+                        <div class="flex items-center justify-center space-x-1">
+                            <span id="resDia" class="text-3xl font-black text-white">0.0</span>
+                            <span class="text-blue-100 font-bold">Litros</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-blue-50 p-6 rounded-2xl text-center">
+                        <span class="block text-xs font-bold text-blue-400 uppercase mb-2">Segundos por Gota</span>
+                        <div class="flex items-center justify-center space-x-1">
+                            <span id="resGotas" class="text-3xl font-black text-blue-700">0.0</span>
+                            <span class="text-blue-300 font-bold">s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="mt-16 text-center text-gray-400 pb-10">
+            <p class="text-xs">© 2024 SENAI Amapá - Todos os direitos reservados.</p>
+            <p class="text-[10px] mt-1 opacity-60 italic">Desenvolvido pelo Instrutor Elielson Mourão</p>
+        </footer>
+    </div>
+
+    <script>
+        const GOTA_VOL_ML = 0.05; 
+        let volumeAcumuladoMl = 0;
+        let simulacaoInterval;
+        let modoManual = false;
+
+        const dropEl = document.getElementById('drop');
+        const rippleEl = document.getElementById('ripple');
+        const waterEl = document.getElementById('waterLevel');
+        const volAtualEl = document.getElementById('volAtual');
+        const progressLine = document.getElementById('progressLine');
+        const manualInput = document.getElementById('manualInt');
+        const displayTemp = document.getElementById('displayTemp');
+
+        function calcularParametros() {
+            const btu = parseFloat(document.getElementById('btu').value);
+            const hum = parseFloat(document.getElementById('hum').value);
+            const temp = parseFloat(document.getElementById('temp').value);
+            const horas = parseFloat(document.getElementById('horas').value);
+            const manualVal = parseFloat(manualInput.value);
+
+            let vazaoHora, intervalo;
+
+            displayTemp.textContent = temp + "°";
+
+            if (modoManual && manualVal > 0) {
+                intervalo = manualVal;
+                vazaoHora = ((3600 / intervalo) * GOTA_VOL_ML) / 1000;
+            } else {
+                const fatorBtu = btu / 12000;
+                // Curva de umidade ajustada para 20% RH gerar ~1.85s/gota
+                const fatorHum = Math.pow(hum / 100, 2) * 2.5; 
+                const fatorTemp = 1 + ((22 - temp) * 0.05);
+
+                vazaoHora = 0.22 * fatorBtu * fatorHum * fatorTemp;
+                vazaoHora = Math.max(vazaoHora, 0.01);
+
+                const mlPorSec = (vazaoHora * 1000) / 3600;
+                intervalo = GOTA_VOL_ML / mlPorSec;
+                
+                if (!modoManual) manualInput.value = intervalo.toFixed(2);
+            }
+
+            return { vazaoHora, intervalo, horas };
+        }
+
+        function atualizarDisplay() {
+            const { vazaoHora, intervalo, horas } = calcularParametros();
+
+            document.getElementById('resHora').innerText = vazaoHora.toFixed(2);
+            document.getElementById('resDia').innerText = (vazaoHora * horas).toFixed(2);
+            document.getElementById('resGotas').innerText = intervalo.toFixed(2);
+            document.getElementById('labelHoras').innerText = horas;
+
+            dropEl.classList.remove('is-dropping');
+            rippleEl.classList.remove('ripple-anim');
+            void dropEl.offsetWidth; 
+
+            dropEl.style.animationDuration = intervalo + 's';
+            rippleEl.style.animationDuration = intervalo + 's';
+            rippleEl.style.animationDelay = (intervalo * 0.95) + 's';
+
+            dropEl.classList.add('is-dropping');
+            rippleEl.classList.add('ripple-anim');
+
+            reiniciarLoop(intervalo);
+        }
+
+        function reiniciarLoop(intervalo) {
+            clearInterval(simulacaoInterval);
+            simulacaoInterval = setInterval(() => {
+                volumeAcumuladoMl += GOTA_VOL_ML;
+                const maxSim = 100; 
+                const pct = Math.min((volumeAcumuladoMl / maxSim) * 100, 100);
+                
+                volAtualEl.innerText = volumeAcumuladoMl.toFixed(2) + " ml";
+                waterEl.setAttribute('height', pct);
+                waterEl.setAttribute('y', 110 - pct);
+                progressLine.style.width = pct + "%";
+
+                if(volumeAcumuladoMl >= maxSim) {
+                    // Reinício automático ao encher (opcional)
+                    // volumeAcumuladoMl = 0;
+                }
+            }, intervalo * 1000);
+        }
+
+        function inputAutomatico() {
+            modoManual = false;
+            atualizarDisplay();
+        }
+
+        function inputManual() {
+            const val = parseFloat(manualInput.value);
+            if(val > 0) {
+                modoManual = true;
+                atualizarDisplay();
+            }
+        }
+
+        function reiniciarSimulacao() {
+            volumeAcumuladoMl = 0;
+            volAtualEl.innerText = "0.00 ml";
+            waterEl.setAttribute('height', '0');
+            waterEl.setAttribute('y', '110');
+            progressLine.style.width = "0%";
+            atualizarDisplay();
+        }
+
+        window.onload = () => {
+            atualizarDisplay();
+        };
+    </script>
+</body>
+</html>

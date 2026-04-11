@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade de Pesquisa: Hardware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .component-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        @media print {
+            .no-print { display: none; }
+            body { background-color: white; }
+            .print-break { page-break-after: always; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <header class="bg-blue-600 p-8 text-white">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Desafio de Hardware 💻</h1>
+                    <p class="text-blue-100 italic">Curso: Operador de Computador</p>
+                </div>
+                <div class="bg-blue-700 p-4 rounded-lg border border-blue-500 text-sm">
+                    <p class="font-bold">Instrutor: <span class="font-normal text-blue-100">Elielson Mourão</span></p>
+                    <p class="font-bold">Entrega: <span class="font-normal text-blue-100">elielson.mourao@ap.senai.br</span></p>
+                </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-4 text-sm font-medium">
+                <span class="bg-blue-500 px-3 py-1 rounded-full border border-blue-400">Atividade Individual ou em Dupla</span>
+                <span class="bg-blue-500 px-3 py-1 rounded-full border border-blue-400">Tempo: 3 a 4 aulas</span>
+            </div>
+        </header>
+
+        <!-- Introdução -->
+        <section class="p-8 border-b border-slate-100">
+            <h2 class="text-xl font-semibold mb-4 text-blue-700">Objetivo do Projeto</h2>
+            <p class="leading-relaxed text-slate-600">
+                Olá, futuro Operador de Computador! O seu desafio é realizar uma pesquisa técnica aprofundada sobre os pilares do hardware moderno. Você não apenas listará o que são, mas aprenderá a diferenciar tecnologias e entender como elas influenciam no desempenho da máquina.
+            </p>
+        </section>
+
+        <!-- Parte 1: Pesquisa Técnica -->
+        <section class="p-8">
+            <h2 class="text-xl font-semibold mb-6 flex items-center">
+                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
+                Parte I: Mergulho Técnico
+            </h2>
+            
+            <p class="mb-6 text-slate-500">Para cada componente abaixo, pesquise e descreva as características solicitadas:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Placa-mãe -->
+                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">Placa-Mãe (Motherboard)</h3>
+                    <ul class="text-sm space-y-2 text-slate-600">
+                        <li>• O que é um <strong>Socket</strong> e por que ele é importante?</li>
+                        <li>• Diferença entre Chipsets de entrada e de alta performance.</li>
+                        <li>• O que é o Form Factor (ATX, Micro-ATX)?</li>
+                    </ul>
+                </div>
+
+                <!-- Processador -->
+                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">Processador (CPU)</h3>
+                    <ul class="text-sm space-y-2 text-slate-600">
+                        <li>• O que são <strong>Cores</strong> (Núcleos) e <strong>Threads</strong>?</li>
+                        <li>• Qual a função da memória Cache L1, L2 e L3?</li>
+                        <li>• O que significa o "Clock" (GHz) do processador?</li>
+                    </ul>
+                </div>
+
+                <!-- Memória RAM -->
+                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">Memória RAM</h3>
+                    <ul class="text-sm space-y-2 text-slate-600">
+                        <li>• Qual a diferença entre DDR4 e DDR5?</li>
+                        <li>• O que é a tecnologia <strong>Dual Channel</strong>?</li>
+                        <li>• Por que a frequência (MHz) afeta o processamento?</li>
+                    </ul>
+                </div>
+
+                <!-- Armazenamento -->
+                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
+                    <h3 class="font-bold text-lg mb-2 text-blue-600">HD vs SSD</h3>
+                    <ul class="text-sm space-y-2 text-slate-600">
+                        <li>• Explique a diferença de velocidade entre um HD e um SSD NVMe.</li>
+                        <li>• O que é a vida útil (TBW) de um SSD?</li>
+                        <li>• Vale a pena ter os dois no mesmo PC? Explique.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parte 2: Desafio Prático -->
+        <section class="p-8 bg-slate-50 border-y border-slate-200">
+            <h2 class="text-xl font-semibold mb-6 flex items-center">
+                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">2</span>
+                Parte II: Simulação de Montagem
+            </h2>
+            <p class="mb-4 text-slate-600">
+                Imagine que você recebeu um orçamento de <strong>R$ 3.500,00</strong> para comprar apenas esses 4 componentes para um PC de edição de vídeo.
+            </p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse bg-white rounded-lg overflow-hidden">
+                    <thead>
+                        <tr class="bg-slate-200 text-slate-700 uppercase text-xs">
+                            <th class="p-3">Componente</th>
+                            <th class="p-3">Modelo Escolhido</th>
+                            <th class="p-3">Motivo da Escolha</th>
+                            <th class="p-3">Preço Est.</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-slate-600">
+                        <tr class="border-b border-slate-100">
+                            <td class="p-3 font-medium">Placa-Mãe</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="p-3 font-medium">Processador</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="p-3 font-medium">Memória RAM</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium">HD ou SSD</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
+                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Instruções de Entrega -->
+        <footer class="p-8 bg-blue-50">
+            <h3 class="font-bold text-blue-800 mb-2">Instruções de Entrega:</h3>
+            <ul class="list-disc list-inside text-sm text-blue-700 space-y-1">
+                <li>O trabalho deve ser entregue em formato PDF ou impresso.</li>
+                <li>Enviar para o e-mail: <strong class="underline">elielson.mourao@ap.senai.br</strong></li>
+                <li>Identifique o assunto do e-mail como: [HARDWARE] Nome do Aluno - Turma.</li>
+                <li>Inclua as fontes de pesquisa e justifique a compatibilidade entre as peças.</li>
+            </ul>
+            <div class="mt-6 flex justify-between items-center no-print">
+                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition-colors">
+                    Imprimir / Salvar PDF
+                </button>
+                <p class="text-xs text-slate-400">© 2024 SENAI AP - Professor Elielson Mourão</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

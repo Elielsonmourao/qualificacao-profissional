@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Missão Redes: 30 Desafios</title>
+    <style>
+        :root { --neon-blue: #00f3ff; --neon-purple: #bc13fe; --bg: #0a0b10; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        .container { max-width: 900px; margin: auto; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px; border: 1px solid var(--neon-blue); }
+        h1, h2 { color: var(--neon-blue); text-transform: uppercase; text-align: center; }
+        .section { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .q-block { margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; }
+        select, input { background: #111; color: var(--neon-blue); border: 1px solid var(--neon-purple); padding: 5px; border-radius: 4px; }
+        button { width: 100%; padding: 20px; background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple)); border: none; color: white; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 1.2em; }
+        #finalReport { display: none; margin-top: 20px; background: #000; padding: 20px; border: 2px solid #0f0; }
+        textarea { width: 100%; height: 200px; background: #111; color: #0f0; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Master Class: Manutenção de Redes</h1>
+    <p style="text-align: center;">Complete os 30 desafios abaixo para validar sua certificação inicial.</p>
+    
+    <div class="q-block">
+        <label>Nome do Aluno:</label>
+        <input type="text" id="alunoNome" style="width: 80%;">
+    </div>
+
+    <div class="section">
+        <h2>Fase 1: Conhecimento Base</h2>
+        <div id="multiplaEscolha"></div>
+    </div>
+
+    <div class="section">
+        <h2>Fase 2: Terminologia (Complete)</h2>
+        <p>Complete as frases com os termos técnicos corretos:</p>
+        <div id="lacunas"></div>
+    </div>
+
+    <div class="section">
+        <h2>Fase 3: Tomada de Decisão</h2>
+        <div id="diagnostico"></div>
+    </div>
+
+    <button onclick="processarTudo()">GERAR RELATÓRIO FINAL</button>
+
+    <div id="finalReport">
+        <h3>Relatório Técnico Gerado</h3>
+        <p>Envie este conteúdo para: <strong>elielson.mourao@ap.senai.br</strong></p>
+        <textarea id="output"></textarea>
+    </div>
+</div>
+
+<script>
+// Dados das Questões
+const questaoMultipla = [
+    {q: "O que significa LAN?", options: ["Local Area Network", "Long Access Node", "Light Area Net"], correct: 0},
+    {q: "Qual o cabo mais comum em redes locais?", options: ["Coaxial", "Par Trançado", "Fibra Óptica"], correct: 1},
+    {q: "O que o comando 'Ping' testa?", options: ["Velocidade de download", "Conectividade entre dois pontos", "Vírus no PC"], correct: 1},
+    {q: "Topologia onde todos se ligam a um ponto central:", options: ["Barramento", "Anel", "Estrela"], correct: 2},
+    {q: "Função principal do Roteador:", options: ["Interligar redes diferentes", "Aumentar o som do PC", "Imprimir arquivos"], correct: 0},
+    {q: "Velocidade padrão de uma rede Gigabit:", options: ["100 Mbps", "1000 Mbps", "10 Mbps"], correct: 1},
+    {q: "O que protege a rede de acessos externos?", options: ["Firewall", "Monitor", "Estabilizador"], correct: 0},
+    {q: "Qual dispositivo 'inteligente' envia dados apenas ao destino correto?", options: ["Hub", "Switch", "Repetidor"], correct: 1},
+    {q: "Protocolo usado para navegar em sites:", options: ["FTP", "SMTP", "HTTP/HTTPS"], correct: 2},
+    {q: "Principal vantagem da Fibra Óptica:", options: ["É feita de plástico", "Imunidade a interferência eletromagnética", "É mais barata que o cobre"], correct: 1}
+];
+
+const questaoLacuna = [
+    "O conector padrão de redes é o ____.",
+    "O endereço único de cada máquina na rede é o endereço ____.",
+    "Redes sem fio são conhecidas pela sigla ____.",
+    "O ____ de rede é o local onde os cabos são organizados (armário metálico).",
+    "A ferramenta usada para prender o conector no cabo é o alicate de ____.",
+    "O modelo de referência de 7 camadas chama-se Modelo ____.",
+    "Quando o cabo está quebrado internamente, dizemos que há um ____ físico.",
+    "____ é o nome dado ao atraso na transmissão de dados.",
+    "Um ____ sinaliza se o cabo de rede está com os fios na ordem certa.",
+    "O servidor que transforma nomes (google.com) em IPs é o ____."
+];
+
+const questaoDecisao = [
+    "Cabo desconectado. Onde olhar primeiro?",
+    "Wi-Fi não alcança o fundo da sala. Solução?",
+    "Internet lenta apenas em um PC. O que testar?",
+    "Luz do link piscando laranja/âmbar. Indica?",
+    "Vários PCs sem rede ao mesmo tempo. Causa provável?",
+    "Conector com trava quebrada. O que fazer?",
+    "Sinal de Wi-Fi some perto do micro-ondas. Por quê?",
+    "PC diz 'Cabo desconectado' mas o cabo está lá. Causa?",
+    "Rede montada mas não navega. O que reiniciar?",
+    "Preciso de mobilidade total. Qual tecnologia usar?"
+];
+
+// Renderizar Questões
+function render() {
+    let htmlM = "";
+    questaoMultipla.forEach((item, i) => {
+        htmlM += `<div class='q-block'>${i+1}. ${item.q}<br><select id='m${i}'><option value=''>Escolha...</option>`;
+        item.options.forEach((opt, idx) => { htmlM += `<option value='${idx}'>${opt}</option>`; });
+        htmlM += `</select></div>`;
+    });
+    document.getElementById('multiplaEscolha').innerHTML = htmlM;
+
+    let htmlL = "";
+    questaoLacuna.forEach((item, i) => {
+        let partes = item.split("____");
+        htmlL += `<div class='q-block'>${i+11}. ${partes[0]} <input type='text' id='l${i}'> ${partes[1]}</div>`;
+    });
+    document.getElementById('lacunas').innerHTML = htmlL;
+
+    let htmlD = "";
+    questaoDecisao.forEach((item, i) => {
+        htmlD += `<div class='q-block'>${i+21}. ${item} <br><input type='text' id='d${i}' placeholder='Sua resposta técnica...'></div>`;
+    });
+    document.getElementById('diagnostico').innerHTML = htmlD;
+}
+
+function processarTudo() {
+    const nome = document.getElementById('alunoNome').value;
+    if(!nome) return alert("Identifique-se primeiro!");
+
+    let relatorio = `RELATÓRIO COMPLETO DE ATIVIDADE - REDES\nALUNO: ${nome}\n${'-'.repeat(30)}\n\n`;
+    
+    for(let i=0; i<10; i++) {
+        let sel = document.getElementById(`m${i}`);
+        relatorio += `Questão ${i+1}: ${sel.options[sel.selectedIndex].text}\n`;
+    }
+    for(let i=0; i<10; i++) {
+        relatorio += `Questão ${i+11}: ${document.getElementById(`l${i}`).value}\n`;
+    }
+    for(let i=0; i<10; i++) {
+        relatorio += `Questão ${i+21}: ${document.getElementById(`d${i}`).value}\n`;
+    }
+
+    document.getElementById('output').value = relatorio;
+    document.getElementById('finalReport').style.display = 'block';
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+render();
+</script>
+</body>
+</html>

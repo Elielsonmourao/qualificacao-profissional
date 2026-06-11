@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operação SafeData: Missão Arquivos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0d0e15;
+            color: #00ffcc;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #00ffcc;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px dashed #00ffcc;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        /* Enfoque especial para o nome do instrutor */
+        .instructor-badge {
+            display: inline-block;
+            background: rgba(255, 0, 127, 0.15);
+            border: 1px solid #ff007f;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+        }
+
+        .instructor-badge strong {
+            color: #ff007f;
+            text-shadow: 0 0 5px #ff007f;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #00ffcc;
+        }
+
+        .mission-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 4px solid #ff007f;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .mission-title {
+            font-weight: bold;
+            color: #ff007f;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Área do Simulador */
+        .simulator {
+            background: #05060a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 250px;
+            position: relative;
+        }
+
+        .file-zone {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #fff;
+            position: relative;
+        }
+
+        .item:hover {
+            background: rgba(0, 255, 204, 0.1);
+        }
+
+        .item.selected {
+            background: rgba(0, 255, 204, 0.25);
+            border: 1px solid #00ffcc;
+        }
+
+        .item.cut {
+            opacity: 0.4;
+            border: 1px dashed #ff007f;
+        }
+
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        /* Controles */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #00ffcc;
+            color: #0d0e15;
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        button:disabled {
+            border-color: #333;
+            color: #333;
+            cursor: not-allowed;
+            box-shadow: none;
+            background: transparent;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 24px;
+        }
+
+        .success { color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
+        .error { color: #ff007f; text-shadow: 0 0 5px #ff007f; }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #888;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        footer strong {
+            color: #00ffcc;
+            text-shadow: 0 0 2px #00ffcc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .modal-content {
+            background: #121420;
+            border: 2px solid #ff007f;
+            padding: 40px;
+            text-align: center;
+            border-radius: 12px;
+            max-width: 500px;
+            box-shadow: 0 0 30px #ff007f;
+        }
+
+        .modal-content h2 {
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-name {
+            color: #00ffcc;
+            text-shadow: 0 0 8px #00ffcc;
+            font-weight: bold;
+        }
+
+        .breadcrumbs {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Operação SafeData</h1>
+            <div class="instructor-badge">
+                Treinamento Oficial Modulado pelo Instrutor: <strong>Elielson Mourão</strong>
+            </div>
+            <div class="status-bar">
+                <span id="phase-txt">Fase: 1 / 4</span>
+                <span id="score-txt">Pontos: 0</span>
+            </div>
+        </header>
+
+        <div class="mission-box">
+            <div class="mission-title" id="mission-title">Carregando...</div>
+            <p id="mission-desc">Aguardando instruções do sistema...</p>
+        </div>
+
+        <div class="breadcrumbs" id="path-view">Início \</div>
+        
+        <div class="simulator" id="sim-screen">
+            <div class="file-zone" id="file-area">
+                </div>
+        </div>
+
+        <div class="feedback" id="feedback-msg"></div>
+
+        <div class="controls">
+            <button id="btn-nova-pasta" onclick="triggerCreateFolder()">📁 Nova Pasta</button>
+            <button id="btn-copiar" onclick="triggerCopy()">📄 Copiar</button>
+            <button id="btn-recortar" onclick="triggerCut()">✂️ Recortar</button>
+            <button id="btn-colar" onclick="triggerPaste()">📋 Colar</button>
+            <button id="btn-compactar" onclick="triggerZip()">🤐 Compactar (ZIP)</button>
+        </div>
+    </div>
+
+    <footer>
+        Desenvolvido com dedicação pelo Instrutor <strong>Elielson Mourão</strong> &copy; 2026.
+    </footer>
+
+    <div class="modal" id="end-modal">
+        <div class="modal-content">
+            <h2 style="color: #ff007f; text-shadow: 0 0 10px #ff007f;">SISTEMA SEGURO! 🚀</h2>
+            <p style="color: #fff; margin: 20px 0; line-height: 1.6;">
+                Parabéns! Você concluiu com êxito todas as diretrizes de gerenciamento de arquivos passadas pelo <span class="highlight-name">Instrutor Elielson Mourão</span>!
+            </p>
+            <button onclick="restartGame()" style="border-color: #ff007f; color: #ff007f; padding: 12px 24px;">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        // Estado do Jogo
+        let currentPhase = 1;
+        let score = 0;
+        let selectedItem = null;
+        let clipboard = { action: null, item: null };
+        let currentDirectory = "root";
+
+        let items = [];
+
+        const phases = {
+            1: {
+                title: "Missão 1: Inicializar o Servidor",
+                desc: "Para organizar o sistema, crie uma pasta chamada <b>PROJETOS</b>. Depois, entre nela com dois cliques rápidos para liberar o próximo comando.",
+                init: () => {
+                    items = [{ id: 1, name: "sistema.sys", type: "file", icon: "⚙️" }];
+                    currentDirectory = "root";
+                    disableButtons(["btn-copiar", "btn-recortar", "btn-colar", "btn-compactar"]);
+                    enableButtons(["btn-nova-pasta"]);
+                }
+            },
+            2: {
+                title: "Missão 2: Fazer Backup de Segurança",
+                desc: "Temos um arquivo ultra-secreto chamado <b>relatorio.txt</b>. Selecione o arquivo, use a ação de <b>Copiar</b>, entre na pasta <b>BACKUP</b> e clique em <b>Colar</b>.",
+                init: () => {
+                    items = [
+                        { id: 1, name: "relatorio.txt", type: "file", icon: "📄" },
+                        { id: 2, name: "BACKUP", type: "folder", icon: "📁" }
+                    ];
+                    currentDirectory = "root";
+                    disableButtons(["btn-nova-pasta", "btn-compactar"]);
+                    enableButtons(["btn-copiar", "btn-recortar", "btn-colar"]);
+                }
+            },
+            3: {
+                title: "Missão 3: Limpeza de Disco (Recortar)",
+                desc: "O arquivo perigoso <b>virus.exe</b> está na raiz do sistema! Selecione-o, use a ação de <b>Recortar</b>, abra a pasta de isolamento chamada <b>QUARENTENA</b> e faça o <b>Colar</b> para movê-lo de vez.",
+                init: () => {
+                    items = [
+                        { id: 1, name: "virus.exe", type: "file", icon: "👾" },
+                        { id: 2, name: "QUARENTENA", type: "folder", icon: "📁" }
+                    ];
+                    currentDirectory = "root";
+                    disableButtons(["btn-nova-pasta", "btn-compactar", "btn-copiar"]);
+                    enableButtons(["btn-recortar", "btn-colar"]);
+                }
+            },
+            4: {
+                title: "Missão Final: Compactar para Envio",
+                desc: "Precisamos enviar o pacote final de dados. Selecione a pasta inteira chamada <b>DADOS_FINAIS</b> e use a ferramenta <b>Compactar (ZIP)</b> para transformá-la em um único arquivo leve.",
+                init: () => {
+                    items = [{ id: 1, name: "DADOS_FINAIS", type: "folder", icon: "📁" }];
+                    currentDirectory = "root";
+                    disableButtons(["btn-nova-pasta", "btn-copiar", "btn-recortar", "btn-colar"]);
+                    enableButtons(["btn-compactar"]);
+                }
+            }
+        };
+
+        function loadPhase(phaseNum) {
+            selectedItem = null;
+            clipboard = { action: null, item: null };
+            showFeedback("", "");
+            document.getElementById("phase-txt").innerText = `Fase: ${phaseNum} / 4`;
+            document.getElementById("score-txt").innerText = `Pontos: ${score}`;
+            
+            phases[phaseNum].init();
+            
+            document.getElementById("mission-title").innerText = phases[phaseNum].title;
+            document.getElementById("mission-desc").innerHTML = phases[phaseNum].desc;
+            
+            renderFileSystem();
+        }
+
+        function renderFileSystem() {
+            const area = document.getElementById("file-area");
+            area.innerHTML = "";
+            
+            document.getElementById("path-view").innerText = currentDirectory === "root" ? "Início \\" : "Início \\ " + (currentPhase === 1 ? "PROJETOS \\" : currentPhase === 2 ? "BACKUP \\" : "QUARENTENA \\");
+
+            let visibleItems = [];
+            if (currentDirectory === "root") {
+                visibleItems = items.filter(i => !i.parentId);
+            } else {
+                visibleItems = items.filter(i => i.parentId === "inside");
+            }
+
+            if (visibleItems.length === 0) {
+                area.innerHTML = `<p style="color: #666; font-style: italic; padding: 20px;">Pasta vazia...</p>`;
+            }
+
+            visibleItems.forEach(item => {
+                const div = document.createElement("div");
+                div.className = `item ${selectedItem && selectedItem.id === item.id ? 'selected' : ''}`;
+                if (clipboard.action === 'cut' && clipboard.item.id === item.id) {
+                    div.classList.add('cut');
+                }
+                
+                div.innerHTML = `
+                    <span class="icon">${item.icon}</span>
+                    <span>${item.name}</span>
+                `;
+                
+                div.onclick = (e) => { e.stopPropagation(); selectItem(item); };
+                div.ondblclick = (e) => { e.stopPropagation(); handleDblClick(item); };
+
+                area.appendChild(div);
+            });
+        }
+
+        function selectItem(item) {
+            selectedItem = item;
+            renderFileSystem();
+        }
+
+        document.getElementById("sim-screen").onclick = () => {
+            selectedItem = null;
+            renderFileSystem();
+        };
+
+        function handleDblClick(item) {
+            if (item.type === 'folder') {
+                if (currentPhase === 1 && item.name === "PROJETOS") {
+                    currentDirectory = "inside";
+                    renderFileSystem();
+                    showFeedback("Sucesso! Você criou e entrou na pasta corretamente.", "success");
+                    score += 25;
+                    setTimeout(() => { nextPhase(); }, 2000);
+                } else if (currentPhase === 2 && item.name === "BACKUP") {
+                    currentDirectory = "inside";
+                    renderFileSystem();
+                } else if (currentPhase === 3 && item.name === "QUARENTENA") {
+                    currentDirectory = "inside";
+                    renderFileSystem();
+                }
+            }
+        }
+
+        function triggerCreateFolder() {
+            if (currentPhase === 1) {
+                const name = prompt("Digite o nome da pasta:");
+                if (name && name.toUpperCase() === "PROJETOS") {
+                    items.push({ id: 99, name: "PROJETOS", type: "folder", icon: "📁" });
+                    renderFileSystem();
+                    showFeedback("Pasta criada! Agora dê dois cliques nela para entrar.", "success");
+                } else {
+                    showFeedback("Erro! O nome da pasta deve ser exatamente PROJETOS.", "error");
+                }
+            }
+        }
+
+        function triggerCopy() {
+            if (!selectedItem) return showFeedback("Selecione um arquivo para copiar primeiro!", "error");
+            clipboard = { action: 'copy', item: { ...selectedItem } };
+            showFeedback(`Copiado: ${selectedItem.name}. Agora entre na pasta de destino e clique em Colar.`, "success");
+        }
+
+        function triggerCut() {
+            if (!selectedItem) return showFeedback("Selecione um arquivo para recortar primeiro!", "error");
+            clipboard = { action: 'cut', item: selectedItem };
+            renderFileSystem();
+            showFeedback(`Recortado: ${selectedItem.name}. Ele vai sumir da origem ao colar!`, "success");
+        }
+
+        function triggerPaste() {
+            if (!clipboard.item) return showFeedback("Nada na área de transferência!", "error");
+            
+            if (currentPhase === 2 && currentDirectory === "inside" && clipboard.action === 'copy') {
+                if (clipboard.item.name === "relatorio.txt") {
+                    items.push({ id: 100, name: "relatorio.txt", type: "file", icon: "📄", parentId: "inside" });
+                    clipboard = { action: null, item: null };
+                    renderFileSystem();
+                    showFeedback("Sucesso! Cópia realizada no local seguro.", "success");
+                    score += 25;
+                    setTimeout(() => { nextPhase(); }, 2000);
+                }
+            } else if (currentPhase === 3 && currentDirectory === "inside" && clipboard.action === 'cut') {
+                if (clipboard.item.name === "virus.exe") {
+                    items = items.filter(i => i.name !== "virus.exe");
+                    items.push({ id: 101, name: "virus.exe", type: "file", icon: "👾", parentId: "inside" });
+                    clipboard = { action: null, item: null };
+                    renderFileSystem();
+                    showFeedback("Excelente! O vírus foi movido para a quarentena.", "success");
+                    score += 25;
+                    setTimeout(() => { nextPhase(); }, 2000);
+                }
+            } else {
+                showFeedback("Local ou ação errada! Siga os passos da instrução.", "error");
+            }
+        }
+
+        function triggerZip() {
+            if (!selectedItem) return showFeedback("Selecione a pasta para compactar!", "error");
+            
+            if (currentPhase === 4 && selectedItem.name === "DADOS_FINAIS") {
+                items = [{ id: 200, name: "DADOS_FINAIS.zip", type: "file", icon: "🤐" }];
+                selectedItem = null;
+                renderFileSystem();
+                showFeedback("Perfeito! Pasta compactada em .ZIP com absoluto sucesso!", "success");
+                score += 25;
+                document.getElementById("score-txt").innerText = `Pontos: ${score}`;
+                setTimeout(() => {
+                    document.getElementById("end-modal").style.display = "flex";
+                }, 2000);
+            } else {
+                showFeedback("Ação inválida para este item.", "error");
+            }
+        }
+
+        function nextPhase() {
+            currentPhase++;
+            if (currentPhase <= 4) {
+                loadPhase(currentPhase);
+            }
+        }
+
+        function restartGame() {
+            currentPhase = 1;
+            score = 0;
+            document.getElementById("end-modal").style.display = "none";
+            loadPhase(1);
+        }
+
+        function showFeedback(msg, type) {
+            const el = document.getElementById("feedback-msg");
+            el.innerText = msg;
+            el.className = "feedback " + type;
+        }
+
+        function disableButtons(list) {
+            list.forEach(id => document.getElementById(id).disabled = true);
+        }
+
+        function enableButtons(list) {
+            list.forEach(id => document.getElementById(id).disabled = false);
+        }
+
+        loadPhase(1);
+    </script>
+</body>
+</html>

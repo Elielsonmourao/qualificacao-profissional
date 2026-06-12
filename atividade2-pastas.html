@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão Organização Digital | Instrutor Elielson Mourão</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(-45deg, #e0f2fe, #bae6fd, #f1f5f9, #e0f2fe);
+            --panel-bg: rgba(255, 255, 255, 0.8);
+            --primary-blue: #0284c7;
+            --secondary-blue: #0369a1;
+            --text-color: #1e293b;
+            --success-color: #16a34a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Animação do Fundo Degradê */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Animação de entrada do painel */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-meta {
+            font-size: 0.9rem;
+            color: var(--secondary-blue);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0;
+            border-bottom: 3px solid var(--primary-blue);
+            padding-bottom: 12px;
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            color: var(--secondary-blue);
+            margin-top: 30px;
+            font-size: 1.3rem;
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 10px;
+        }
+
+        .context-box {
+            background: rgba(2, 132, 199, 0.04);
+            border: 1px solid rgba(2, 132, 199, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .tree {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            line-height: 1.6;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .folder {
+            color: #0284c7;
+            font-weight: bold;
+        }
+
+        .file {
+            color: #475569;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efeito de flutuação e sombra dinâmica no Hover */
+        .task-item:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.1);
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 15px;
+            margin-top: 3px;
+            accent-color: var(--primary-blue);
+            transform: scale(1.2);
+            transition: transform 0.2s ease;
+        }
+
+        .task-item:hover input[type="checkbox"] {
+            transform: scale(1.3);
+        }
+
+        .task-item span {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        /* Animação da linha riscando o texto */
+        .task-item input[type="checkbox"]:checked + span {
+            color: #94a3b8;
+        }
+
+        .task-item input[type="checkbox"]:checked + span::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 2px;
+            background: #94a3b8;
+            animation: strike 0.3s ease-out forwards;
+        }
+
+        @keyframes strike {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .alert-box {
+            background: linear-gradient(90deg, #0284c7, #0369a1);
+            color: #ffffff;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 35px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+        }
+
+        code {
+            font-family: monospace;
+            background: rgba(2, 132, 199, 0.08);
+            color: var(--secondary-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .alert-box code {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-meta">Componente Prático O.S.</div>
+    <h1>🚀 Missão: Organização Digital</h1>
+    
+    <div class="context-box">
+        <strong>Cenário Profissional:</strong> Você foi contratado pela empresa <strong>TechNova</strong>. Sua primeira missão técnica é organizar o servidor de arquivos, criando uma estrutura de diretórios lógica e padronizada para os departamentos.
+    </div>
+
+    <h2>📋 Checklist de Execução</h2>
+    <p>Marque as caixas conforme for concluindo as etapas no computador:</p>
+    
+    <ul class="task-list">
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Abrir o gerenciador de arquivos (Explorador de Arquivos) e navegar até a pasta <strong>Documentos</strong> ou <strong>Área de Trabalho</strong>.</span>
+        </li>
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Criar a pasta principal raiz com o nome padrão: <code>Empresa_TechNova_SeuNome</code>.</span>
+        </li>
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Entrar na pasta raiz e criar as 4 pastas dos departamentos (01_Administracao, 02_Recursos_Humanos, 03_Suporte_Tecnico, 04_Desenvolvimento).</span>
+        </li>
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Acessar cada departamento e criar suas respectivas subpastas internas.</span>
+        </li>
+    </ul>
+
+    <h2>📁 Estrutura Alvo (Árvore de Diretórios)</h2>
+    <p>A estrutura final no sistema operacional deve seguir exatamente esta hierarquia:</p>
+    
+    <div class="tree">
+        📁 <span class="folder">Empresa_TechNova_[SeuNome]</span><br>
+        ├── 📁 <span class="folder">01_Administracao</span><br>
+        │&nbsp;&nbsp; ├── 📁 Contratos<br>
+        │&nbsp;&nbsp; └── 📁 Financeiro<br>
+        ├── 📁 <span class="folder">02_Recursos_Humanos</span><br>
+        │&nbsp;&nbsp; ├── 📁 Folha_Pagamento<br>
+        │&nbsp;&nbsp; └── 📁 Treinamentos<br>
+        ├── 📁 <span class="folder">03_Suporte_Tecnico</span><br>
+        │&nbsp;&nbsp; ├── 📁 Chamados_Abertos<br>
+        │&nbsp;&nbsp; ├── 📁 Manutencao_Hardware<br>
+        │&nbsp;&nbsp; └── 📁 Redes<br>
+        └── 📁 <span class="folder">04_Desenvolvimento</span><br>
+        &nbsp;&nbsp;&nbsp; ├── 📁 Projeto_Web<br>
+        &nbsp;&nbsp;&nbsp; └── 📁 Banco_de_Dados<br>
+    </div>
+
+    <h2>⚡ Desafio Operacional</h2>
+    <ul class="task-list">
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Entrar na subpasta <code>Projeto_Web</code>, criar um arquivo do Bloco de Notas e salvá-lo com o nome <span class="file">notas_reuniao.txt</span>.</span>
+        </li>
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Mover (recortar/colar) o arquivo <span class="file">notas_reuniao.txt</span> para dentro da pasta <code>Chamados_Abertos</code>.</span>
+        </li>
+        <li class="task-item" onclick="toggleCheck(this)">
+            <input type="checkbox">
+            <span>Renomear a subpasta <code>Folha_Pagamento</code> para <code>Departamento_Pessoal</code>.</span>
+        </li>
+    </ul>
+
+    <div class="alert-box">
+        📥 <strong>Forma de Entrega:</strong> Abra o seu gerenciador de arquivos, expanda todas as pastas criadas para que apareçam na tela, tire um <em>Print Screen</em> completo e envie conforme as instruções em sala.
+    </div>
+
+    <footer>
+        Desenvolvido pelo <strong>Instrutor Elielson Mourão</strong> &copy; 2026
+    </footer>
+</div>
+
+<script>
+    function toggleCheck(element) {
+        const checkbox = element.querySelector('input[type="checkbox"]');
+        if (event.target !== checkbox) {
+            checkbox.checked = !checkbox.checked;
+        }
+    }
+</script>
+
+</body>
+</html>

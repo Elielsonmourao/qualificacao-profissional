@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Informática - Desafio Individual</title>
+    <!-- Tailwind CSS para Estilização Moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Ícones de Alta Qualidade -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+        }
+        /* Efeito de brilho para elementos ativos */
+        .active-glow {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* Efeito de pulso para botões importantes */
+        .pulse-btn {
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+<!-- Canvas para confetes de vitória -->
+<canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-55 hidden w-full h-full"></canvas>
+
+<!-- Header Principal -->
+<header class="bg-slate-900 border-b border-slate-800 py-4 px-6 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-emerald-500 to-teal-400 p-2.5 rounded-xl shadow-lg shadow-emerald-500/20">
+                <i class="fa-solid fa-graduation-cap text-2xl text-slate-950"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">
+                    JOGO DA INFORMÁTICA
+                </h1>
+                <p class="text-xs text-slate-400 font-medium">Desafio Individual — Vença os obstáculos e chegue ao topo!</p>
+            </div>
+        </div>
+        
+        <div class="flex gap-2 items-center">
+            <button onclick="saveGameState()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 border border-slate-700">
+                <i class="fa-solid fa-floppy-disk"></i> Salvar Progresso
+            </button>
+            <button onclick="loadGameState()" id="btn-load" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 border border-slate-700">
+                <i class="fa-solid fa-upload"></i> Carregar
+            </button>
+            <button onclick="resetGame()" class="bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 border border-rose-800/50">
+                <i class="fa-solid fa-rotate-left"></i> Reiniciar
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Container -->
+<main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center gap-6">
+    
+    <!-- Setup Screen (Configuração Inicial) -->
+    <div id="setup-screen" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-slate-800 max-w-xl mx-auto w-full shadow-2xl">
+        <div class="text-center mb-6">
+            <span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">Identificação do Aluno</span>
+            <h2 class="text-3xl font-extrabold text-white mt-3">Prepare-se para o Desafio</h2>
+            <p class="text-slate-400 mt-2 text-sm">Insira seus dados para começar a trilha. Responda corretamente para evitar voltar casas e conquiste o menor tempo da turma!</p>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-slate-300 mb-2">Qual é o seu nome completo ou equipe?</label>
+                <input type="text" id="player-name-input" placeholder="Ex: Roberto Silva ou Equipe Alfa" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-300 mb-2">Selecione o seu Peão de Jogo</label>
+                <div id="avatar-grid" class="grid grid-cols-4 gap-3">
+                    <!-- Dynamic Avatars generated in JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-800 flex justify-center">
+            <button onclick="startGame()" class="w-full pulse-btn bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-4 rounded-xl text-md transition-all transform hover:scale-102 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+                <i class="fa-solid fa-play"></i> Iniciar Desafio de Informática
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Screen (Oculto inicialmente) -->
+    <div id="game-screen" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Tabuleiro (Esquerda/Centro) -->
+        <div class="lg:col-span-8 flex flex-col gap-4">
+            <!-- Info Bar do Aluno -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap justify-between items-center gap-3 shadow-md">
+                <div class="flex items-center gap-3">
+                    <span id="player-avatar-badge" class="text-3xl p-1 bg-slate-950 rounded-lg">💻</span>
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block uppercase tracking-wider">Jogador Ativo</span>
+                        <strong id="player-name-display" class="text-lg text-emerald-400 font-extrabold">Jogador</strong>
+                    </div>
+                </div>
+                
+                <!-- Estatísticas Ativas -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-slate-950 px-3 py-2 rounded-lg text-center min-w-[70px] border border-slate-800">
+                        <span class="block text-[9px] uppercase font-bold text-slate-500">Cronômetro</span>
+                        <span id="stat-time" class="text-sm font-extrabold text-white">00:00</span>
+                    </div>
+                    <div class="bg-slate-950 px-3 py-2 rounded-lg text-center min-w-[60px] border border-slate-800">
+                        <span class="block text-[9px] uppercase font-bold text-slate-500">Rodadas</span>
+                        <span id="stat-rolls" class="text-sm font-extrabold text-amber-400">0</span>
+                    </div>
+                    <div class="bg-slate-950 px-3 py-2 rounded-lg text-center min-w-[60px] border border-slate-800">
+                        <span class="block text-[9px] uppercase font-bold text-slate-500">Acertos</span>
+                        <span id="stat-correct" class="text-sm font-extrabold text-emerald-400">0</span>
+                    </div>
+                    <div class="bg-slate-950 px-3 py-2 rounded-lg text-center min-w-[60px] border border-slate-800">
+                        <span class="block text-[9px] uppercase font-bold text-slate-500">Erros</span>
+                        <span id="stat-wrong" class="text-sm font-extrabold text-rose-400">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABULEIRO MAP CONTAINER -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6 shadow-2xl overflow-x-auto relative">
+                <div class="absolute inset-0 bg-radial-gradient from-emerald-950/20 via-transparent to-transparent pointer-events-none"></div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Circuito Tecnológico (64 Casas)
+                    </h3>
+                    <span class="text-xs text-slate-500 font-bold">Referência do Tabuleiro: tabuleiro-jogo-da-informatica.png</span>
+                </div>
+
+                <!-- Grid principal do tabuleiro que imita o winding serpentine path -->
+                <div id="board-grid" class="grid grid-cols-4 md:grid-cols-8 gap-3 min-w-[600px]">
+                    <!-- 64 Board spaces generated in JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Controle e Jogadores (Direita) -->
+        <div class="lg:col-span-4 space-y-6">
+            <!-- Dice Roll Module -->
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-5">
+                    <i class="fa-solid fa-dice-five text-8xl"></i>
+                </div>
+
+                <h3 class="text-lg font-bold text-white mb-2 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cubes text-emerald-400"></i> Rolar Movimento
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">Mova o peão pela trilha e prepare-se para os desafios de TI!</p>
+
+                <!-- Dice display area -->
+                <div class="my-4 flex justify-center items-center h-28">
+                    <div id="dice-container" class="w-24 h-24 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-xl shadow-emerald-500/10 flex items-center justify-center border-4 border-slate-950 transform transition-all duration-300">
+                        <span id="dice-value" class="text-slate-950 text-5xl font-extrabold">?</span>
+                    </div>
+                </div>
+
+                <button id="roll-button" onclick="rollDice()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2 text-lg">
+                    <i class="fa-solid fa-dice animate-spin-slow"></i> Jogar Dado
+                </button>
+            </div>
+
+            <!-- Posicionamento Atual -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-md font-bold text-slate-200 mb-3 flex items-center gap-2 border-b border-slate-800 pb-2">
+                    <i class="fa-solid fa-location-crosshairs text-emerald-400"></i> Onde você está?
+                </h3>
+                <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-slate-500 block uppercase font-extrabold">Casa Atual</span>
+                        <span id="hud-space-title" class="text-sm font-bold text-white">Carregando...</span>
+                    </div>
+                    <span id="hud-space-number" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-lg font-black px-3.5 py-1.5 rounded-xl">0</span>
+                </div>
+            </div>
+
+            <!-- Histórico de Rodadas / Logs -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-md font-bold text-slate-200 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-history text-slate-400"></i> Histórico do Desafio
+                </h3>
+                <div id="logs-container" class="bg-slate-950/80 rounded-xl p-3 h-48 overflow-y-auto text-xs font-mono space-y-2 border border-slate-800">
+                    <!-- Logs injected in JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-slate-950 border-t border-slate-900 py-6 px-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+        <span>&copy; 2026 Jogo da Informática — Desenvolvido para o Ensino Prático de Computação</span>
+        <div class="flex gap-4">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Sucesso / Avanço</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Punição / Recuo</span>
+        </div>
+    </div>
+</footer>
+
+<!-- MODAL DE PERGUNTAS / EVENTOS -->
+<div id="game-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div id="modal-content" class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 md:p-8 shadow-2xl relative overflow-hidden transform scale-95 transition-all">
+        <div id="modal-theme-bar" class="absolute top-0 left-0 right-0 h-2 bg-emerald-500"></div>
+
+        <div class="flex justify-between items-center mb-6 pt-2">
+            <div class="flex items-center gap-2.5">
+                <div id="modal-icon-bg" class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
+                    <i id="modal-icon" class="fa-solid fa-circle-question text-xl"></i>
+                </div>
+                <div>
+                    <span id="modal-tag" class="text-xs font-bold uppercase tracking-wider text-emerald-400">Pergunta da Casa</span>
+                    <h4 id="modal-title" class="text-lg font-extrabold text-white">Categoria do Desafio</h4>
+                </div>
+            </div>
+            <span id="modal-space-badge" class="bg-slate-800 text-slate-300 font-bold px-3 py-1 rounded-lg text-xs border border-slate-700">Casa 0</span>
+        </div>
+
+        <div class="space-y-6">
+            <p id="modal-prompt" class="text-slate-200 text-base leading-relaxed font-semibold">
+                Qual é o principal componente do computador?
+            </p>
+
+            <!-- Options Area (For MCQ) -->
+            <div id="modal-options-container" class="space-y-3">
+                <!-- Buttons injected dynamically -->
+            </div>
+
+            <!-- Action buttons (For notifications / Sorte / Punição) -->
+            <div id="modal-actions" class="hidden flex justify-end">
+                <button onclick="closeModalAndApply()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl transition-all shadow-md">
+                    Continuar Desafio
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+// Lista de avatares com símbolos tecnológicos divertidos
+const AVATARS = [
+    { icon: '💻', name: 'Notebook' },
+    { icon: '🚀', name: 'Foguete' },
+    { icon: '🧠', name: 'Cérebro IA' },
+    { icon: '👾', name: 'Alien' },
+    { icon: '💾', name: 'Disquete' },
+    { icon: '🔌', name: 'Cabo USB' },
+    { icon: '⚙️', name: 'Engrenagem' },
+    { icon: '📱', name: 'Celular' }
+];
+
+// Mapeamento exato das 64 casas do tabuleiro conforme o arquivo "tabuleiro-jogo-da-informatica.png"
+// Cores: Vermelho (bg-red-600), Amarelo (bg-yellow-500), Laranja (bg-orange-600), Verde (bg-emerald-600), Azul (bg-blue-600), Roxo (bg-purple-600)
+// Balanceado com alta punição para evitar términos excessivamente rápidos.
+const BOARD_SPACES = [
+    {
+        id: 0,
+        title: "INÍCIO",
+        desc: "Comece sua jornada aqui!",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "start",
+        icon: "fa-flag-checkered",
+        question: null
+    },
+    {
+        id: 1,
+        title: "O que é Hardware?",
+        desc: "Qual é o conceito correto de Hardware?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-microchip",
+        question: {
+            options: [
+                "A parte de programas do computador.",
+                "A parte física do computador, como circuitos e peças.",
+                "O provedor que nos fornece internet.",
+                "O cabo elétrico que liga o monitor."
+            ],
+            answer: 1,
+            penalty: 1, // Volta 1 casa se errar
+            reward: 0   // Fica na casa se acertar
+        }
+    },
+    {
+        id: 2,
+        title: "Cite 2 periféricos de entrada",
+        desc: "Selecione a alternativa que contém apenas periféricos de entrada:",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-keyboard",
+        question: {
+            options: [
+                "Impressora e Monitor.",
+                "Teclado e Mouse.",
+                "Caixa de som e Projetor.",
+                "Fone de ouvido e Mouse."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1  // Avance 1 se acertar
+        }
+    },
+    {
+        id: 3,
+        title: "O que é Software?",
+        desc: "Qual é a definição correta de Software?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-code",
+        question: {
+            options: [
+                "O processador central do computador.",
+                "O conjunto de componentes físicos do computador.",
+                "A parte lógica do sistema, composta por programas e instruções.",
+                "O disco rígido que armazena os arquivos físicos."
+            ],
+            answer: 2,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 4,
+        title: "Tipos de Software",
+        desc: "Quais são os principais tipos de software existentes?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-layer-group",
+        question: {
+            options: [
+                "Software de mouse e software de tela.",
+                "Apenas navegadores e aplicativos de edição.",
+                "De sistema, de aplicativo e de programação.",
+                "Hardware rígido e software suave."
+            ],
+            answer: 2,
+            penalty: 2, // Errou? Volta 2!
+            reward: 2
+        }
+    },
+    {
+        id: 5,
+        title: "DESAFIO: Diferença H/S",
+        desc: "Qual a diferença essencial entre Hardware e Software?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-dumbbell",
+        question: {
+            options: [
+                "Hardware é o que você toca (físico); Software é o que executa os comandos (lógico).",
+                "Hardware é digital; software é analógico.",
+                "Não há diferença, pois representam as mesmas funções.",
+                "Software é o computador físico; Hardware são as instruções virtuais."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 6,
+        title: "Função da memória RAM",
+        desc: "Qual é a principal função da Memória RAM?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-memory",
+        question: {
+            options: [
+                "Armazenar arquivos e fotos de forma permanente.",
+                "Resfriar o gabinete interno.",
+                "Armazenar temporariamente dados que estão sendo processados.",
+                "Melhorar a velocidade da internet banda larga."
+            ],
+            answer: 2,
+            penalty: 1, // Volte 1 casa se errar
+            reward: 0
+        }
+    },
+    {
+        id: 7,
+        title: "O que é um Sistema Operacional?",
+        desc: "Para que serve um Sistema Operacional (S.O.)?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-window-maximize",
+        question: {
+            options: [
+                "Gerenciar recursos físicos e fornecer interface para o usuário usar programas.",
+                "Organizar mouses e fones sem fios.",
+                "Manter o sistema de energia elétrica ativo.",
+                "Fazer downloads mais rápidos de jogos."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 8,
+        title: "Exemplos de Sistemas Operacionais",
+        desc: "Quais dos itens abaixo representam exclusivamente Sistemas Operacionais?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-cubes-stacked",
+        question: {
+            options: [
+                "Word, Excel e PowerPoint.",
+                "Windows, Linux e macOS.",
+                "Chrome, Safari e Firefox.",
+                "Intel, AMD e Nvidia."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 9,
+        title: "Função da Placa-Mãe",
+        desc: "Qual é a função básica da placa-mãe (Motherboard)?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-circle-nodes",
+        question: {
+            options: [
+                "Unir todos os componentes para que possam se comunicar de forma unificada.",
+                "Realizar somente os cálculos matemáticos complexos.",
+                "Armazenar os dados de navegação na internet.",
+                "Conectar o monitor diretamente à rede wi-fi."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 10,
+        title: "Armazenamento",
+        desc: "Onde os arquivos ficam salvos de forma permanente, mesmo desligando o computador?",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "question",
+        icon: "fa-database",
+        question: {
+            options: [
+                "Na Memória RAM.",
+                "No Processador (CPU).",
+                "No Disco Rígido (HD) ou unidade de Estado Sólido (SSD).",
+                "No Cooler de refrigeração."
+            ],
+            answer: 2,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 11,
+        title: "DESAFIO: Barramento",
+        desc: "O que é um 'barramento' (bus) na arquitetura de um computador?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-route",
+        question: {
+            options: [
+                "Uma barreira física para poeira na placa-mãe.",
+                "O caminho de comunicação que transfere dados entre componentes.",
+                "Uma porta USB de alta potência.",
+                "Uma licença de segurança para computadores de rede."
+            ],
+            answer: 1,
+            penalty: 2, // Punição severa
+            reward: 0
+        }
+    },
+    {
+        id: 12,
+        title: "Para que serve o processador?",
+        desc: "Qual a função da CPU (Unidade Central de Processamento)?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-brain",
+        question: {
+            options: [
+                "Guardar as imagens da tela.",
+                "Fazer a refrigeração do gabinete.",
+                "Interpretar e executar comandos enviados pelo software.",
+                "Fornecer energia à fonte."
+            ],
+            answer: 2,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 13,
+        title: "SORTE: Cupom de Desconto!",
+        desc: "Você comprou novos equipamentos em uma promoção de informática! Avance 2 casas.",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "luck",
+        icon: "fa-ticket",
+        question: null,
+        advance: 2
+    },
+    {
+        id: 14,
+        title: "SORTE: Ponto Extra",
+        desc: "Você limpou os arquivos desnecessários do disco. Permaneça na casa atual.",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "luck",
+        icon: "fa-award",
+        question: null,
+        advance: 0
+    },
+    {
+        id: 15,
+        title: "O que é um Driver?",
+        desc: "Qual é a função de um Driver de dispositivo?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-gears",
+        question: {
+            options: [
+                "Um software para acelerar downloads na nuvem.",
+                "Um programa que limpa fisicamente o mouse.",
+                "Um software que permite ao S.O. e um hardware se comunicarem corretamente.",
+                "O cabo que conecta a placa de vídeo ao monitor."
+            ],
+            answer: 2,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 16,
+        title: "DESAFIO: PC de Estudos",
+        desc: "Quais peças básicas são essenciais para montar um computador de estudos operável?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-desktop",
+        question: {
+            options: [
+                "Placa-mãe, CPU, Memória RAM, Armazenamento, Fonte de Alimentação, Monitor, Teclado e Mouse.",
+                "Apenas fone de ouvido de última geração e gabinete RGB.",
+                "Roteador sem fio e apenas cabos de tomada.",
+                "Mousepad gamer de alta velocidade."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 17,
+        title: "Componentes do Computador",
+        desc: "Quais são os principais componentes físicos internos do gabinete?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-toolbox",
+        question: {
+            options: [
+                "Teclado, caixa de som e impressora.",
+                "Placa-mãe, Processador, Memória RAM, Fonte e Armazenamento (SSD/HD).",
+                "Monitores e fones bluetooth apenas.",
+                "Roteadores e cabos de fibra óptica."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 18,
+        title: "O que é Rede?",
+        desc: "Qual é o conceito básico de uma Rede de Computadores?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-network-wired",
+        question: {
+            options: [
+                "Vários computadores autônomos interconectados compartilhando dados e recursos.",
+                "Um aplicativo nativo do celular para baixar fotos.",
+                "O suporte físico plástico onde colocamos os cabos.",
+                "Uma tela de segurança virtual para navegação de sites."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 19,
+        title: "Tipos de Redes",
+        desc: "Quais são as siglas corretas para redes Locais e redes de Longa Distância?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-globe",
+        question: {
+            options: [
+                "RAM e ROM.",
+                "LAN e WAN.",
+                "HTTP e FTP.",
+                "CPU e SSD."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 20,
+        title: "SORTE: Atalho de Rede",
+        desc: "Você otimizou os canais de rede da sua residência! Avance 2 casas.",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "luck",
+        icon: "fa-bolt",
+        question: null,
+        advance: 2
+    },
+    {
+        id: 21,
+        title: "O que é Internet?",
+        desc: "Qual a melhor definição para a Internet?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-wifi",
+        question: {
+            options: [
+                "Um aplicativo do Windows para baixar fotos.",
+                "A rede mundial de computadores interconectados.",
+                "O cabo azul de rede local.",
+                "Um satélite meteorológico."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 22,
+        title: "DESAFIO: Serviços de Internet",
+        desc: "Quais são serviços comuns disponibilizados na Internet?",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "question",
+        icon: "fa-server",
+        question: {
+            options: [
+                "Teclados e mouses integrados.",
+                "E-mail, Páginas Web (WWW), Compartilhamento de Arquivos e Streaming.",
+                "Apenas os softwares de calculadora offline.",
+                "Os botões físicos do computador."
+            ],
+            answer: 1,
+            penalty: 2,
+            reward: 0
+        }
+    },
+    {
+        id: 23,
+        title: "O que é Nuvem?",
+        desc: "O que significa 'armazenar dados na computação em nuvem'?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-cloud",
+        question: {
+            options: [
+                "Guardar dados em satélites em dias chuvosos.",
+                "Armazenar arquivos em servidores remotos acessados via Internet.",
+                "Copiar arquivos para um pen drive conectado.",
+                "Fazer o backup físico na memória do celular."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 24,
+        title: "SORTE: Otimização!",
+        desc: "Seu sistema limpou arquivos residuais temporários de forma automática! Avance 1 casa.",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "luck",
+        icon: "fa-broom",
+        question: null,
+        advance: 1
+    },
+    {
+        id: 25,
+        title: "PUNIÇÃO: O que é IP?",
+        desc: "Atenção! Se errar, volta 1 casa. O que significa Endereço IP?",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "question",
+        icon: "fa-hashtag",
+        question: {
+            options: [
+                "Impressora Padrão de rede corporativa.",
+                "Identificador numérico exclusivo de um dispositivo em uma rede.",
+                "A velocidade máxima que a fibra óptica alcança.",
+                "A senha do sinal do roteador Wi-Fi."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 26,
+        title: "Navegadores de Internet",
+        desc: "Selecione o grupo que contém apenas navegadores (browsers) de internet:",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-compass",
+        question: {
+            options: [
+                "WhatsApp, Telegram e Messenger.",
+                "Chrome, Edge, Firefox e Safari.",
+                "Word, Excel e PowerPoint.",
+                "Windows, Linux e Android."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 27,
+        title: "PUNIÇÃO: Ameaças Virtuais",
+        desc: "Se errar, volta 1 casa. Quais são as ameaças virtuais mais perigosas atualmente?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-bug",
+        question: {
+            options: [
+                "Coolers com poeira e cabos de energia dobrados.",
+                "Vírus, Malware, Phishing e Ransomware.",
+                "Falta de espaço no mousepad.",
+                "Monitores que piscam por mau contato."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 28,
+        title: "SORTE: Backup Atualizado",
+        desc: "Seu sistema salvou todos os dados de forma segura na nuvem! Avance 1 casa.",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "luck",
+        icon: "fa-copy",
+        question: null,
+        advance: 1
+    },
+    {
+        id: 29,
+        title: "DESAFIO: Backup",
+        desc: "Por que realizar backups periódicos é fundamental?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-shield-halved",
+        question: {
+            options: [
+                "Para liberar energia elétrica interna no computador.",
+                "Para garantir a recuperação de dados em caso de falha de hardware ou sequestro virtual.",
+                "Para limpar a tela do computador remotamente.",
+                "Para alterar as senhas das redes sociais automaticamente."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 30,
+        title: "O que é Backup?",
+        desc: "Como se traduz o termo Backup no ecossistema de computação?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-clone",
+        question: {
+            options: [
+                "Cópia de Segurança.",
+                "Inicialização Limpa.",
+                "Limpeza Física.",
+                "Software Antivírus."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 31,
+        title: "Senhas Seguras",
+        desc: "Qual o padrão recomendado para criar uma senha forte e segura?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-key",
+        question: {
+            options: [
+                "Seu nome seguido de 123.",
+                "O número do telefone celular residencial.",
+                "Combinação de letras maiúsculas/minúsculas, números, caracteres especiais e tamanho longo.",
+                "O ano do seu nascimento repetido."
+            ],
+            answer: 2,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 32,
+        title: "PUNIÇÃO: ATAQUE DE VÍRUS!",
+        desc: "ALERTA! Ransomware sequestrou os arquivos do sistema e você não tinha backup. Volte ao início da trilha!",
+        color: "bg-red-700 border-red-500 text-white animate-pulse font-extrabold",
+        type: "poverty",
+        icon: "fa-skull-crossbones",
+        question: null,
+        advance: -999 // Volta ao início
+    },
+    {
+        id: 33,
+        title: "PUNIÇÃO: Phishing",
+        desc: "Se errar, volta 1 casa. O que significa o golpe de Phishing?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-fish",
+        question: {
+            options: [
+                "Um vírus que aumenta o tamanho das janelas.",
+                "Fraude eletrônica para roubar dados confidenciais enganando o usuário com mensagens falsas.",
+                "Um programa que otimiza placas-mãe antigas.",
+                "A velocidade de transmissão da placa de vídeo."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 34,
+        title: "SORTE: Antivírus Robusto",
+        desc: "Seu antivírus identificou uma invasão no momento exato! Avance 2 casas.",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "luck",
+        icon: "fa-shield-virus",
+        question: null,
+        advance: 2
+    },
+    {
+        id: 35,
+        title: "DESAFIO: Prevenção",
+        desc: "Qual destas condutas é ideal para evitar infecções por malware no PC?",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "question",
+        icon: "fa-circle-exclamation",
+        question: {
+            options: [
+                "Evitar baixar softwares piratas e manter sistema e antivírus atualizados.",
+                "Manter o monitor desligado durante a noite.",
+                "Usar apenas conexões bluetooth em locais abertos.",
+                "Limpar os cabos do computador com produtos químicos."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 36,
+        title: "O que é Antivírus?",
+        desc: "Qual o objetivo de um antivírus no computador?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-shield-heart",
+        question: {
+            options: [
+                "Limpar arquivos duplicados apenas.",
+                "Prevenir, detectar e remover ameaças e programas nocivos do computador.",
+                "Aumentar o processamento térmico do hardware.",
+                "Conectar automaticamente com o roteador."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 37,
+        title: "Pacote Office",
+        desc: "Qual a finalidade de ferramentas corporativas de escritório como o Pacote Office?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-briefcase",
+        question: {
+            options: [
+                "Gerar códigos lógicos em linguagens avançadas de desenvolvimento.",
+                "Facilitar tarefas de escritório como edição de textos, planilhas e apresentações.",
+                "Criar jogos eletrônicos 3D de alta performance.",
+                "Formatar unidades de armazenamento danificadas."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 38,
+        title: "Excel: Célula",
+        desc: "O que é uma 'célula' em uma planilha de Excel?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-table-cells",
+        question: {
+            options: [
+                "A bateria do notebook que recarrega os dados.",
+                "O ponto de cruzamento de uma linha (número) com uma coluna (letra).",
+                "O código principal de proteção da planilha.",
+                "Um tipo de planilha oculta do sistema."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 39,
+        title: "Excel: Fórmula",
+        desc: "O que representa uma fórmula no Microsoft Excel?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-square-root-variable",
+        question: {
+            options: [
+                "Uma sequência de caracteres que altera o papel de parede.",
+                "Um cálculo ou regra lógica que calcula valores automaticamente com base no conteúdo de células.",
+                "Uma ferramenta para desinstalar os aplicativos office.",
+                "Um comando que desliga o computador."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 40,
+        title: "DESAFIO: Soma no Excel",
+        desc: "Qual o comando ideal para somar os valores das células do intervalo A1 até A5 no Excel?",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "question",
+        icon: "fa-plus-minus",
+        question: {
+            options: [
+                "=SOMA(A1:A5)",
+                "SOMA(A1 ate A5)",
+                "=somar(A1;A5)",
+                "[SOMAR A1+A5]"
+            ],
+            answer: 0,
+            penalty: 2, // Errou? Volta 2!
+            reward: 1
+        }
+    },
+    {
+        id: 41,
+        title: "Para que serve o Word?",
+        desc: "Qual é a principal função do Microsoft Word?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-file-lines",
+        question: {
+            options: [
+                "Gerenciar bancos de dados pesados de redes sociais.",
+                "Criação, edição e formatação profissional de documentos de texto.",
+                "Montar apresentações dinâmicas de slides.",
+                "Gerar planilhas financeiras integradas."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 42,
+        title: "Word: Formatação",
+        desc: "A formatação de um texto em ferramentas como Word refere-se a:",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "question",
+        icon: "fa-font",
+        question: {
+            options: [
+                "Limpar os erros de escrita deletando todo o texto.",
+                "Configurar fontes, tamanhos, cores, alinhamentos, margens e estilos visuais.",
+                "Transformar arquivos de texto em códigos de programação.",
+                "Reiniciar o sistema operacional em modo de segurança."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 43,
+        title: "SORTE: Slides Excepcionais",
+        desc: "Você criou uma apresentação de slides de alta qualidade! Avance 1 casa.",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "luck",
+        icon: "fa-face-smile",
+        question: null,
+        advance: 1
+    },
+    {
+        id: 44,
+        title: "PowerPoint: Função",
+        desc: "Para que serve o Microsoft PowerPoint?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-file-powerpoint",
+        question: {
+            options: [
+                "Criar arquivos de banco de dados imutáveis.",
+                "Criar e exibir apresentações de slides dinâmicas.",
+                "Configurar impressoras virtuais no sistema.",
+                "Controlar o envio de mídias pelo WhatsApp."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 45,
+        title: "DESAFIO: Apresentação",
+        desc: "Qual é a boa prática na elaboração de slides profissionais?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-chalkboard-user",
+        question: {
+            options: [
+                "Inserir textos enormes para que o público leia todo o conteúdo.",
+                "Equilíbrio visual: textos sucintos, tópicos objetivos e imagens explicativas de suporte.",
+                "Utilizar dezenas de cores brilhantes que se sobrepõem.",
+                "Não colocar nenhuma imagem para focar apenas nas tabelas financeiras."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 46,
+        title: "O que é um Gráfico?",
+        desc: "Qual o benefício de transformar tabelas de dados em Gráficos?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-chart-pie",
+        question: {
+            options: [
+                "Impedir que os dados sejam editados por intrusos.",
+                "Melhorar a compreensão e análise visual rápida de informações estatísticas.",
+                "Diminuir o processamento térmico do computador.",
+                "Limpar os valores incorretos das linhas."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 47,
+        title: "Aplicações de IA",
+        desc: "Quais dos itens abaixo são aplicações práticas da Inteligência Artificial (IA) hoje?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-robot",
+        question: {
+            options: [
+                "Apenas interruptores de luz comuns.",
+                "Assistentes virtuais de voz, algoritmos de recomendação de filmes, tradutores automáticos e carros autônomos.",
+                "Somente relógios de parede mecânicos.",
+                "O calor gerado pela fonte de alimentação."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 48,
+        title: "O que é IA?",
+        desc: "Qual o melhor conceito de Inteligência Artificial?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-brain",
+        question: {
+            options: [
+                "Máquinas físicas que têm sentimentos e inteligência emocional humana real.",
+                "Sistemas de computador capazes de executar tarefas que normalmente exigem inteligência humana, como aprendizado e tomada de decisão.",
+                "Um tipo especial de processador térmico gamer.",
+                "O sinal de rede sem fio wi-fi de alta intensidade."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 49,
+        title: "SORTE: Upgrade do Sistema!",
+        desc: "Você instalou um novo SSD rápido e aumentou a Memória RAM! Avance 1 casa.",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "luck",
+        icon: "fa-gauge-high",
+        question: null,
+        advance: 1
+    },
+    {
+        id: 50,
+        title: "DESAFIO: Ética Digital",
+        desc: "Qual direito ou dever do usuário é pilar para a Ética Digital?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-balance-scale",
+        question: {
+            options: [
+                "Acessar dados pessoais de colegas sem permissão.",
+                "Respeitar a privacidade, dados pessoais e propriedade intelectual no ambiente online.",
+                "Fazer downloads de jogos sem pagar taxas comerciais.",
+                "Postar dados falsos na internet em perfis alternativos."
+            ],
+            answer: 1,
+            penalty: 2, // Punição severa
+            reward: 1
+        }
+    },
+    {
+        id: 51,
+        title: "PUNIÇÃO: O que é LGPD?",
+        desc: "Se errar, volta 1 casa. No Brasil, o que é a LGPD?",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "question",
+        icon: "fa-file-shield",
+        question: {
+            options: [
+                "Licenciamento Geral de Programas Digitais.",
+                "Lei Geral de Proteção de Dados Pessoais.",
+                "Logística e Gerenciamento de Processadores de Dados.",
+                "Lógica Geral de Portas e Drivers de Internet."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 52,
+        title: "Ética Digital",
+        desc: "Por que devemos priorizar a boa conduta digital na Internet?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-handshake",
+        question: {
+            options: [
+                "Somente para evitar suspensões em jogos multiplayer.",
+                "Para garantir respeito e segurança mútua, prevenindo fraudes, golpes e comportamentos tóxicos online.",
+                "Para aumentar a velocidade de conexão local.",
+                "Para evitar pagar a conta mensal do provedor."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 53,
+        title: "SORTE: Mentor Sênior!",
+        desc: "Um programador sênior ajudou você a consertar bugs críticos de desempenho! Avance 2 casas.",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "luck",
+        icon: "fa-user-tie",
+        question: null,
+        advance: 2
+    },
+    {
+        id: 54,
+        title: "Lógica de Programação",
+        desc: "Qual o papel principal da Lógica de Programação na Computação?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-code-branch",
+        question: {
+            options: [
+                "Entender a eletricidade que liga a tomada do monitor.",
+                "Organizar o raciocínio e a sequência de instruções lógicas para ensinar o computador a resolver um problema.",
+                "Limpar bancos de dados offline do celular.",
+                "Formatar arquivos de fotos digitais."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 55,
+        title: "DESAFIO: O que é Algoritmo?",
+        desc: "Qual a melhor metáfora para explicar um Algoritmo?",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "question",
+        icon: "fa-diagram-project",
+        question: {
+            options: [
+                "Uma sequência lógica ordenada de etapas finitas (como uma receita) para resolver um problema.",
+                "O calor que dissipa da CPU.",
+                "Um cabo físico de alta velocidade para fibra óptica.",
+                "Um vírus que destrói arquivos no Word."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 56,
+        title: "PUNIÇÃO: Algoritmo",
+        desc: "Se errar, volta 1 casa. Por que algoritmos são a base dos sistemas?",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "question",
+        icon: "fa-code-compare",
+        question: {
+            options: [
+                "Porque eles limpam mouses óticos de poeira.",
+                "Porque contêm a sequência passo a passo de como o computador deve computar e tratar a informação.",
+                "Porque aumentam a vida útil do monitor.",
+                "Porque criam o sistema de som das caixas de som."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 0
+        }
+    },
+    {
+        id: 57,
+        title: "SORTE: Destaque Open Source!",
+        desc: "Seu algoritmo open-source foi elogiado por engenheiros do mundo todo! Avance 2 casas.",
+        color: "bg-blue-600 border-blue-500 text-white",
+        type: "luck",
+        icon: "fa-trophy",
+        question: null,
+        advance: 2
+    },
+    {
+        id: 58,
+        title: "DESAFIO: Evolução",
+        desc: "Qual a lição fundamental para quem trabalha com informática hoje?",
+        color: "bg-red-600 border-red-500 text-white",
+        type: "question",
+        icon: "fa-comments",
+        question: {
+            options: [
+                "A tecnologia muda constantemente, por isso o estudo deve ser contínuo e diário.",
+                "As máquinas funcionam sozinhas sem precisar de manutenção.",
+                "A internet é um local totalmente seguro e livre de riscos criminosos.",
+                "Basta aprender a ligar o computador para dominar o setor."
+            ],
+            answer: 0,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 59,
+        title: "Área da Informática",
+        desc: "Como se chama a divisão da computação focada em desenvolver e manter códigos de programas e sistemas?",
+        color: "bg-yellow-500 border-yellow-400 text-slate-950",
+        type: "question",
+        icon: "fa-laptop-code",
+        question: {
+            options: [
+                "Suporte Técnico e redes físicas.",
+                "Desenvolvimento de Software (Programação).",
+                "Infraestrutura Elétrica.",
+                "Design de Interiores de TI."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 60,
+        title: "O Futuro da TI",
+        desc: "Qual das tecnologias abaixo promete redefinir a capacidade de processamento de dados nos próximos anos?",
+        color: "bg-emerald-600 border-emerald-500 text-white",
+        type: "question",
+        icon: "fa-hourglass-half",
+        question: {
+            options: [
+                "Unidades de disquete plástico de grande porte.",
+                "Computação Quântica.",
+                "Cabos USB analógicos antigos.",
+                "Telas de monitores em preto e branco."
+            ],
+            answer: 1,
+            penalty: 1,
+            reward: 1
+        }
+    },
+    {
+        id: 61,
+        title: "SORTE: Parabéns pela Dedicação!",
+        desc: "Seu empenho nos estudos de tecnologia chamou a atenção da coordenação! Avance 2 casas.",
+        color: "bg-purple-600 border-purple-500 text-white",
+        type: "luck",
+        icon: "fa-star",
+        question: null,
+        advance: 2
+    },
+    {
+        id: 62,
+        title: "DESAFIO FINAL: Importância",
+        desc: "Para conquistar a última reta do caminho: Por que a Informática é essencial no mundo contemporâneo?",
+        color: "bg-orange-600 border-orange-500 text-white",
+        type: "question",
+        icon: "fa-crown",
+        question: {
+            options: [
+                "Porque ela apenas gasta energia e gera jogos eletrônicos para lazer.",
+                "Porque ela interconecta pessoas globalmente, otimiza indústrias, impulsiona a medicina, educação e pesquisas científicas.",
+                "Porque ela faz com que as pessoas parem de usar cadernos físicos de papel.",
+                "Não é essencial, poderíamos gerenciar hospitais e aviões sem computadores de forma simples."
+            ],
+            answer: 1,
+            penalty: 2, // Punição severa antes de cruzar a linha de chegada!
+            reward: 1
+        }
+    },
+    {
+        id: 63,
+        title: "SAÍDA",
+        desc: "FIM DA JORNADA! Você superou todas as barreiras tecnológicas e venceu!",
+        color: "bg-emerald-600 border-emerald-500 text-white font-extrabold",
+        type: "end",
+        icon: "fa-graduation-cap",
+        question: null
+    }
+];
+
+// Game State
+let gameState = {
+    playerName: "Jogador",
+    playerAvatar: "💻",
+    position: 0,
+    rollsCount: 0,
+    correctCount: 0,
+    wrongCount: 0,
+    secondsElapsed: 0,
+    gameStarted: false,
+    gameOver: false
+};
+
+// Variáveis de Controle e Loops
+let timerInterval = null;
+let pendingMovement = null;
+let selectedAvatarIndex = 0;
+
+// Configurações do Confete
+let confettiActive = false;
+let confettiParticles = [];
+const confettiCanvas = document.getElementById('confetti-canvas');
+const ctxConfetti = confettiCanvas.getContext('2d');
+
+// Inicializar carregamento da página
+window.onload = function() {
+    renderAvatarSelector();
+    addLog("Sistema carregado. Aguardando identificação para começar o jogo.");
+    
+    // Tornar o canvas de confete responsivo
+    window.addEventListener('resize', resizeConfettiCanvas);
+};
+
+
+// Renderizar o seletor de avatares na tela inicial
+function renderAvatarSelector() {
+    const grid = document.getElementById('avatar-grid');
+    grid.innerHTML = '';
+
+    AVATARS.forEach((av, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => selectAvatar(idx);
+        btn.id = `avatar-btn-${idx}`;
+        btn.className = `flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all bg-slate-950/65 ${idx === 0 ? 'border-emerald-500 active-glow' : 'border-slate-800 hover:border-slate-700'}`;
+        btn.innerHTML = `
+            <span class="text-3xl mb-1">${av.icon}</span>
+            <span class="text-[10px] text-slate-400 font-bold">${av.name}</span>
+        `;
+        grid.appendChild(btn);
+    });
+}
+
+// Selecionar avatar do peão
+function selectAvatar(idx) {
+    selectedAvatarIndex = idx;
+    
+    // Atualizar bordas visuais dos botões
+    AVATARS.forEach((_, avIdx) => {
+        const btn = document.getElementById(`avatar-btn-${avIdx}`);
+        if(avIdx === idx) {
+            btn.className = "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all bg-slate-950/80 border-emerald-500 active-glow";
+        } else {
+            btn.className = "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all bg-slate-950/65 border-slate-800 hover:border-slate-700";
+        }
+    });
+
+    playSound('click');
+}
+
+
+// Iniciar a partida
+function startGame() {
+    const nameInput = document.getElementById('player-name-input').value.trim();
+    if (!nameInput) {
+        alert("Por favor, digite seu nome ou nome do grupo para registrar no desafio!");
+        return;
+    }
+
+    gameState.playerName = nameInput;
+    gameState.playerAvatar = AVATARS[selectedAvatarIndex].icon;
+    gameState.position = 0;
+    gameState.rollsCount = 0;
+    gameState.correctCount = 0;
+    gameState.wrongCount = 0;
+    gameState.secondsElapsed = 0;
+    gameState.gameStarted = true;
+    gameState.gameOver = false;
+
+    // Reset de logs
+    document.getElementById('logs-container').innerHTML = '';
+
+    // Alternar telas
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('game-screen').classList.remove('hidden');
+
+    addLog(`🎮 ${gameState.playerAvatar} ${gameState.playerName} iniciou a jornada da informática!`);
+    
+    // Iniciar temporizador
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        if (!gameState.gameOver) {
+            gameState.secondsElapsed++;
+            updateTimerDisplay();
+        }
+    }, 1000);
+
+    // Gerar visual do circuito
+    buildBoard();
+    updateUI();
+    playSound('start');
+}
+
+// Atualizar mostrador de tempo do HUD
+function updateTimerDisplay() {
+    const minutes = Math.floor(gameState.secondsElapsed / 60);
+    const seconds = gameState.secondsElapsed % 60;
+    document.getElementById('stat-time').innerText = 
+        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+
+// Monta o tabuleiro no formato serpente alternando as linhas de 8 colunas
+function buildBoard() {
+    const grid = document.getElementById('board-grid');
+    grid.innerHTML = '';
+
+    const colsCount = 8;
+    const rowsCount = 8;
+
+    for (let r = 0; r < rowsCount; r++) {
+        let rowIndices = [];
+        for (let c = 0; c < colsCount; c++) {
+            rowIndices.push(r * colsCount + c);
+        }
+        
+        // Se a linha for ímpar (r = 1, 3, 5, 7), inverte o caminho para criar o formato serpente (curvas alternadas)
+        if (r % 2 !== 0) {
+            rowIndices.reverse();
+        }
+
+        rowIndices.forEach(spaceIndex => {
+            const spaceData = BOARD_SPACES[spaceIndex];
+            if (!spaceData) return;
+
+            const spaceEl = document.createElement('div');
+            spaceEl.id = `space-${spaceIndex}`;
+            spaceEl.className = `relative flex flex-col justify-between min-h-[95px] md:min-h-[110px] p-2.5 rounded-xl border-2 transition-all ${spaceData.color} shadow-lg`;
+            
+            // Desenhar os detalhes internos de cada casa
+            spaceEl.innerHTML = `
+                <div class="flex justify-between items-start gap-1">
+                    <span class="text-[9px] font-black uppercase bg-slate-950/40 text-white px-1.5 py-0.5 rounded">
+                        #${spaceIndex}
+                    </span>
+                    <i class="fa-solid ${spaceData.icon} text-slate-100/40 text-xs md:text-sm"></i>
+                </div>
+                <div class="my-1">
+                    <p class="text-[10px] md:text-xs font-extrabold leading-tight drop-shadow-md text-white">
+                        ${spaceData.title}
+                    </p>
+                </div>
+                <!-- Container onde o peão físico do jogador é renderizado -->
+                <div id="pawn-slot-${spaceIndex}" class="flex justify-center items-center min-h-[26px] bg-slate-950/25 rounded-lg p-0.5 border border-white/5">
+                </div>
+            `;
+            grid.appendChild(spaceEl);
+        });
+    }
+}
+
+
+// Sincroniza a tela com o estado interno do jogo
+function updateUI() {
+    if (!gameState.gameStarted) return;
+
+    // Atualizar HUD Principal
+    document.getElementById('player-name-display').innerText = gameState.playerName;
+    document.getElementById('player-avatar-badge').innerText = gameState.playerAvatar;
+    document.getElementById('stat-rolls').innerText = gameState.rollsCount;
+    document.getElementById('stat-correct').innerText = gameState.correctCount;
+    document.getElementById('stat-wrong').innerText = gameState.wrongCount;
+
+    // Atualizar dados da casa atual do HUD
+    const currentSpaceData = BOARD_SPACES[gameState.position];
+    document.getElementById('hud-space-title').innerText = currentSpaceData.title;
+    document.getElementById('hud-space-number').innerText = gameState.position;
+
+    // Limpar peão de todas as casas do tabuleiro
+    for (let i = 0; i < 64; i++) {
+        const slot = document.getElementById(`pawn-slot-${i}`);
+        if (slot) slot.innerHTML = '';
+        
+        // Remover efeito de destaque ativo
+        const box = document.getElementById(`space-${i}`);
+        if (box) {
+            box.classList.remove('ring-4', 'ring-white', 'scale-105', 'z-10', 'active-glow');
+        }
+    }
+
+    // Adicionar peão na casa atual do jogador
+    const activeSlot = document.getElementById(`pawn-slot-${gameState.position}`);
+    if (activeSlot) {
+        const pawn = document.createElement('span');
+        pawn.className = "w-7 h-7 rounded-full bg-slate-950 text-white flex items-center justify-center text-sm shadow-md border border-white font-bold animate-bounce";
+        pawn.innerHTML = gameState.playerAvatar;
+        activeSlot.appendChild(pawn);
+    }
+
+    // Destacar visualmente a casa atual do jogador
+    const activeBox = document.getElementById(`space-${gameState.position}`);
+    if (activeBox) {
+        activeBox.classList.add('ring-4', 'ring-white', 'scale-105', 'z-10', 'active-glow');
+    }
+
+    // Bloquear botão de rolagem caso o jogo finalize
+    document.getElementById('roll-button').disabled = gameState.gameOver;
+}
+
+
+// Rolar dado animado
+function rollDice() {
+    if (gameState.gameOver) return;
+
+    const diceContainer = document.getElementById('dice-container');
+    const diceValue = document.getElementById('dice-value');
+    const rollButton = document.getElementById('roll-button');
+
+    rollButton.disabled = true;
+    playSound('dice');
+
+    // Incrementar estatística de rodadas
+    gameState.rollsCount++;
+
+    // Simular vibração e rotação do dado
+    let counter = 0;
+    const animInterval = setInterval(() => {
+        const tempVal = Math.floor(Math.random() * 6) + 1;
+        diceValue.innerText = tempVal;
+        diceContainer.style.transform = `rotate(${counter * 90}deg) scale(0.9)`;
+        counter++;
+
+        if (counter > 8) {
+            clearInterval(animInterval);
+            
+            // Resultado definitivo (1 a 6)
+            const finalRoll = Math.floor(Math.random() * 6) + 1;
+            diceValue.innerText = finalRoll;
+            diceContainer.style.transform = "rotate(0deg) scale(1)";
+            
+            // Processar mudança de casa
+            movePlayer(finalRoll);
+        }
+    }, 80);
+}
+
+// Mover jogador na trilha
+function movePlayer(steps) {
+    const oldPos = gameState.position;
+    let newPos = oldPos + steps;
+
+    if (newPos >= 63) {
+        newPos = 63;
+    }
+
+    gameState.position = newPos;
+    const spaceData = BOARD_SPACES[newPos];
+
+    pendingMovement = {
+        steps: steps,
+        from: oldPos,
+        to: newPos
+    };
+
+    addLog(`🎲 Dado jogado: tirou **${steps}** (Casa ${oldPos} ➡️ Casa ${newPos})`);
+    updateUI();
+
+    // Pequeno delay para mover o peão visualmente antes de abrir a pergunta
+    setTimeout(() => {
+        triggerSpaceEvent(spaceData);
+    }, 600);
+}
+
+
+// Dispara os pop-ups do tabuleiro
+function triggerSpaceEvent(space) {
+    const modal = document.getElementById('game-modal');
+    const modalContent = document.getElementById('modal-content');
+    const themeBar = document.getElementById('modal-theme-bar');
+    const icon = document.getElementById('modal-icon');
+    const tag = document.getElementById('modal-tag');
+    const title = document.getElementById('modal-title');
+    const badge = document.getElementById('modal-space-badge');
+    const prompt = document.getElementById('modal-prompt');
+    const optionsContainer = document.getElementById('modal-options-container');
+    const actions = document.getElementById('modal-actions');
+
+    // Reset modal
+    modal.classList.remove('hidden');
+    modalContent.classList.remove('scale-95');
+    modalContent.classList.add('scale-100');
+    optionsContainer.innerHTML = '';
+    actions.classList.add('hidden');
+
+    badge.innerText = `Casa ${space.id}`;
+    title.innerText = space.title;
+    prompt.innerText = space.desc;
+
+    // Configurar o visual do modal com base na categoria
+    if (space.type === 'start') {
+        themeBar.className = "absolute top-0 left-0 right-0 h-2 bg-emerald-500";
+        icon.className = "fa-solid fa-flag-checkered text-xl text-emerald-400";
+        tag.innerText = "Início";
+        actions.classList.remove('hidden');
+    } 
+    else if (space.type === 'end') {
+        themeBar.className = "absolute top-0 left-0 right-0 h-2 bg-amber-500";
+        icon.className = "fa-solid fa-trophy text-xl text-amber-400 animate-bounce";
+        tag.innerText = "VITÓRIA!";
+        actions.classList.remove('hidden');
+        
+        // Finalizar Jogo
+        gameState.gameOver = true;
+        clearInterval(timerInterval);
+        
+        const finalMin = Math.floor(gameState.secondsElapsed / 60);
+        const finalSec = gameState.secondsElapsed % 60;
+        
+        prompt.innerHTML = `
+            <div class="p-4 bg-emerald-500/15 rounded-xl border border-emerald-500/30 text-emerald-400 text-center mb-4">
+                <p class="font-black text-xl mb-1">🏁 PARABÉNS, VOCÊ VENCEU!</p>
+                <p class="text-sm font-semibold">Desafio concluído com pleno êxito tecnológico.</p>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl space-y-2 text-sm border border-slate-800">
+                <p class="flex justify-between"><span>Tempo Total:</span> <strong class="text-white">${finalMin}m ${finalSec}s</strong></p>
+                <p class="flex justify-between"><span>Total de Rodadas:</span> <strong class="text-amber-400">${gameState.rollsCount}</strong></p>
+                <p class="flex justify-between"><span>Respostas Certas:</span> <strong class="text-emerald-400">${gameState.correctCount}</strong></p>
+                <p class="flex justify-between"><span>Respostas Erradas:</span> <strong class="text-rose-400">${gameState.wrongCount}</strong></p>
+            </div>
+            <p class="text-xs text-slate-500 text-center mt-4">Chame o professor para registrar sua pontuação e tempo!</p>
+        `;
+        
+        addLog(`🏆 DESAFIO CONCLUÍDO! Tempo final: ${finalMin}m ${finalSec}s. Chame o professor!`);
+        playSound('win');
+        startConfetti();
+    } 
+    else if (space.type === 'luck') {
+        themeBar.className = "absolute top-0 left-0 right-0 h-2 bg-sky-500";
+        icon.className = "fa-solid fa-gift text-xl text-sky-400";
+        tag.innerText = "Sorte na Trilha";
+        actions.classList.remove('hidden');
+        
+        pendingMovement.luckAdvance = space.advance;
+    } 
+    else if (space.type === 'poverty') {
+        themeBar.className = "absolute top-0 left-0 right-0 h-2 bg-rose-600";
+        icon.className = "fa-solid fa-skull-crossbones text-xl text-rose-500";
+        tag.innerText = "Punição Crítica";
+        actions.classList.remove('hidden');
+        
+        pendingMovement.criticalPoverty = true;
+    } 
+    else if (space.type === 'question') {
+        themeBar.className = "absolute top-0 left-0 right-0 h-2 bg-yellow-500";
+        icon.className = "fa-solid fa-circle-question text-xl text-yellow-400";
+        tag.innerText = "Pergunta de Informática";
+
+        if (space.question) {
+            space.question.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-600 rounded-xl p-3.5 text-sm text-slate-200 hover:text-white transition-all font-semibold flex items-center justify-between group";
+                btn.onclick = () => answerQuestion(idx, space.question.answer, space.question.penalty, space.question.reward);
+                btn.innerHTML = `
+                    <span>${opt}</span>
+                    <span class="w-6 h-6 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-xs group-hover:bg-emerald-500 group-hover:text-slate-950 font-bold transition-all">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+    }
+}
+
+
+// Processa a resposta dada ao desafio
+function answerQuestion(selectedIdx, correctIdx, penalty, reward) {
+    const optionsContainer = document.getElementById('modal-options-container');
+    const isCorrect = selectedIdx === correctIdx;
+
+    // Incrementar estatísticas corretas/erradas
+    if (isCorrect) {
+        gameState.correctCount++;
+        playSound('correct');
+    } else {
+        gameState.wrongCount++;
+        playSound('wrong');
+    }
+
+    // Travar opções e exibir gabarito
+    optionsContainer.innerHTML = '';
+    const space = BOARD_SPACES[gameState.position];
+    
+    space.question.options.forEach((opt, idx) => {
+        let style = "bg-slate-850 border-slate-800 text-slate-500";
+        let iconMarkup = "";
+        
+        if (idx === correctIdx) {
+            style = "bg-emerald-950/60 border-emerald-500 text-emerald-400 font-extrabold";
+            iconMarkup = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+        } else if (idx === selectedIdx && !isCorrect) {
+            style = "bg-rose-950/60 border-rose-500 text-rose-400 font-extrabold";
+            iconMarkup = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+        }
+
+        const div = document.createElement('div');
+        div.className = `w-full text-left rounded-xl p-3.5 text-sm border flex items-center justify-between ${style}`;
+        div.innerHTML = `<span>${opt}</span> ${iconMarkup}`;
+        optionsContainer.appendChild(div);
+    });
+
+    const prompt = document.getElementById('modal-prompt');
+    
+    if (isCorrect) {
+        prompt.innerHTML = `
+            <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/30 text-emerald-400 mb-2 font-bold text-center">
+                🎉 EXCELENTE! VOCÊ ACERTOU!
+            </div>
+            Domínio técnico demonstrado! ${reward > 0 ? `Avance mais ${reward} casa(s).` : 'Você está seguro.'}
+        `;
+        pendingMovement.correct = true;
+        pendingMovement.reward = reward;
+    } else {
+        prompt.innerHTML = `
+            <div class="p-3 bg-rose-500/10 rounded-xl border border-rose-500/30 text-rose-400 mb-2 font-bold text-center">
+                ❌ RESPOSTA INCORRETA!
+            </div>
+            Falha de arquitetura lógica! Punição aplicada: Recue ${penalty} casa(s).
+        `;
+        pendingMovement.correct = false;
+        pendingMovement.penalty = penalty;
+    }
+
+    document.getElementById('modal-actions').classList.remove('hidden');
+}
+
+
+// Fecha o modal e processa o deslocamento resultante da casa
+function closeModalAndApply() {
+    document.getElementById('game-modal').classList.add('hidden');
+    stopConfetti(); // Garante o desligamento se fechar o modal final
+
+    if (!pendingMovement) return;
+
+    if (pendingMovement.criticalPoverty) {
+        gameState.position = 0;
+        addLog(`💀 [Ataque Hacker] Seu peão retornou para o INÍCIO da trilha!`);
+    } 
+    else if (pendingMovement.luckAdvance) {
+        gameState.position = Math.min(63, gameState.position + pendingMovement.luckAdvance);
+        addLog(`🎁 [Sorte] Você avançou ${pendingMovement.luckAdvance} casa(s) adicionais!`);
+    } 
+    else if (pendingMovement.correct === true && pendingMovement.reward > 0) {
+        gameState.position = Math.min(63, gameState.position + pendingMovement.reward);
+        addLog(`✅ [Acerto] Avançou ${pendingMovement.reward} casa(s) bônus.`);
+    } 
+    else if (pendingMovement.correct === false && pendingMovement.penalty > 0) {
+        gameState.position = Math.max(0, gameState.position - pendingMovement.penalty);
+        addLog(`⚠️ [Punição] Recuou ${pendingMovement.penalty} casa(s) por erro.`);
+    }
+
+    pendingMovement = null;
+    updateUI();
+
+    // Habilitar rolagem se o jogo não acabou
+    if (!gameState.gameOver) {
+        document.getElementById('roll-button').disabled = false;
+    }
+}
+
+// Adiciona linha de informação no console de logs
+function addLog(text) {
+    const container = document.getElementById('logs-container');
+    const timestamp = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    const entry = document.createElement('div');
+    entry.className = "py-1.5 border-b border-slate-950 last:border-0";
+    entry.innerHTML = `<span class="text-slate-500 font-bold">[${timestamp}]</span> <span class="text-slate-300 font-medium">${text}</span>`;
+    
+    container.appendChild(entry);
+    container.scrollTop = container.scrollHeight;
+}
+
+
+// Salvar progresso
+function saveGameState() {
+    localStorage.setItem('jogo_informatica_solo', JSON.stringify(gameState));
+    addLog("💾 Seu progresso foi salvo com sucesso localmente!");
+}
+
+// Carregar progresso
+function loadGameState() {
+    const saved = localStorage.getItem('jogo_informatica_solo');
+    if (!saved) {
+        alert("Nenhum dado salvo encontrado neste computador!");
+        return;
+    }
+
+    try {
+        gameState = JSON.parse(saved);
+        
+        document.getElementById('setup-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        
+        // Retomar cronômetro
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if (!gameState.gameOver) {
+                gameState.secondsElapsed++;
+                updateTimerDisplay();
+            }
+        }, 1000);
+
+        buildBoard();
+        updateUI();
+        updateTimerDisplay();
+        addLog("📂 Progresso de desafio retomado com sucesso!");
+    } catch(err) {
+        alert("Ocorreu um erro ao ler os registros de progresso.");
+    }
+}
+
+// Reiniciar desafio
+function resetGame() {
+    if (confirm("Quer reiniciar todo o seu progresso neste computador?")) {
+        clearInterval(timerInterval);
+        gameState = {
+            playerName: "Jogador",
+            playerAvatar: "💻",
+            position: 0,
+            rollsCount: 0,
+            correctCount: 0,
+            wrongCount: 0,
+            secondsElapsed: 0,
+            gameStarted: false,
+            gameOver: false
+        };
+        
+        stopConfetti();
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('setup-screen').classList.remove('hidden');
+        document.getElementById('player-name-input').value = '';
+        addLog("Jogo resetado. Insira seus dados para reiniciar.");
+    }
+}
+
+
+// Gera áudio sem precisar de arquivos externos hospedados
+function playSound(type) {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        if (type === 'start') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(261.63, now); // C4
+            osc.frequency.setValueAtTime(329.63, now + 0.1); // E4
+            osc.frequency.setValueAtTime(392.00, now + 0.2); // G4
+            osc.frequency.setValueAtTime(523.25, now + 0.3); // C5
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            osc.start(now);
+            osc.stop(now + 0.5);
+        } 
+        else if (type === 'correct') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+        } 
+        else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, now); // A3
+            osc.frequency.linearRampToValueAtTime(110, now + 0.25); // A2
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        } 
+        else if (type === 'dice') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.setValueAtTime(320, now + 0.05);
+            osc.frequency.setValueAtTime(190, now + 0.1);
+            osc.frequency.setValueAtTime(380, now + 0.15);
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+            osc.start(now);
+            osc.stop(now + 0.22);
+        } 
+        else if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, now);
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            osc.start(now);
+            osc.stop(now + 0.08);
+        }
+        else if (type === 'win') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.setValueAtTime(659.25, now + 0.15); // E5
+            osc.frequency.setValueAtTime(783.99, now + 0.3); // G5
+            osc.frequency.setValueAtTime(1046.50, now + 0.45); // C6
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+            osc.start(now);
+            osc.stop(now + 1.2);
+        }
+    } catch (e) {
+        console.warn("Áudio pausado esperando interação humana.", e);
+    }
+}
+
+
+// Redimensionar tela de confetes
+function resizeConfettiCanvas() {
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+}
+
+// Iniciar fogos de confete coloridos
+function startConfetti() {
+    confettiCanvas.classList.remove('hidden');
+    resizeConfettiCanvas();
+    confettiActive = true;
+    confettiParticles = [];
+
+    for (let i = 0; i < 150; i++) {
+        confettiParticles.push({
+            x: Math.random() * confettiCanvas.width,
+            y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+            size: Math.random() * 6 + 5,
+            color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+            speedY: Math.random() * 3 + 2,
+            speedX: Math.random() * 2 - 1,
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 4 - 2
+        });
+    }
+
+    requestAnimationFrame(updateConfetti);
+}
+
+// Atualizar partículas de confete
+function updateConfetti() {
+    if (!confettiActive) return;
+
+    ctxConfetti.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+    confettiParticles.forEach(p => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotationSpeed;
+
+        if (p.y > confettiCanvas.height) {
+            p.y = -10;
+            p.x = Math.random() * confettiCanvas.width;
+        }
+
+        ctxConfetti.save();
+        ctxConfetti.translate(p.x, p.y);
+        ctxConfetti.rotate((p.rotation * Math.PI) / 180);
+        ctxConfetti.fillStyle = p.color;
+        ctxConfetti.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctxConfetti.restore();
+    });
+
+    requestAnimationFrame(updateConfetti);
+}
+
+// Desativar animação
+function stopConfetti() {
+    confettiActive = false;
+    confettiCanvas.classList.add('hidden');
+}
+</script>
+</body>
+</html>

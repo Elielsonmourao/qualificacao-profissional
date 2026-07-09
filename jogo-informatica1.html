@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Tech - Tabuleiro de Informática Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #030712; 
+            background-image: radial-gradient(circle at top right, #111827, #030712);
+        }
+        .serpentine-grid { 
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr); 
+            gap: 12px; 
+            min-width: 950px; 
+        }
+        
+        /* SEGURANÇA MÁXIMA: Bloqueio total de seleção, arraste e cópia de texto das perguntas */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+        input { 
+            -webkit-user-select: text !important; 
+            user-select: text !important; 
+        }
+
+        .active-glow { 
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6); 
+            transform: scale(1.04); 
+            z-index: 20;
+            border-color: #10b981 !important;
+        }
+        .die-spin { 
+            animation: spin 0.15s infinite linear; 
+        }
+        @keyframes spin { 
+            from { transform: rotate(0deg) scale(0.9); } 
+            to { transform: rotate(360deg) scale(1.1); } 
+        }
+        
+        /* Custom Scrollbar para navegadores escolares */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col p-4 overflow-x-hidden" oncontextmenu="return false;">
+
+<!-- Canvas de confete para a vitória -->
+<canvas id="confetti" class="fixed inset-0 pointer-events-none z-50 hidden"></canvas>
+
+<!-- Topo / Stats -->
+<header class="max-w-6xl mx-auto w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-wrap justify-between items-center shadow-2xl backdrop-blur-md">
+    <div class="flex items-center gap-4">
+        <div id="pawn-display" class="text-4xl bg-slate-950 p-2 rounded-xl border border-slate-800 shadow-inner">💻</div>
+        <div>
+            <h1 id="user-name" class="text-xl font-black text-emerald-400 uppercase tracking-tight">Candidato Tech</h1>
+            <p class="text-[10px] text-slate-500 font-bold tracking-wider">MAPA INTEGRAL: JOGO DA INFORMÁTICA</p>
+        </div>
+    </div>
+
+    <div class="flex gap-4">
+        <div class="text-center px-4 border-r border-slate-800">
+            <span class="block text-[10px] text-slate-500 font-black uppercase">Tempo Decorrido</span>
+            <span id="timer" class="text-lg font-mono font-bold text-sky-400">00:00</span>
+        </div>
+        <div class="text-center px-4 border-r border-slate-800">
+            <span class="block text-[10px] text-slate-500 font-black uppercase">Dadadas</span>
+            <span id="rolls" class="text-lg font-bold text-amber-500">0</span>
+        </div>
+        <div class="text-center px-4">
+            <span class="block text-[10px] text-slate-500 font-black uppercase">Pontuação</span>
+            <span id="score" class="text-lg font-bold text-emerald-500">0 acertos</span>
+        </div>
+    </div>
+</header>
+
+<!-- Notificação Flutuante -->
+<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-red-500 text-slate-950 font-black px-6 py-3 rounded-xl shadow-2xl transition-all duration-300 transform scale-0 z-[110] flex items-center gap-2">
+    <i class="fa-solid fa-triangle-exclamation"></i> <span id="toast-text"></span>
+</div>
+
+<main class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
+    
+    <!-- Configuração Inicial do Estudante -->
+    <div id="setup" class="lg:col-span-12 bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-2xl mx-auto w-full shadow-2xl">
+        <div class="text-center mb-8">
+            <span class="bg-emerald-500/10 text-emerald-400 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider">Desafio Escolar Individual</span>
+            <h2 class="text-3xl font-black mt-3 text-white">LABORATÓRIO DE INFORMÁTICA</h2>
+            <p class="text-slate-400 text-sm mt-1">Escreva seu nome para se registrar no terminal e começar o percurso.</p>
+        </div>
+        
+        <div class="space-y-6">
+            <div>
+                <label class="block text-xs font-black text-slate-400 mb-2 uppercase tracking-widest">Seu Nome / Matrícula:</label>
+                <input type="text" id="name-in" placeholder="Digite seu nome para o ranking..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 font-bold text-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+            </div>
+            <div>
+                <label class="block text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">Selecione seu Peão:</label>
+                <div class="grid grid-cols-4 sm:grid-cols-8 gap-3" id="avatar-sel"></div>
+            </div>
+            
+            <button onclick="initGame()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black py-5 rounded-2xl transition-all shadow-lg shadow-emerald-500/20 text-xl tracking-tight">
+                INICIAR DESAFIO SOLO
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabuleiro de 64 Casas -->
+    <div id="board-container" class="lg:col-span-9 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 overflow-x-auto shadow-2xl">
+            <div id="grid" class="serpentine-grid"></div>
+        </div>
+    </div>
+
+    <!-- Painel Lateral de Controle -->
+    <div id="controls" class="lg:col-span-3 hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 text-center shadow-xl">
+            <h3 class="text-xs font-black text-slate-500 mb-4 uppercase tracking-wider">Gerador de Passos</h3>
+            <div id="dice-box" class="w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-700 mx-auto rounded-2xl flex items-center justify-center text-4xl font-black text-white shadow-xl border-4 border-slate-950 mb-6 transition-all">
+                🎲
+            </div>
+            <button id="roll-btn" onclick="handleRoll()" class="w-full bg-emerald-500 text-slate-950 font-black py-4 rounded-xl hover:bg-emerald-400 transition-all active:scale-95 shadow-lg shadow-emerald-500/10">
+                LANÇAR DADO
+            </button>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+            <h3 class="text-xs font-black text-slate-500 mb-2 uppercase tracking-wider">Informações da Casa</h3>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                <div>
+                    <span class="block text-[9px] text-slate-600 font-bold uppercase">CASA ATUAL</span>
+                    <span id="loc-name" class="text-sm font-black text-emerald-400 leading-tight block">Início</span>
+                </div>
+                <div class="border-t border-slate-900 pt-2 flex justify-between items-center">
+                    <span class="text-[10px] font-black text-slate-600">ID DA COORDENADA:</span>
+                    <span id="loc-num" class="text-xl font-black text-slate-400">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal de Pergunta/Evento -->
+<div id="modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[100] flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-8 shadow-2xl relative overflow-hidden">
+        <div id="modal-bar" class="absolute top-0 left-0 w-full h-2 bg-emerald-500 animate-pulse"></div>
+        <div class="flex items-center gap-4 mb-8">
+            <div id="modal-icon" class="text-3xl bg-slate-950 p-3 rounded-2xl border border-slate-800">❓</div>
+            <div>
+                <h4 id="modal-title" class="text-xl font-black text-white tracking-tight">DESAFIO DE SISTEMA</h4>
+                <p id="modal-subtitle" class="text-xs font-bold text-slate-500 uppercase tracking-widest">Responda para avançar</p>
+            </div>
+        </div>
+        
+        <p id="modal-text" class="text-lg font-bold text-slate-200 mb-8 leading-relaxed"></p>
+        
+        <div id="options" class="grid gap-3"></div>
+        
+        <div id="modal-footer" class="mt-8 pt-6 border-t border-slate-800 hidden flex flex-col sm:flex-row gap-4 justify-between items-center">
+            <span id="feedback-txt" class="text-xs font-black"></span>
+            <button onclick="closeModal()" class="w-full sm:w-auto bg-emerald-500 text-slate-950 font-black px-8 py-3 rounded-xl hover:bg-emerald-400 transition-all">CONTINUAR</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// SEGURANÇA ANTICOLA: Desativação total de atalhos de desenvolvedor, cópia, inspeção e arraste
+document.addEventListener('keydown', e => {
+    if (e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 'i' || e.key === 'j' || e.key === 's' || e.key === 'c' || e.key === 'x')) e.preventDefault();
+    if (e.metaKey && (e.key === 'c' || e.key === 'x' || e.key === 'u')) e.preventDefault();
+    if (e.key === 'F12') e.preventDefault();
+});
+document.addEventListener('dragstart', e => e.preventDefault());
+
+const AVATARS = ["💻", "🚀", "🧠", "👾", "💾", "🔌", "⚙️", "📱"];
+
+// POOL AMPLO DE QUESTÕES ALEATÓRIAS (Totalmente imprevisíveis, mudam de ordem constantemente)
+const QUESTIONS_BANK = [
+    { q: "O que é Hardware?", a: "A parte física do computador (placas, cabos e circuitos)", o: ["Os programas instalados", "O sistema operacional", "Os dados salvos na nuvem"] },
+    { q: "Quais destes são considerados periféricos de entrada?", a: "Teclado e Mouse", o: ["Monitor e Impressora", "Caixa de Som e Fones de Ouvido", "Placa-mãe e Processador"] },
+    { q: "O que é Software?", a: "A parte lógica (programas, aplicativos e sistemas)", o: ["O monitor e o teclado", "O gabinete físico", "As conexões de energia"] },
+    { q: "Qual dos seguintes é um software de sistema?", a: "Sistema Operacional", o: ["Navegador de internet", "Editor de texto", "Planilha eletrônica"] },
+    { q: "Qual a diferença fundamental entre Hardware e Software?", a: "Hardware é tangível (físico), Software é intangível (lógico)", o: ["Hardware é mais rápido que software", "Software funciona sem hardware", "Hardware nunca estraga, software sim"] },
+    { q: "Qual a principal característica da Memória RAM?", a: "É volátil e apaga ao desligar o aparelho", o: ["Guarda arquivos permanentemente", "Aumenta o espaço do HD", "Limpa poeira física"] },
+    { q: "O que é um Sistema Operacional?", a: "O software principal que gerencia o hardware e outros programas", o: ["Um aplicativo para desenhar", "A placa principal do PC", "Um cabo de rede de alta velocidade"] },
+    { q: "Quais destes são exemplos de Sistemas Operacionais?", a: "Windows, Linux e MacOS", o: ["Word, Excel e PowerPoint", "Chrome, Firefox e Safari", "Intel, AMD e Nvidia"] },
+    { q: "Quais são os componentes básicos do ciclo de processamento?", a: "Entrada, Processamento e Saída", o: ["Monitor, Teclado e Mouse", "Energia, Placa e Gabinete", "Cópia, Cola e Deleta"] },
+    { q: "Para que serve um driver?", a: "Permitir que o sistema operacional se comunique com um hardware específico", o: ["Limpar o histórico de navegação", "Acelerar a velocidade do processador", "Proteger contra vírus de internet"] },
+    { q: "Qual a menor unidade de medida de dados no computador?", a: "Bit", o: ["Byte", "Kilobyte", "Megabyte"] },
+    { q: "Qual a função do processador (CPU)?", a: "Executar instruções e processar dados", o: ["Armazenar fotos", "Mostrar imagens na tela", "Fornecer energia ao computador"] },
+    { q: "O que é um barramento de dados?", a: "Conjunto de linhas físicas para transmissão de dados entre componentes", o: ["O cabo de energia principal", "Um vírus que bloqueia o teclado", "O cooler de resfriamento"] },
+    { q: "Onde o sistema operacional fica gravado permanentemente?", a: "HD ou SSD", o: ["Memória RAM", "Memória Cache", "Processador"] },
+    { q: "Qual a função principal da Placa-Mãe?", a: "Interconectar todos os componentes do PC", o: ["Processar gráficos 3D", "Controlar o brilho da tela", "Alimentar o cooler"] },
+    { q: "O que significa a sigla LAN?", a: "Local Area Network (Rede Local)", o: ["Long Access Number", "Logic Area Network", "Link Active Node"] },
+    { q: "Qual tecla atualiza uma página de navegador no Windows?", a: "F5", o: ["F2", "F11", "Esc"] },
+    { q: "O que significa WWW?", a: "World Wide Web", o: ["World Windows Web", "Web Wide World", "Windows World Web"] },
+    { q: "O que significa computação em nuvem?", a: "Serviços de armazenamento e processamento via internet", o: ["Salvar arquivos no ar condicionado", "Conexão sem fio local", "Computadores movidos a água"] },
+    { q: "Qual atalho de teclado duplica uma aba no Google Chrome?", a: "Ctrl + T", o: ["Ctrl + N", "Ctrl + D", "Ctrl + Shift + T"] },
+    { q: "O que é um endereço IP?", a: "O identificador numérico de um dispositivo na rede", o: ["A senha do roteador", "O e-mail do usuário", "O código do processador"] },
+    { q: "Qual a função do software Antivírus?", a: "Detectar, impedir e remover códigos maliciosos", o: ["Deixar a internet mais rápida", "Limpar poeira do hardware", "Digitar textos automáticos"] },
+    { q: "O que o protocolo HTTPS garante que o HTTP comum não garante?", a: "Criptografia dos dados transmitidos", o: ["Maior velocidade do site", "Imagens em alta definição", "Downloads grátis"] },
+    { q: "O que é Phishing?", a: "Técnica de engenharia social para enganar e roubar dados confidenciais", o: ["Um jogo de simulação de pescaria", "Instalação física de cabos", "A limpeza de cookies do navegador"] },
+    { q: "No Microsoft Excel, o que é uma Célula?", a: "A intersecção de uma linha e uma coluna", o: ["O arquivo de planilha completo", "O gráfico gerado pelo sistema", "O botão para fechar o programa"] },
+    { q: "Qual símbolo inicia obrigatoriamente qualquer fórmula no Excel?", a: "Igual ( = )", o: ["Mais ( + )", "Arroba ( @ )", "Hashtag ( # )"] },
+    { q: "Qual fórmula realiza a busca vertical de informações no Excel?", a: "PROCV (VLOOKUP)", o: ["SOMA (SUM)", "SE (IF)", "MÉDIA (AVERAGE)"] },
+    { q: "Qual padrão de formatação é exigido para trabalhos acadêmicos no Brasil?", a: "Normas da ABNT", o: ["Normas ISO", "Padrão W3C", "Padrão IEEE"] },
+    { q: "Qual termo define softwares maliciosos genéricos?", a: "Malware", o: ["Hardware", "Shareware", "Firmware"] },
+    { q: "O que é um Ransomware?", a: "Malware que criptografa dados e exige resgate em dinheiro", o: ["Um antivírus gratuito", "Um arquivo de texto protegido", "Um tipo de processador"] },
+    { q: "O que é um Algoritmo?", a: "Sequência lógica de passos para resolver um problema", o: ["A placa interna do processador", "Um erro de conexão de sinal", "Uma conta de energia do PC"] },
+    { q: "Qual estrutura lógica repete um bloco de comandos várias vezes?", a: "Loop de Repetição (While/For)", o: ["Estrutura Condicional (If/Else)", "Variável Global", "Comentário de código"] },
+    { q: "Qual a finalidade principal da LGPD no Brasil?", a: "Proteger os dados pessoais e privacidade dos cidadãos", o: ["Acelerar as compras online", "Controlar o preço dos computadores", "Limitar o uso de redes sociais"] },
+    { q: "O que o protocolo DNS faz na internet?", a: "Traduz nomes de domínios (sites) em endereços IP", o: ["Protege contra descargas elétricas", "Aumenta a velocidade do processador", "Compartilha arquivos offline"] }
+];
+
+// BASE DE DADOS DAS 64 CASAS - INCLUSÃO RIGOROSA DE CASAS DE RECUO E 5 RESET COLETIVOS
+const BOARD = [
+    { id: 0, title: "Início", type: "start", color: "bg-rose-700", icon: "fa-flag", text: "Comece sua jornada!" },
+    { id: 1, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-600", icon: "fa-arrow-left", text: "Problema no cooler! Volte 1 casa." },
+    { id: 2, title: "Periféricos", type: "question", color: "bg-orange-500", icon: "fa-keyboard" },
+    { id: 3, title: "Software", type: "question", color: "bg-yellow-500", icon: "fa-gear" },
+    { id: 4, title: "Bônus +2", type: "bonus", value: 2, color: "bg-emerald-600", icon: "fa-arrow-right", text: "Aceleração do Processador! Avance 2 casas de bônus." },
+    { id: 5, title: "Hardware", type: "question", color: "bg-purple-600", icon: "fa-microchip" },
+    { id: 6, title: "Recuo -2", type: "penalty", value: 2, color: "bg-red-600", icon: "fa-arrow-left", text: "Memória RAM sobrecarregada! Volte 2 casas." },
+    { id: 7, title: "Sist. Operacional", type: "question", color: "bg-orange-500", icon: "fa-laptop-code" },
+    { id: 8, title: "Sistemas", type: "question", color: "bg-orange-500", icon: "fa-desktop" },
+    { id: 9, title: "Recuo -3", type: "penalty", value: 3, color: "bg-red-600", icon: "fa-arrow-left", text: "Falha de Conectividade! Volte 3 casas." },
+    { id: 10, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-500", icon: "fa-arrow-left", text: "Driver desatualizado! Volte 1 casa." },
+    { id: 11, title: "Armazenamento", type: "question", color: "bg-blue-600", icon: "fa-hard-drive" },
+    
+    // RESET 1 (Volta ao Início)
+    { id: 12, title: "VOLTE AO INÍCIO", type: "reset", color: "bg-red-950 border-red-500", icon: "fa-skull-crossbones", text: "BUG CRÍTICO DE PLACA-MÃE! Curto-circuito detectado. Volte ao início da jornada." },
+    
+    { id: 13, title: "Unid. de Medida", type: "question", color: "bg-yellow-600", icon: "fa-clover" },
+    { id: 14, title: "Processador CPU", type: "question", color: "bg-orange-500", icon: "fa-cpu" },
+    { id: 15, title: "Recuo -6", type: "penalty", value: 6, color: "bg-red-800", icon: "fa-arrow-left", text: "ALERTA MÁXIMO! Aquecimento extremo do processador. Volte 6 casas." },
+    { id: 16, title: "Bônus +1", type: "bonus", value: 1, color: "bg-emerald-500", icon: "fa-star", text: "Você otimizou os arquivos temporários! Avance 1 casa." },
+    { id: 17, title: "Recuo -2", type: "penalty", value: 2, color: "bg-red-600", icon: "fa-arrow-left", text: "Tela azul do Windows! Volte 2 casas." },
+    { id: 18, title: "Redes de PC", type: "question", color: "bg-blue-600", icon: "fa-network-wired" },
+    { id: 19, title: "Tipos de Redes", type: "question", color: "bg-green-600", icon: "fa-wifi" },
+    { id: 20, title: "Navegadores", type: "question", color: "bg-yellow-600", icon: "fa-compass" },
+    { id: 21, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-500", icon: "fa-arrow-left", text: "Conexão discada caindo. Volte 1 casa." },
+    { id: 22, title: "Desafio Web", type: "question", color: "bg-purple-600", icon: "fa-brain" },
+    { id: 23, title: "Recuo -3", type: "penalty", value: 3, color: "bg-red-600", icon: "fa-arrow-left", text: "Cabo de rede desconectado! Volte 3 casas." },
+    { id: 24, title: "Nuvem", type: "question", color: "bg-blue-600", icon: "fa-cloud" },
+    { id: 25, title: "Endereço IP", type: "question", color: "bg-orange-500", icon: "fa-location-dot" },
+    { id: 26, title: "Segurança", type: "question", color: "bg-orange-600", icon: "fa-shield-halved" },
+    { id: 27, title: "Antivírus", type: "question", color: "bg-orange-500", icon: "fa-bug" },
+    
+    // RESET 2 (Volta ao Início)
+    { id: 28, title: "VOLTE AO INÍCIO", type: "reset", color: "bg-red-950 border-red-500", icon: "fa-skull-crossbones", text: "ATAQUE DOS CIBERCRIMINOSOS! Ransomware criptografou suas partições de disco. Volte ao início!" },
+    
+    { id: 29, title: "Boas Práticas", type: "question", color: "bg-purple-600", icon: "fa-key" },
+    { id: 30, title: "Recuo -2", type: "penalty", value: 2, color: "bg-red-600", icon: "fa-arrow-left", text: "Sua senha era 123456 e foi descoberta. Volte 2 casas." },
+    { id: 31, title: "Phishing", type: "question", color: "bg-yellow-500", icon: "fa-fish" },
+    { id: 32, title: "Recuo -6", type: "penalty", value: 6, color: "bg-red-800", icon: "fa-arrow-left", text: "VÍRUS DETECTADO! Malware de mineração de cripto consumiu a CPU. Volte 6 casas!" },
+    { id: 33, title: "Segurança Ativa", type: "question", color: "bg-green-600", icon: "fa-lock" },
+    { id: 34, title: "Backup de Dados", type: "question", color: "bg-green-600", icon: "fa-floppy-disk" },
+    { id: 35, title: "Bônus +2", type: "bonus", value: 2, color: "bg-emerald-600", icon: "fa-arrow-right", text: "Backup restaurado com 100% de integridade! Avance 2 casas de bônus." },
+    { id: 36, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-500", icon: "fa-arrow-left", text: "HD externo corrompido! Volte 1 casa." },
+    { id: 37, title: "Ameaças digitais", type: "question", color: "bg-orange-500", icon: "fa-triangle-exclamation" },
+    
+    // RESET 3 (Volta ao Início)
+    { id: 38, title: "VOLTE AO INÍCIO", type: "reset", color: "bg-red-950 border-red-500", icon: "fa-skull-crossbones", text: "VÍRUS NA PLACA-MÃE! Curto-circuito geral na fonte de energia. Volte ao início da corrida!" },
+    
+    { id: 39, title: "Pacote Office", type: "question", color: "bg-green-600", icon: "fa-file-zipper" },
+    { id: 40, title: "Excel Avançado", type: "question", color: "bg-yellow-500", icon: "fa-file-excel" },
+    { id: 41, title: "Recuo -3", type: "penalty", value: 3, color: "bg-red-600", icon: "fa-arrow-left", text: "Erro na fórmula de somatória! Volte 3 casas." },
+    { id: 42, title: "Word Editor", type: "question", color: "bg-blue-600", icon: "fa-file-word" },
+    { id: 43, title: "Formatação ABNT", type: "question", color: "bg-blue-600", icon: "fa-text-height" },
+    { id: 44, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-500", icon: "fa-arrow-left", text: "Trabalho escolar não foi salvo e a luz caiu! Volte 1 casa." },
+    { id: 45, title: "Recuo -6", type: "penalty", value: 6, color: "bg-red-800", icon: "fa-arrow-left", text: "APRESENTAÇÃO TRAVADA! PowerPoint parou de responder durante a aula. Volte 6 casas!" },
+    { id: 46, title: "PowerPoint", type: "question", color: "bg-orange-500", icon: "fa-file-powerpoint" },
+    { id: 47, title: "Gráficos de Dados", type: "question", color: "bg-blue-600", icon: "fa-chart-column" },
+    
+    // RESET 4 (Volta ao Início)
+    { id: 48, title: "VOLTE AO INÍCIO", type: "reset", color: "bg-red-950 border-red-500", icon: "fa-skull-crossbones", text: "LOOP INFINITO DETECTADO! Sua lógica de programação travou o compilador. Volte ao início do circuito!" },
+    
+    { id: 49, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-500", icon: "fa-arrow-left", text: "Ponto e vírgula ausente no código! Volte 1 casa." },
+    { id: 50, title: "Lógica Program.", type: "question", color: "bg-purple-600", icon: "fa-code-fork" },
+    { id: 51, title: "Recuo -3", type: "penalty", value: 3, color: "bg-red-600", icon: "fa-arrow-left", text: "Condicional mal feita gerou erro fatal. Volte 3 casas." },
+    { id: 52, title: "Estruturas Web", type: "question", color: "bg-yellow-500", icon: "fa-code" },
+    { id: 53, title: "Ética Digital", type: "question", color: "bg-orange-500", icon: "fa-scale-balanced" },
+    { id: 54, title: "Recuo -2", type: "penalty", value: 2, color: "bg-red-600", icon: "fa-arrow-left", text: "Vazamento de dados privados na internet. Volte 2 casas." },
+    { id: 55, title: "LGPD", type: "question", color: "bg-blue-600", icon: "fa-user-shield" },
+    
+    // RESET 5 (Volta ao Início)
+    { id: 56, title: "VOLTE AO INÍCIO", type: "reset", color: "bg-red-950 border-red-500", icon: "fa-skull-crossbones", text: "FALHA CRÍTICA DE BACKUP! Servidor de contingência queimou sem discos extras. Volte ao início!" },
+    
+    { id: 57, title: "Internet das Coisas", type: "question", color: "bg-yellow-600", icon: "fa-microchip" },
+    { id: 58, title: "Inteligência Art.", type: "question", color: "bg-green-600", icon: "fa-robot" },
+    { id: 59, title: "Recuo -6", type: "penalty", value: 6, color: "bg-red-800", icon: "fa-arrow-left", text: "IA ALUCINOU! Banco de dados de treinamento foi poluído. Volte 6 casas!" },
+    { id: 60, title: "Aplicações de IA", type: "question", color: "bg-green-600", icon: "fa-brain" },
+    { id: 61, title: "Ética na IA", type: "question", color: "bg-emerald-600", icon: "fa-scale-unbalanced" },
+    { id: 62, title: "Recuo -1", type: "penalty", value: 1, color: "bg-red-500", icon: "fa-arrow-left", text: "Endereço DNS incorreto no modem. Volte 1 casa." },
+    { id: 63, title: "Saída", type: "end", color: "bg-emerald-600", icon: "fa-trophy", text: "Vitória! Você concluiu com sucesso!" }
+];
+
+let state = {
+    pos: 0,
+    rolls: 0,
+    correct: 0,
+    time: 0,
+    playing: false,
+    pawn: AVATARS[0],
+    currentQ: null,
+    name: ""
+};
+
+let modalCallback = null; // Callback para sequenciar o movimento do peão após fechar modais de aviso
+
+// Exibe toast simples e rápido na parte superior do site
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-text').innerText = msg;
+    t.classList.remove('scale-0');
+    t.classList.add('scale-100');
+    setTimeout(() => {
+        t.classList.remove('scale-100');
+        t.classList.add('scale-0');
+    }, 4000);
+}
+
+// Embaralha matrizes (para aleatorizar perguntas e alternativas)
+function shuffle(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+// Monta seleção de avatar
+const avDiv = document.getElementById('avatar-sel');
+AVATARS.forEach((a, i) => {
+    const b = document.createElement('button');
+    b.className = "text-2xl bg-slate-950 p-3 rounded-2xl border-2 border-slate-800 hover:border-emerald-500 transition-all";
+    if(i === 0) { 
+        b.classList.add('border-emerald-500'); 
+        state.pawn = a; 
+    }
+    b.innerText = a;
+    b.onclick = () => {
+        document.querySelectorAll('#avatar-sel button').forEach(x => x.classList.remove('border-emerald-500'));
+        b.classList.add('border-emerald-500');
+        state.pawn = a;
+        document.getElementById('pawn-display').innerText = a;
+    };
+    avDiv.appendChild(b);
+});
+
+function initGame() {
+    const nameVal = document.getElementById('name-in').value.trim();
+    if (!nameVal) {
+        showToast("Você precisa preencher seu nome primeiro!");
+        return;
+    }
+    
+    state.name = nameVal;
+    state.playing = true;
+    state.pos = 0;
+    state.rolls = 0;
+    state.correct = 0;
+    state.time = 0;
+    
+    document.getElementById('setup').classList.add('hidden');
+    document.getElementById('board-container').classList.remove('hidden');
+    document.getElementById('controls').classList.remove('hidden');
+    document.getElementById('user-name').innerText = state.name;
+    
+    renderBoard();
+    startTimer();
+}
+
+function renderBoard() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    
+    // Curva serpente em 8 colunas e 8 linhas
+    for (let r = 0; r < 8; r++) {
+        let cols = [];
+        for (let c = 0; c < 8; c++) {
+            cols.push(r * 8 + c);
+        }
+        if (r % 2 !== 0) {
+            cols.reverse();
+        }
+
+        cols.forEach(idx => {
+            const tile = BOARD[idx];
+            const el = document.createElement('div');
+            el.id = `t-${idx}`;
+            
+            // Layout profissional do Bloco
+            el.className = `${tile.color} p-3 rounded-2xl border-2 border-white/5 min-h-[105px] flex flex-col justify-between transition-all duration-300 shadow-lg relative`;
+            el.innerHTML = `
+                <div class="flex justify-between items-center opacity-40">
+                    <span class="text-[10px] font-black">#${idx}</span>
+                    <i class="fa-solid ${tile.icon} text-xs"></i>
+                </div>
+                <span class="text-[9px] font-black uppercase text-center mt-1 text-white leading-tight truncate">${tile.title}</span>
+                <div id="p-slot-${idx}" class="h-6 flex justify-center items-center"></div>
+            `;
+            grid.appendChild(el);
+        });
+    }
+    updatePawn();
+}
+
+function updatePawn() {
+    document.querySelectorAll('[id^="p-slot-"]').forEach(s => s.innerHTML = '');
+    document.querySelectorAll('.serpentine-grid > div').forEach(d => d.classList.remove('active-glow'));
+    
+    const slot = document.getElementById(`p-slot-${state.pos}`);
+    if (slot) {
+        const pawn = document.createElement('div');
+        pawn.className = "text-2xl drop-shadow-lg animate-bounce select-none";
+        pawn.innerText = state.pawn;
+        slot.appendChild(pawn);
+    }
+    
+    const currentTileEl = document.getElementById(`t-${state.pos}`);
+    if (currentTileEl) {
+        currentTileEl.classList.add('active-glow');
+    }
+    
+    document.getElementById('loc-num').innerText = state.pos;
+    document.getElementById('loc-name').innerText = BOARD[state.pos].title;
+}
+
+function handleRoll() {
+    if (!state.playing) return;
+    const btn = document.getElementById('roll-btn');
+    const die = document.getElementById('dice-box');
+    
+    btn.disabled = true;
+    die.classList.add('die-spin');
+    
+    setTimeout(() => {
+        die.classList.remove('die-spin');
+        const roll = Math.floor(Math.random() * 6) + 1;
+        die.innerText = getDieEmoji(roll);
+        state.rolls++;
+        document.getElementById('rolls').innerText = state.rolls;
+        move(roll);
+    }, 600);
+}
+
+function getDieEmoji(num) {
+    const dies = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+    return dies[num - 1] || "🎲";
+}
+
+// Movimento passo a passo para gerar impacto visual do deslocamento do peão
+function animateMovement(from, to, callback = null) {
+    let current = from;
+    const step = () => {
+        if (current === to) {
+            state.pos = to;
+            updatePawn();
+            if (callback) callback();
+            return;
+        }
+        current += (to > current) ? 1 : -1;
+        state.pos = current;
+        updatePawn();
+        setTimeout(step, 180); // Velocidade ideal de transição
+    };
+    step();
+}
+
+function move(steps) {
+    let newPos = Math.min(63, state.pos + steps);
+    animateMovement(state.pos, newPos, () => {
+        setTimeout(() => handleTile(BOARD[newPos]), 400);
+    });
+}
+
+function handleTile(tile) {
+    if (tile.type === 'start') {
+        document.getElementById('roll-btn').disabled = false;
+    } 
+    else if (tile.type === 'end') {
+        state.playing = false;
+        triggerVictory();
+    }
+    else if (tile.type === 'reset') {
+        // Casas Críticas de Voltar tudo para o 0
+        showEventModal("🚨 COSTA SENSÍVEL DA REDE!", "Falha Crítica de Sistema", tile.text, "error", () => {
+            animateMovement(state.pos, 0, () => {
+                document.getElementById('roll-btn').disabled = false;
+            });
+        });
+    }
+    else if (tile.type === 'penalty') {
+        // Casas normais de Voltar X posições
+        showEventModal("⚠️ ANOMALIA DE SISTEMA!", `Penalidade: Volte ${tile.value} Casas`, tile.text, "error", () => {
+            let newPos = Math.max(0, state.pos - tile.value);
+            animateMovement(state.pos, newPos, () => {
+                document.getElementById('roll-btn').disabled = false;
+            });
+        });
+    }
+    else if (tile.type === 'bonus') {
+        // Casas de bônus de avanço automático
+        showEventModal("⚡ TURBO CARREGADO!", `Bônus: Avance ${tile.value} Casas`, tile.text, "success", () => {
+            let newPos = Math.min(63, state.pos + tile.value);
+            animateMovement(state.pos, newPos, () => {
+                document.getElementById('roll-btn').disabled = false;
+            });
+        });
+    }
+    else {
+        // Casas normais de pergunta de informática
+        // Sorteamos uma pergunta do banco aleatoriamente
+        const questionData = shuffle(QUESTIONS_BANK)[0];
+        state.currentQ = questionData;
+        const alternatives = shuffle([questionData.a, ...questionData.o]);
+        openQuestionModal(questionData.q, alternatives, tile.title);
+    }
+}
+
+function openQuestionModal(questionText, alternatives, title) {
+    const modal = document.getElementById('modal');
+    const options = document.getElementById('options');
+    const footer = document.getElementById('modal-footer');
+    
+    document.getElementById('modal-bar').className = "absolute top-0 left-0 w-full h-2 bg-indigo-500 animate-pulse";
+    document.getElementById('modal-icon').className = "text-3xl bg-slate-950 p-3 rounded-2xl border border-slate-800 fa-solid fa-circle-question text-indigo-400";
+    document.getElementById('modal-title').innerText = `TÓPICO: ${title}`;
+    document.getElementById('modal-subtitle').innerText = "Responda para se manter na posição";
+    document.getElementById('modal-text').innerText = questionText;
+    
+    options.innerHTML = '';
+    footer.classList.add('hidden');
+    
+    alternatives.forEach(alt => {
+        const b = document.createElement('button');
+        b.className = "w-full text-left bg-slate-800 p-4 rounded-xl font-bold hover:bg-slate-700 border border-slate-700 hover:border-indigo-500 transition-all flex justify-between items-center";
+        b.innerHTML = `<span>${alt}</span> <i class="fa-solid fa-chevron-right opacity-0 transition-all text-xs"></i>`;
+        b.onclick = () => checkAnswer(alt, b);
+        options.appendChild(b);
+    });
+    
+    modalCallback = null; // Perguntas normais não realizam movimentos automáticos no fechamento
+    modal.classList.remove('hidden');
+}
+
+function checkAnswer(selected, btn) {
+    const correct = state.currentQ.a;
+    const allBtns = document.querySelectorAll('#options button');
+    allBtns.forEach(b => {
+        b.disabled = true;
+        b.classList.remove('hover:border-indigo-500');
+    });
+
+    const feedbackTxt = document.getElementById('feedback-txt');
+    const footer = document.getElementById('modal-footer');
+
+    if (selected === correct) {
+        btn.classList.add('bg-emerald-500', 'text-slate-950', 'border-emerald-400');
+        btn.querySelector('i').className = "fa-solid fa-circle-check text-slate-950 opacity-100";
+        state.correct++;
+        document.getElementById('score').innerText = `${state.correct} acertos`;
+        
+        feedbackTxt.className = "text-emerald-400 font-bold text-sm";
+        feedbackTxt.innerText = "Parabéns! Resposta correta. Sua posição está mantida.";
+    } else {
+        btn.classList.add('bg-red-500', 'text-white', 'border-red-400');
+        btn.querySelector('i').className = "fa-solid fa-circle-xmark text-white opacity-100";
+        
+        allBtns.forEach(b => {
+            if (b.innerText.trim() === correct) {
+                b.classList.add('border-emerald-500', 'bg-emerald-950/20');
+            }
+        });
+
+        // PENALIDADE ATIVA DE PERGUNTA: Errar recua o jogador em 2 casas
+        feedbackTxt.className = "text-red-400 font-bold text-sm";
+        feedbackTxt.innerText = "Resposta errada! O firewall bloqueou o tráfego e você recuou 2 casas.";
+        
+        modalCallback = () => {
+            let errorPos = Math.max(0, state.pos - 2);
+            animateMovement(state.pos, errorPos, () => {
+                document.getElementById('roll-btn').disabled = false;
+            });
+        };
+    }
+    
+    footer.classList.remove('hidden');
+}
+
+function showEventModal(title, sub, text, type, callback = null) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-subtitle').innerText = sub;
+    document.getElementById('modal-text').innerText = text;
+    document.getElementById('options').innerHTML = '';
+    document.getElementById('feedback-txt').innerText = '';
+    document.getElementById('modal-footer').classList.remove('hidden');
+    
+    const colors = { success: 'bg-emerald-500', error: 'bg-red-600' };
+    document.getElementById('modal-bar').className = `absolute top-0 left-0 w-full h-2 ${colors[type] || 'bg-indigo-500'}`;
+    
+    const icon = document.getElementById('modal-icon');
+    icon.className = `text-3xl bg-slate-950 p-3 rounded-2xl border border-slate-800 fa-solid ${type === 'error' ? 'fa-triangle-exclamation text-red-500' : 'fa-trophy text-emerald-400'}`;
+    
+    modalCallback = callback;
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.add('hidden');
+    if (modalCallback) {
+        const nextAction = modalCallback;
+        modalCallback = null;
+        nextAction();
+    } else {
+        document.getElementById('roll-btn').disabled = false;
+    }
+}
+
+// TIMER
+function startTimer() {
+    setInterval(() => {
+        if (!state.playing) return;
+        state.time++;
+        const m = Math.floor(state.time / 60);
+        const s = state.time % 60;
+        document.getElementById('timer').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }, 1000);
+}
+
+function triggerVictory() {
+    const canvas = document.getElementById('confetti');
+    canvas.classList.remove('hidden');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    let particles = [];
+    for (let i = 0; i < 150; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            r: Math.random() * 6 + 4,
+            d: Math.random() * canvas.height,
+            color: `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, 0.8)`,
+            tilt: Math.random() * 10 - 5
+        });
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, idx) => {
+            ctx.beginPath();
+            ctx.lineWidth = p.r;
+            ctx.strokeStyle = p.color;
+            ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+            ctx.stroke();
+            
+            p.y += Math.cos(p.d) + 1 + p.r / 2;
+            p.tilt = Math.sin(idx) * 3;
+            
+            if (p.y > canvas.height) {
+                particles[idx] = {
+                    x: Math.random() * canvas.width,
+                    y: -20,
+                    r: p.r,
+                    d: p.d,
+                    color: p.color,
+                    tilt: p.tilt
+                };
+            }
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+    
+    const minutes = Math.floor(state.time / 60);
+    const seconds = state.time % 60;
+    showEventModal(
+        "🏆 PARABÉNS, VOCÊ CONCLUIU!", 
+        "JORNADA COMPLETA", 
+        `Incrível! Você dominou o circuito tecnológico em ${minutes} minutos e ${seconds} segundos.\nTotal de Dadadas: ${state.rolls}.\nTotal de Acertos: ${state.correct}.\nMostre essa tela ao seu instrutor para registrar sua vitória!`, 
+        "success"
+    );
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade: Usuário Avançado do Windows</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf.js for Client-Side PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        winblue: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0078d4',
+                            600: '#0063b1',
+                            700: '#004e8c',
+                            800: '#003a68',
+                            900: '#002749',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* PRINT / PDF STYLES */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            header, footer, #start-screen, #quiz-screen, .no-print {
+                display: none !important;
+            }
+            #print-report-container {
+                display: block !important;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-full font-sans antialiased flex flex-col selection:bg-winblue-500 selection:text-white">
+
+    <!-- Background Accents -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0 no-print">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-winblue-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 right-1/3 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+    </div>
+
+    <header class="relative z-10 border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 no-print">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-winblue-600 flex items-center justify-center text-white shadow-lg shadow-winblue-600/30 font-bold text-xl">
+                    <i class="fa-brands fa-windows"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-white leading-tight">Operador de Computador</h1>
+                    <p class="text-xs text-slate-400">UC: Usuários Avançados de Sistemas Operacionais</p>
+                </div>
+            </div>
+            <div id="top-badge" class="hidden sm:flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-full px-3 py-1 text-xs text-slate-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>20 Questões Teórico-Práticas</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col justify-center">
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10 text-slate-100 pointer-events-none">
+                    <i class="fa-solid fa-laptop-code text-9xl"></i>
+                </div>
+                
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-winblue-500/10 border border-winblue-500/30 text-winblue-400 text-xs font-semibold uppercase tracking-wider mb-4">
+                    <i class="fa-solid fa-graduation-cap"></i> Avaliação Prática Interativa
+                </div>
+
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-3">
+                    Desafio do Usuário Avançado do Windows
+                </h2>
+                
+                <p class="text-slate-300 leading-relaxed text-sm sm:text-base mb-6">
+                    Esta atividade foi desenvolvida para testar e consolidar seus conhecimentos técnicos sobre diagnósticos, comandos no Prompt (CMD), consoles de gerenciamento (MMC), sistema de arquivos, serviços e ferramentas avançadas do Microsoft Windows.
+                </p>
+
+                <!-- Student Identification Card -->
+                <div class="bg-slate-900/90 border border-winblue-500/30 rounded-xl p-5 mb-6 space-y-4 shadow-inner">
+                    <h3 class="text-sm font-bold text-winblue-400 flex items-center gap-2 uppercase tracking-wider">
+                        <i class="fa-solid fa-user-pen"></i> Identificação do Estudante
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="input-student-name" class="block text-xs font-medium text-slate-300 mb-1.5">
+                                Nome Completo do Aluno <span class="text-rose-400">*</span>
+                            </label>
+                            <input type="text" id="input-student-name" placeholder="Digite seu nome completo" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-winblue-500 transition">
+                        </div>
+                        <div>
+                            <label for="input-student-course" class="block text-xs font-medium text-slate-300 mb-1.5">
+                                Curso / Turma / Módulo <span class="text-rose-400">*</span>
+                            </label>
+                            <input type="text" id="input-student-course" placeholder="Ex: Operador de Computador - Turma 01" value="Operador de Computador" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-winblue-500 transition">
+                        </div>
+                    </div>
+                    <div id="student-info-error" class="hidden text-xs text-rose-400 font-medium flex items-center gap-1.5 pt-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Por favor, preencha seu nome e curso antes de iniciar a atividade.</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-winblue-500/10 text-winblue-400 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">Total de Questões</div>
+                            <div class="text-base font-bold text-white">20 Questões</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">Relatório Final</div>
+                            <div class="text-base font-bold text-white">Exportação em PDF</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">Feedback</div>
+                            <div class="text-base font-bold text-white">Imediato + Explicação</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 items-center justify-between border-t border-slate-700/50 pt-6">
+                    <div class="text-xs text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-winblue-400"></i> Dica: Ao terminar, você poderá salvar o comprovante da atividade em PDF!
+                    </div>
+                    <button id="btn-start" onclick="validateAndStart()" class="w-full sm:w-auto px-8 py-3.5 bg-winblue-600 hover:bg-winblue-500 active:bg-winblue-700 text-white font-semibold rounded-xl shadow-lg shadow-winblue-600/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                        <span>Iniciar Atividade</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ CONTAINER (Hidden by default) -->
+        <div id="quiz-screen" class="hidden space-y-6">
+            
+            <!-- Progress Bar Card -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-4 backdrop-blur-md shadow-lg">
+                <div class="flex justify-between items-center text-xs sm:text-sm font-medium mb-2">
+                    <span id="question-indicator" class="text-winblue-400 font-semibold">Questão 1 de 20</span>
+                    <span id="score-indicator" class="text-slate-400">Pontuação: <strong id="current-score" class="text-emerald-400">0</strong>/20</span>
+                </div>
+                <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700/40">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-winblue-600 to-cyan-400 rounded-full transition-all duration-300 w-[5%]"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl space-y-6">
+                
+                <!-- Category Badge & Question Title -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <span id="question-category" class="px-3 py-1 rounded-md bg-slate-900 text-winblue-400 border border-slate-700 text-xs font-semibold tracking-wide uppercase">
+                            Categoria
+                        </span>
+                        <span id="question-difficulty" class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-medium">
+                            Nível: Básico/Intermediário
+                        </span>
+                    </div>
+
+                    <h3 id="question-text" class="text-lg sm:text-xl font-bold text-white leading-relaxed">
+                        Carregando pergunta...
+                    </h3>
+                </div>
+
+                <!-- Answer Options -->
+                <div id="options-container" class="space-y-3 pt-2">
+                    <!-- Options injected dynamically via JavaScript -->
+                </div>
+
+                <!-- Explanation Box (Shows after user chooses an answer) -->
+                <div id="explanation-box" class="hidden p-4 rounded-xl border text-sm leading-relaxed space-y-2 transition-all">
+                    <div class="font-bold flex items-center gap-2" id="explanation-title">
+                        <i class="fa-solid fa-circle-info"></i> Explicação Técnica:
+                    </div>
+                    <p id="explanation-text" class="text-slate-200">
+                        ...
+                    </p>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="flex items-center justify-between border-t border-slate-700/50 pt-5 mt-4">
+                    <button id="btn-prev" onclick="prevQuestion()" disabled class="px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
+                        <i class="fa-solid fa-chevron-left"></i> Anterior
+                    </button>
+
+                    <button id="btn-next" onclick="nextQuestion()" disabled class="px-6 py-2.5 bg-winblue-600 hover:bg-winblue-500 text-white rounded-xl text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed shadow-md flex items-center gap-2">
+                        <span>Próxima</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RESULT SCREEN (Hidden by default) -->
+        <div id="result-screen" class="hidden space-y-6">
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl text-center space-y-6">
+                
+                <div class="w-20 h-20 mx-auto rounded-full bg-slate-900 border-2 border-winblue-500/40 flex items-center justify-center text-3xl text-winblue-400 shadow-xl shadow-winblue-500/10">
+                    <i id="result-icon" class="fa-solid fa-trophy"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Atividade Concluída!</h2>
+                    <p id="display-student-info" class="text-winblue-400 text-sm font-medium mt-1">
+                        Aluno: <strong id="res-student-name" class="text-white">---</strong> | Curso: <strong id="res-student-course" class="text-white">---</strong>
+                    </p>
+                </div>
+
+                <!-- Score Card Display -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto text-left">
+                    <div class="bg-slate-900/80 border border-slate-700/60 rounded-xl p-4 text-center">
+                        <div class="text-xs text-slate-400 mb-1">Acertos</div>
+                        <div id="final-correct" class="text-3xl font-extrabold text-emerald-400">0</div>
+                        <div class="text-[10px] text-slate-500 mt-1">de 20 questões</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700/60 rounded-xl p-4 text-center">
+                        <div class="text-xs text-slate-400 mb-1">Aproveitamento</div>
+                        <div id="final-percentage" class="text-3xl font-extrabold text-winblue-400">0%</div>
+                        <div class="text-[10px] text-slate-500 mt-1">porcentagem final</div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-700/60 rounded-xl p-4 text-center">
+                        <div class="text-xs text-slate-400 mb-1">Desempenho</div>
+                        <div id="final-rating" class="text-sm font-bold text-amber-400 mt-2">Em Avaliação</div>
+                    </div>
+                </div>
+
+                <!-- Performance Feedback Message -->
+                <div id="feedback-message" class="p-4 rounded-xl bg-slate-900/60 border border-slate-700 text-sm text-slate-300 max-w-2xl mx-auto">
+                    ...
+                </div>
+
+                <!-- Primary Action Buttons (Export PDF / Review) -->
+                <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                    <button onclick="exportToPDF()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-emerald-600/30 flex items-center gap-2">
+                        <i class="fa-solid fa-file-pdf text-lg"></i>
+                        <span>Exportar Relatório em PDF</span>
+                    </button>
+                    
+                    <button onclick="window.print()" class="px-5 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Imprimir</span>
+                    </button>
+
+                    <button onclick="toggleReviewMode()" class="px-5 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-200 font-medium rounded-xl text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Revisar Respostas</span>
+                    </button>
+                    
+                    <button onclick="restartQuiz()" class="px-5 py-3 bg-winblue-600/20 hover:bg-winblue-600/30 text-winblue-300 font-medium rounded-xl text-sm transition flex items-center gap-2 border border-winblue-500/30">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Refazer</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Review List -->
+            <div id="review-container" class="hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines text-winblue-400"></i> Revisão Detalhada das 20 Questões
+                    </h3>
+                    <div class="flex gap-2">
+                        <button onclick="filterReview('all')" class="review-filter-btn px-3 py-1 rounded-lg text-xs bg-winblue-600 text-white font-medium">Todas</button>
+                        <button onclick="filterReview('correct')" class="review-filter-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium">Acertos</button>
+                        <button onclick="filterReview('incorrect')" class="review-filter-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium">Erros</button>
+                    </div>
+                </div>
+
+                <div id="review-list" class="space-y-4">
+                    <!-- Review Items dynamically injected -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- HIDDEN PRINTABLE PDF REPORT CONTAINER -->
+    <div id="print-report-container" class="hidden p-8 max-w-4xl mx-auto bg-white text-slate-900 font-sans">
+        
+        <!-- Document Header -->
+        <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900 uppercase tracking-tight">Comprovante de Atividade Prática</h1>
+                <p class="text-sm font-semibold text-slate-600">Curso: Operador de Computador • Módulo Windows Avançado</p>
+                <p class="text-xs text-slate-500">Unidade Curricular: Usuários Avançados de Sistemas Operacionais</p>
+            </div>
+            <div class="text-right">
+                <span class="inline-block bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded">20 QUESTÕES</span>
+                <p id="pdf-date-stamp" class="text-[11px] text-slate-500 mt-1">Data: --/--/----</p>
+            </div>
+        </div>
+
+        <!-- Student Identification Info Box -->
+        <div class="bg-slate-100 border border-slate-300 rounded-lg p-4 mb-6 grid grid-cols-2 gap-4">
+            <div>
+                <span class="block text-xs uppercase font-bold text-slate-500">Nome do Aluno:</span>
+                <span id="pdf-student-name" class="text-base font-bold text-slate-900">---</span>
+            </div>
+            <div>
+                <span class="block text-xs uppercase font-bold text-slate-500">Curso / Turma:</span>
+                <span id="pdf-student-course" class="text-base font-bold text-slate-900">---</span>
+            </div>
+            <div>
+                <span class="block text-xs uppercase font-bold text-slate-500">Pontuação Obtida:</span>
+                <span id="pdf-score" class="text-base font-bold text-slate-900">0 de 20 (0%)</span>
+            </div>
+            <div>
+                <span class="block text-xs uppercase font-bold text-slate-500">Nível de Desempenho:</span>
+                <span id="pdf-rating" class="text-base font-bold text-slate-900">---</span>
+            </div>
+        </div>
+
+        <!-- Detailed Questions & Answers Table / Review -->
+        <div class="space-y-4">
+            <h2 class="text-base font-bold text-slate-900 border-b border-slate-300 pb-1">
+                Gabarito Detalhado e Respostas do Estudante
+            </h2>
+            <div id="pdf-questions-list" class="space-y-3">
+                <!-- PDF Questions generated dynamically -->
+            </div>
+        </div>
+
+        <!-- Document Footer -->
+        <div class="mt-8 border-t border-slate-300 pt-4 text-center text-xs text-slate-500">
+            <p>Relatório gerado automaticamente pelo Sistema de Avaliação Interativa de Usuários Avançados do Windows.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-slate-800 py-4 text-center text-xs text-slate-500 no-print">
+        <p>Atividade Pedagógica de Informática • Curso de Operador de Computador • Módulo Windows Avançado</p>
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                category: "Redes & CMD",
+                question: "Um técnico precisa verificar as configurações de rede de um computador com Windows, incluindo o endereço IP local, a máscara de sub-rede e o gateway padrão. Qual comando no Prompt de Comando (CMD) deve ser utilizado?",
+                options: [
+                    "ping 127.0.0.1",
+                    "ipconfig",
+                    "tracert google.com",
+                    "netstat -a"
+                ],
+                correct: 1,
+                explanation: "O comando 'ipconfig' exibe os valores de configuração de rede IP atuais da placa de rede (endereço IPv4/IPv6, máscara de sub-rede e gateway padrão). Com a opção '/all' (ipconfig /all), exibe também o endereço MAC e os servidores DNS."
+            },
+            {
+                id: 2,
+                category: "Monitoramento do Sistema",
+                question: "Ao perceber que o computador está extremamente lento, o operador deseja identificar qual processo específico está consumindo 100% do uso do disco rígido. Qual ferramenta nativa do Windows permite visualizar e encerrar esse processo diretamente?",
+                options: [
+                    "Painel de Controle",
+                    "Visualizador de Eventos",
+                    "Gerenciador de Tarefas (Task Manager)",
+                    "Agendador de Tarefas"
+                ],
+                correct: 2,
+                explanation: "O Gerenciador de Tarefas (Ctrl + Shift + Esc) exibe o consumo em tempo real de CPU, Memória, Disco e Rede por processo, permitindo finalizar tarefas travadas ou com alto consumo de recursos."
+            },
+            {
+                id: 3,
+                category: "Sistema de Arquivos",
+                question: "Em um ambiente corporativo com Windows, qual sistema de arquivos deve ser utilizado na partição do sistema operacional para permitir o controle de acesso e atribuição de permissões individuais por usuário em pastas e arquivos?",
+                options: [
+                    "FAT32",
+                    "exFAT",
+                    "NTFS",
+                    "ISO 9660"
+                ],
+                correct: 2,
+                explanation: "O NTFS (New Technology File System) é o sistema de arquivos padrão do Windows moderno. Ele oferece suporte a permissões de segurança por usuário/grupo, criptografia (EFS), compactação nativa e arquivos com mais de 4 GB (limite do FAT32)."
+            },
+            {
+                id: 4,
+                category: "Consoles de Gerenciamento",
+                question: "Para abrir o utilitário de Gerenciamento do Computador diretamente pelo menu Executar (atalho Win + R), qual comando executável deve ser digitado?",
+                options: [
+                    "services.msc",
+                    "compmgmt.msc",
+                    "devmgmt.msc",
+                    "msconfig"
+                ],
+                correct: 1,
+                explanation: "O comando 'compmgmt.msc' abre o Gerenciamento do Computador, um console central que agrupa o Gerenciador de Dispositivos, Gerenciamento de Disco, Agendador de Tarefas e Visualizador de Eventos."
+            },
+            {
+                id: 5,
+                category: "Arquitetura & Registro",
+                question: "O Registro do Windows é um banco de dados hierárquico central do sistema. Qual é o risco principal associado à alteração incorreta ou exclusão acidental de chaves no Editor do Registro (regedit)?",
+                options: [
+                    "Aumento temporário na velocidade de navegação na internet",
+                    "Exclusão automática da conta do usuário no Windows Defender",
+                    "Instabilidade crítica do sistema operacional ou falha de inicialização (Boot)",
+                    "Formatação instantânea e irreversível de todo o disco rígido"
+                ],
+                correct: 2,
+                explanation: "O Registro contém todas as configurações do kernel, drivers, serviços e programas do Windows. Alterações incorretas podem impedir que o sistema inicie ou causar falhas graves (tela azul)."
+            },
+            {
+                id: 6,
+                category: "Hardware & Drivers",
+                question: "Um novo periférico foi conectado ao computador, mas apresenta um símbolo de triângulo amarelo com ponto de exclamação no Gerenciador de Dispositivos. O que esse sinal indica?",
+                options: [
+                    "O dispositivo está funcionando perfeitamente e atualizado",
+                    "O driver do dispositivo está ausente, corrompido ou com falha de funcionamento",
+                    "O dispositivo está sendo utilizado como placa de vídeo primária",
+                    "A porta USB foi desativada permanentemente pela bios"
+                ],
+                correct: 1,
+                explanation: "O triângulo amarelo com exclamação indica um erro no dispositivo, geralmente causado por ausência de driver compatível, conflito de recursos ou falha física do componente."
+            },
+            {
+                id: 7,
+                category: "Manutenção & Diagnóstico",
+                question: "Qual utilitário de linha de comando do Windows inspeciona a integridade de todos os arquivos protegidos do sistema operacional e substitui arquivos corrompidos por cópias de backup corretas?",
+                options: [
+                    "chkdsk /f",
+                    "sfc /scannow",
+                    "format C:",
+                    "diskpart"
+                ],
+                correct: 1,
+                explanation: "O comando 'sfc /scannow' (System File Checker) verifica se há arquivos essenciais do sistema danificados e os restaura a partir do cache compactado em 'C:\\Windows\\System32\\winxs's."
+            },
+            {
+                id: 8,
+                category: "Segurança",
+                question: "Qual é a função principal do Controle de Conta de Usuário (UAC - User Account Control) no Windows?",
+                options: [
+                    "Acelerar o carregamento de jogos e softwares pesados",
+                    "Impedir alterações não autorizadas no sistema solicitando permissão administrativa antes de executar modificações elevadas",
+                    "Bloquear pop-ups e propagandas em navegadores web",
+                    "Criar backups automáticos diários dos arquivos pessoais"
+                ],
+                correct: 1,
+                explanation: "O UAC evita que softwares maliciosos façam alterações administrativas no computador sem o consentimento do usuário, exibindo a tela de confirmação de elevação de privilégios."
+            },
+            {
+                id: 9,
+                category: "Serviços do Windows",
+                question: "O serviço do Windows responsável pela fila de impressão (Spooler) parou de responder. Qual console do Microsoft Management Console (MMC) permite reiniciar ou alterar o tipo de inicialização desse serviço?",
+                options: [
+                    "services.msc",
+                    "diskmgmt.msc",
+                    "eventvwr.msc",
+                    "gpedit.msc"
+                ],
+                correct: 0,
+                explanation: "O 'services.msc' abre o console de Serviços do Windows, onde o operador pode parar, iniciar, reiniciar e definir a inicialização (Automático, Manual ou Desativado) de qualquer serviço de segundo plano."
+            },
+            {
+                id: 10,
+                category: "Atalhos & Produtividade",
+                question: "Qual combinação de teclas no Windows abre o Menu de Link Rápido (Menu de Usuário Avançado), permitindo acesso rápido ao Gerenciador de Dispositivos, Gerenciamento de Disco e Terminal?",
+                options: [
+                    "Ctrl + Alt + Del",
+                    "Windows + X",
+                    "Windows + R",
+                    "Alt + F4"
+                ],
+                correct: 1,
+                explanation: "O atalho 'Windows + X' (ou clique com botão direito no menu Iniciar) abre um menu de atalhos indispensável para administradores, dando acesso rápido às ferramentas de sistema."
+            },
+            {
+                id: 11,
+                category: "Variáveis de Ambiente",
+                question: "O que é a variável de ambiente PATH no Windows e qual a sua utilidade para um usuário avançado?",
+                options: [
+                    "Um arquivo de texto contendo a lista de senhas salvas do usuário",
+                    "Uma lista de caminhos de diretórios onde o sistema busca executáveis ao digitar um comando sem especificar seu caminho completo",
+                    "A rota física dos cabos de rede conectados à placa mãe",
+                    "Uma pasta oculta onde ficam guardados os papéis de parede do sistema"
+                ],
+                correct: 1,
+                explanation: "A variável PATH especifica as pastas onde o Windows procura por arquivos executáveis (.exe, .bat, .cmd) quando você digita um comando no Prompt ou Executar."
+            },
+            {
+                id: 12,
+                category: "Recuperação do Sistema",
+                question: "Um operador instalou um programa incorreto que desconfigurou o sistema. Qual recurso nativo permite retornar as configurações do Windows a um estado anterior sem perder os arquivos pessoais do usuário?",
+                options: [
+                    "Formatação rápida do volume",
+                    "Ponto de Restauração do Sistema (System Restore)",
+                    "Limpeza de Disco (cleanmgr)",
+                    "Desfragmentador de Disco"
+                ],
+                correct: 1,
+                explanation: "A Restauração do Sistema reverte arquivos de sistema, chaves de registro e programas instalados para um Ponto de Restauração previamente criado, mantendo intactos os documentos do usuário."
+            },
+            {
+                id: 13,
+                category: "Gerenciamento de Disco",
+                question: "Qual utilitário gráfico do Windows deve ser usado para criar uma nova partição, diminuir o tamanho de um volume existente ou atribuir uma nova letra de unidade (ex: D:)?",
+                options: [
+                    "Gerenciador de Dispositivos (devmgmt.msc)",
+                    "Gerenciamento de Disco (diskmgmt.msc)",
+                    "Visualizador de Eventos (eventvwr.msc)",
+                    "Monitor de Desempenho (perfmon.msc)"
+                ],
+                correct: 1,
+                explanation: "O Gerenciamento de Disco (`diskmgmt.msc`) é a ferramenta gráfica apropriada para particionar, formatar, alterar letras de unidade e gerenciar discos rígidos e SSDs."
+            },
+            {
+                id: 14,
+                category: "Logs & Diagnóstico",
+                question: "Onde o operador de computador deve consultar para identificar o código de erro exato, a hora e a causa de uma falha inesperada ocorrida em um serviço ou aplicativo do sistema?",
+                options: [
+                    "No Painel de Controle -> Opções da Internet",
+                    "No Visualizador de Eventos (Event Viewer / eventvwr.msc)",
+                    "No Bloco de Notas abrindo o arquivo boot.ini",
+                    "No Gerenciador de Dispositivos na aba Detalhes"
+                ],
+                correct: 1,
+                explanation: "O Visualizador de Eventos registra os logs detalhados do sistema (Erros, Avisos e Informações) categorizados em Logs do Windows (Aplicação, Segurança, Sistema)."
+            },
+            {
+                id: 15,
+                category: "Configuração do Sistema",
+                question: "Ao digitar 'msconfig' na caixa Executar, qual principal configuração de inicialização e diagnóstico pode ser ajustada pelo operador?",
+                options: [
+                    "Definição de permissões de arquivo em pastas da rede local",
+                    "Configuração do modo de inicialização do sistema (Inicialização de Diagnóstico / Modo de Segurança) e Serviços",
+                    "Atualização dos drivers do processador e memória RAM",
+                    "Aumento da taxa de atualização do monitor de vídeo"
+                ],
+                correct: 1,
+                explanation: "A Configuração do Sistema (`msconfig`) é usada para solucionar problemas de inicialização, permitindo configurar boot limpo, modo de segurança e gerenciar serviços de inicialização."
+            },
+            {
+                id: 16,
+                category: "Criptografia & Segurança",
+                question: "Em edições Pro e Enterprise do Windows, qual funcionalidade nativa permite criptografar todo o disco rígido para proteger os dados em caso de roubo ou perda do computador?",
+                options: [
+                    "Windows Defender Antivírus",
+                    "BitLocker Drive Encryption",
+                    "Firewall do Windows com Segurança Avançada",
+                    "Filtro SmartScreen"
+                ],
+                correct: 1,
+                explanation: "O BitLocker é a ferramenta de criptografia de disco inteira integrada ao Windows Pro/Enterprise que protege o volume contra acessos não autorizados offline."
+            },
+            {
+                id: 17,
+                category: "Linha de Comando",
+                question: "Qual comando no Prompt de Comando verifica a estrutura física e lógica do disco rígido em busca de setores defeituosos (bad sectors) e erros no sistema de arquivos?",
+                options: [
+                    "ping",
+                    "chkdsk",
+                    "netstat",
+                    "cls"
+                ],
+                correct: 1,
+                explanation: "O comando 'chkdsk' (Check Disk) examina os discos rígidos e repara erros lógicos de sistema de arquivos e identifica setores defeituosos (bad sectors)."
+            },
+            {
+                id: 18,
+                category: "Modo de Segurança",
+                question: "Qual é a principal utilidade do 'Modo de Segurança' (Safe Mode) no Windows?",
+                options: [
+                    "Aumentar o desempenho em jogos modernos utilizando overclock",
+                    "Iniciar o Windows carregando apenas o conjunto mínimo de drivers e serviços necessários para diagnóstico de falhas",
+                    "Navegar na internet de forma totalmente anônima sem deixar rastros",
+                    "Permitir o uso de dois mouses simultaneamente na mesma máquina"
+                ],
+                correct: 1,
+                explanation: "O Modo de Segurança inicia o sistema de forma enxuta, sem carregar drivers de terceiros nem programas de inicialização, facilitando a remoção de vírus ou restauração de drivers com defeito."
+            },
+            {
+                id: 19,
+                category: "Limpeza & Armazenamento",
+                question: "Para liberar espaço em disco removendo arquivos temporários, atualizações antigas do Windows Update e esvaziar a lixeira de forma segura, qual utilitário nativo deve ser executado (`cleanmgr`)?",
+                options: [
+                    "Limpeza de Disco (Disk Cleanup)",
+                    "Desfragmentador de Registro",
+                    "Verificador de Drivers",
+                    "Monitor de Recursos"
+                ],
+                correct: 0,
+                explanation: "A Limpeza de Disco (`cleanmgr`) e o recurso Sensoriamento de Armazenamento calculam e apagam arquivos temporários não utilizados, caches e instalações antigas do Windows com segurança."
+            },
+            {
+                id: 20,
+                category: "Diferença CMD x PowerShell",
+                question: "Qual das alternativas expressa uma diferença fundamental entre o Prompt de Comando (CMD) tradicional e o Windows PowerShell?",
+                options: [
+                    "O CMD trabalha com objetos estruturados (.NET) enquanto o PowerShell aceita apenas texto simples",
+                    "O PowerShell é uma linguagem de scripts moderna baseada em objetos (.NET) e cmdlets, enquanto o CMD é baseado no interpretador tradicional de comandos de texto (MS-DOS)",
+                    "O CMD só funciona se o computador estiver desconectado da internet",
+                    "O PowerShell foi descontinuado e substituído inteiramente pelo Bloco de Notas"
+                ],
+                correct: 1,
+                explanation: "O PowerShell é muito mais poderoso que o CMD porque opera com objetos .NET e utiliza 'cmdlets' (ex: Get-Service, Stop-Process), permitindo automação avançada de administração de sistemas."
+            }
+        ];
+
+        // App State
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let studentName = "";
+        let studentCourse = "";
+        let reviewFilter = 'all';
+
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const inputStudentName = document.getElementById('input-student-name');
+        const inputStudentCourse = document.getElementById('input-student-course');
+        const studentInfoError = document.getElementById('student-info-error');
+
+        const questionIndicator = document.getElementById('question-indicator');
+        const currentScoreEl = document.getElementById('current-score');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const questionCategory = document.getElementById('question-category');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationTitle = document.getElementById('explanation-title');
+        const explanationText = document.getElementById('explanation-text');
+        
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        function validateAndStart() {
+            studentName = inputStudentName.value.trim();
+            studentCourse = inputStudentCourse.value.trim();
+
+            if (!studentName || !studentCourse) {
+                studentInfoError.classList.remove('hidden');
+                if (!studentName) inputStudentName.focus();
+                else inputStudentCourse.focus();
+                return;
+            }
+
+            studentInfoError.classList.add('hidden');
+            startQuiz();
+        }
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            userAnswers.fill(null);
+            renderQuestion();
+            updateHeader();
+        }
+
+        function updateHeader() {
+            const total = quizData.length;
+            const currentNum = currentQuestionIndex + 1;
+            
+            questionIndicator.textContent = `Questão ${currentNum} de ${total}`;
+            
+            // Calculate score
+            const score = userAnswers.reduce((acc, ans, idx) => {
+                return (ans !== null && ans === quizData[idx].correct) ? acc + 1 : acc;
+            }, 0);
+            
+            currentScoreEl.textContent = score;
+            
+            // Progress percentage
+            const progressPercent = (currentNum / total) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentQuestionIndex];
+            
+            questionCategory.textContent = q.category;
+            questionText.textContent = q.question;
+            
+            optionsContainer.innerHTML = '';
+            
+            const hasAnswered = userAnswers[currentQuestionIndex] !== null;
+            const selectedOption = userAnswers[currentQuestionIndex];
+
+            q.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border text-sm font-medium transition-all flex items-start gap-3 relative overflow-hidden `;
+                
+                if (!hasAnswered) {
+                    btn.className += `bg-slate-900/80 border-slate-700/70 hover:border-winblue-500 hover:bg-slate-800 text-slate-200`;
+                    btn.onclick = () => selectOption(optIdx);
+                } else {
+                    btn.disabled = true;
+                    if (optIdx === q.correct) {
+                        btn.className += `bg-emerald-500/10 border-emerald-500 text-emerald-300 font-semibold`;
+                    } else if (optIdx === selectedOption && selectedOption !== q.correct) {
+                        btn.className += `bg-rose-500/10 border-rose-500 text-rose-300 font-semibold`;
+                    } else {
+                        btn.className += `bg-slate-900/40 border-slate-800 text-slate-500 opacity-60`;
+                    }
+                }
+
+                // Option prefix letter (A, B, C, D)
+                const letter = String.fromCharCode(65 + optIdx);
+                
+                let iconHtml = `<span class="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-slate-400 shrink-0">${letter}</span>`;
+                
+                if (hasAnswered) {
+                    if (optIdx === q.correct) {
+                        iconHtml = `<span class="w-6 h-6 rounded-lg bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-bold shrink-0"><i class="fa-solid fa-check"></i></span>`;
+                    } else if (optIdx === selectedOption && selectedOption !== q.correct) {
+                        iconHtml = `<span class="w-6 h-6 rounded-lg bg-rose-500 text-white flex items-center justify-center text-xs font-bold shrink-0"><i class="fa-solid fa-xmark"></i></span>`;
+                    }
+                }
+
+                btn.innerHTML = `
+                    ${iconHtml}
+                    <span class="pt-0.5 leading-snug">${escapeHtml(optText)}</span>
+                `;
+                
+                optionsContainer.appendChild(btn);
+            });
+
+            // Handle Explanation Display
+            if (hasAnswered) {
+                explanationBox.classList.remove('hidden');
+                const isCorrect = selectedOption === q.correct;
+                
+                if (isCorrect) {
+                    explanationBox.className = 'p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-200 text-sm leading-relaxed space-y-1';
+                    explanationTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Resposta Correta!`;
+                } else {
+                    explanationBox.className = 'p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-200 text-sm leading-relaxed space-y-1';
+                    explanationTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> Resposta Incorreta`;
+                }
+                
+                explanationText.textContent = q.explanation;
+            } else {
+                explanationBox.classList.add('hidden');
+            }
+
+            // Update Navigation Buttons
+            btnPrev.disabled = currentQuestionIndex === 0;
+            btnNext.disabled = !hasAnswered;
+
+            if (currentQuestionIndex === quizData.length - 1 && hasAnswered) {
+                btnNext.innerHTML = `<span>Ver Resultado</span> <i class="fa-solid fa-trophy"></i>`;
+            } else {
+                btnNext.innerHTML = `<span>Próxima</span> <i class="fa-solid fa-chevron-right"></i>`;
+            }
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            renderQuestion();
+            updateHeader();
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                updateHeader();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+                updateHeader();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            document.getElementById('res-student-name').textContent = studentName;
+            document.getElementById('res-student-course').textContent = studentCourse;
+
+            let totalCorrect = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === quizData[idx].correct) totalCorrect++;
+            });
+
+            const totalQuestions = quizData.length;
+            const percentage = Math.round((totalCorrect / totalQuestions) * 100);
+
+            document.getElementById('final-correct').textContent = totalCorrect;
+            document.getElementById('final-percentage').textContent = `${percentage}%`;
+
+            const finalRating = document.getElementById('final-rating');
+            const feedbackMsg = document.getElementById('feedback-message');
+            const resultIcon = document.getElementById('result-icon');
+
+            let ratingText = "";
+            if (percentage >= 85) {
+                ratingText = "Especialista";
+                finalRating.textContent = ratingText;
+                finalRating.className = "text-sm font-bold text-emerald-400 mt-2";
+                resultIcon.className = "fa-solid fa-medal text-emerald-400";
+                feedbackMsg.innerHTML = `<strong class="text-emerald-400">Excelente desempenho, ${escapeHtml(studentName)}!</strong> Você demonstrou domínio avançado nos conceitos do Windows, comandos de rede, registro e consoles de manutenção.`;
+            } else if (percentage >= 60) {
+                ratingText = "Intermediário";
+                finalRating.textContent = ratingText;
+                finalRating.className = "text-sm font-bold text-winblue-400 mt-2";
+                resultIcon.className = "fa-solid fa-graduation-cap text-winblue-400";
+                feedbackMsg.innerHTML = `<strong class="text-winblue-400">Bom trabalho, ${escapeHtml(studentName)}!</strong> Você possui uma base sólida sobre o sistema operacional Windows. Revise as questões que errou no relatório para aprimorar seus conhecimentos.`;
+            } else {
+                ratingText = "Necessita Treino";
+                finalRating.textContent = ratingText;
+                finalRating.className = "text-sm font-bold text-amber-400 mt-2";
+                resultIcon.className = "fa-solid fa-book-open text-amber-400";
+                feedbackMsg.innerHTML = `<strong class="text-amber-400">Continue praticando, ${escapeHtml(studentName)}!</strong> Recomendamos revisar o material sobre comandos do CMD, consoles MSC, permissões NTFS e ferramentas de diagnóstico.`;
+            }
+
+            buildReviewList();
+            preparePrintableReport(totalCorrect, percentage, ratingText);
+        }
+
+        function toggleReviewMode() {
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.classList.toggle('hidden');
+            if (!reviewContainer.classList.contains('hidden')) {
+                reviewContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function filterReview(filter) {
+            reviewFilter = filter;
+            
+            const filterBtns = document.querySelectorAll('.review-filter-btn');
+            filterBtns.forEach(btn => {
+                btn.className = "review-filter-btn px-3 py-1 rounded-lg text-xs bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium";
+            });
+
+            if (event && event.target) {
+                event.target.className = "review-filter-btn px-3 py-1 rounded-lg text-xs bg-winblue-600 text-white font-medium";
+            }
+
+            buildReviewList();
+        }
+
+        function buildReviewList() {
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+
+                if (reviewFilter === 'correct' && !isCorrect) return;
+                if (reviewFilter === 'incorrect' && isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-2xl border bg-slate-900/80 ${isCorrect ? 'border-emerald-500/30' : 'border-rose-500/30'} space-y-3`;
+
+                const statusBadge = isCorrect
+                    ? `<span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold"><i class="fa-solid fa-check"></i> Correto</span>`
+                    : `<span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-semibold"><i class="fa-solid fa-xmark"></i> Incorreto</span>`;
+
+                const userChoiceText = userAns !== null ? q.options[userAns] : 'Não respondida';
+                const correctChoiceText = q.options[q.correct];
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <span class="text-xs font-bold text-winblue-400 uppercase tracking-wider">Questão ${idx + 1} • ${q.category}</span>
+                        ${statusBadge}
+                    </div>
+                    
+                    <h4 class="text-base font-bold text-white">${escapeHtml(q.question)}</h4>
+                    
+                    <div class="space-y-1.5 text-xs sm:text-sm pt-1">
+                        <div class="${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">
+                            <strong>Sua resposta:</strong> ${escapeHtml(userChoiceText)}
+                        </div>
+                        ${!isCorrect ? `<div class="text-emerald-300"><strong>Resposta correta:</strong> ${escapeHtml(correctChoiceText)}</div>` : ''}
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700/50 text-xs text-slate-300 leading-relaxed">
+                        <strong class="text-white block mb-0.5"><i class="fa-solid fa-lightbulb text-amber-400"></i> Explicação Técnica:</strong>
+                        ${escapeHtml(q.explanation)}
+                    </div>
+                `;
+
+                reviewList.appendChild(card);
+            });
+        }
+
+        function preparePrintableReport(score, percentage, rating) {
+            document.getElementById('pdf-student-name').textContent = studentName;
+            document.getElementById('pdf-student-course').textContent = studentCourse;
+            document.getElementById('pdf-score').textContent = `${score} de 20 (${percentage}%)`;
+            document.getElementById('pdf-rating').textContent = rating;
+            
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('pdf-date-stamp').textContent = `Data: ${formattedDate}`;
+
+            const pdfQuestionsList = document.getElementById('pdf-questions-list');
+            pdfQuestionsList.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = `p-3 rounded border text-xs leading-snug space-y-1 ${isCorrect ? 'bg-emerald-50 border-emerald-300' : 'bg-rose-50 border-rose-300'}`;
+
+                const userText = userAns !== null ? q.options[userAns] : 'Não respondida';
+                const correctText = q.options[q.correct];
+
+                qDiv.innerHTML = `
+                    <div class="flex justify-between font-bold text-slate-800">
+                        <span>${idx + 1}. [${q.category}] ${escapeHtml(q.question)}</span>
+                        <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-700'} uppercase font-extrabold">${isCorrect ? 'CORRETO' : 'INCORRETO'}</span>
+                    </div>
+                    <div class="text-slate-700">
+                        <strong>Resposta do Aluno:</strong> ${escapeHtml(userText)}
+                    </div>
+                    ${!isCorrect ? `<div class="text-emerald-800 font-semibold"><strong>Resposta Correta:</strong> ${escapeHtml(correctText)}</div>` : ''}
+                    <div class="text-slate-600 italic pt-0.5 border-t border-slate-200 mt-1">
+                        <strong>Explicação:</strong> ${escapeHtml(q.explanation)}
+                    </div>
+                `;
+
+                pdfQuestionsList.appendChild(qDiv);
+            });
+        }
+
+        function exportToPDF() {
+            const element = document.getElementById('print-report-container');
+            element.classList.remove('hidden');
+
+            const cleanFileName = `Atividade_Windows_Avancado_${studentName.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+
+            const opt = {
+                margin:       [10, 10, 10, 10],
+                filename:     cleanFileName,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            if (typeof html2pdf !== 'undefined') {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    element.classList.add('hidden');
+                }).catch(err => {
+                    console.error("Erro ao gerar PDF:", err);
+                    window.print();
+                    element.classList.add('hidden');
+                });
+            } else {
+                window.print();
+                element.classList.add('hidden');
+            }
+        }
+
+        function restartQuiz() {
+            reviewFilter = 'all';
+            document.getElementById('review-container').classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+        }
+
+        // Helper function for HTML Escaping
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>

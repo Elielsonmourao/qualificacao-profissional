@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Tech Bros: Missão Informática Básica</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght=600;700&display=swap');
+        
+        body { 
+            background-color: #2b5c8f;
+            background-image: radial-gradient(#3a6fa5 20%, transparent 20%), radial-gradient(#3a6fa5 20%, transparent 20%);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            font-family: 'Rajdhani', sans-serif; 
+            overflow-x: hidden; 
+        }
+        .pixel-font { 
+            font-family: 'Press Start 2P', cursive; 
+        }
+        .mario-card {
+            background-color: #f8f8f8;
+            border: 6px solid #000000;
+            box-shadow: 8px 8px 0px #000000;
+            border-radius: 4px;
+        }
+        .mario-btn {
+            background-color: #ffcc00;
+            border: 4px solid #000;
+            box-shadow: 0px 6px 0px #b38f00, 4px 10px 0px #000;
+            position: relative;
+            top: 0;
+            transition: all 0.1s ease;
+        }
+        .mario-btn:active {
+            top: 5px;
+            box-shadow: 0px 1px 0px #b38f00, 4px 5px 0px #000;
+        }
+        .char-card {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .char-card:hover {
+            transform: scale(1.05);
+        }
+        .char-card.selected {
+            background-color: #ffcc00 !important;
+            border-color: #ff0033;
+        }
+        #game-canvas-container canvas { 
+            display: block; 
+            margin: 0 auto; 
+            border-radius: 4px; 
+            border: 6px solid #000000;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6 min-h-screen flex flex-col items-center justify-start gap-4">
+
+    <header class="text-center my-1 max-w-4xl w-full block">
+        <h1 class="pixel-font text-xl md:text-3xl text-[#ffff00] tracking-wider drop-shadow-[4px_4px_0px_#000000] uppercase">SUPER TECH BROS</h1>
+        <div class="inline-block bg-[#ff0033] border-4 border-black px-4 py-1.5 rounded mt-3 shadow-[4px_4px_0px_#000]">
+            <p class="text-white text-xs pixel-font uppercase tracking-widest">Missão: Informática Básica</p>
+        </div>
+    </header>
+
+    <div class="w-full max-w-4xl p-[3px] bg-gradient-to-r from-red-500 via-yellow-400 to-emerald-400 rounded-xl shadow-[0_0_15px_rgba(0,255,204,0.3)] my-2">
+        <div class="bg-[#121212] border-2 border-black/50 text-white p-4 rounded-lg text-center font-sans tracking-wide">
+            <p class="text-[10px] md:text-xs font-black uppercase tracking-[0.25em] text-[#00ffcc] mb-1 pixel-font">Jogo Desenvolvido Por:</p>
+            <h2 class="text-xl md:text-3xl font-extrabold text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]">Instrutor Elielson Mourão</h2>
+        </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl w-full items-start mt-2">
+        
+        <section id="game-section" class="lg:col-span-8 flex flex-col relative min-h-[420px] transition-all duration-300">
+            
+            <div id="login-screen" class="absolute inset-0 bg-[#2b5c8f] z-50 flex flex-col items-center justify-start p-6 gap-6 border-6 border-black rounded-lg overflow-y-auto">
+                <div class="text-center space-y-1">
+                    <span class="pixel-font text-lg text-white drop-shadow-[2px_2px_0px_#000]">REGISTRE SEU AVATAR</span>
+                    <p class="text-blue-200 text-[10px] pixel-font uppercase font-bold">Insira seu nome e escolha quem vai te representar</p>
+                </div>
+
+                <div class="w-full max-w-sm text-center">
+                    <input type="text" id="player-name" required class="w-full bg-white border-4 border-black rounded p-2.5 text-black text-lg font-bold uppercase tracking-wider text-center focus:outline-none focus:bg-yellow-50 shadow-[4px_4px_0px_#000]" placeholder="NOME DO JOGADOR">
+                </div>
+
+                <div class="w-full max-w-xl">
+                    <p class="text-white text-[10px] pixel-font uppercase text-center mb-3 drop-shadow-[1px_1px_0px_#000]">Selecione seu herói:</p>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-3" id="character-selector">
+                        <div id="btn-mario" onclick="selectChar('mario', this)" class="char-card selected p-2 bg-white text-center rounded flex flex-col items-center">
+                            <span class="text-2xl">🔴</span> <span class="pixel-font text-[9px] text-black mt-1">MARIO</span>
+                        </div>
+                        <div id="btn-luigi" onclick="selectChar('luigi', this)" class="char-card p-2 bg-white text-center rounded flex flex-col items-center">
+                            <span class="text-2xl">🟢</span> <span class="pixel-font text-[9px] text-black mt-1">LUIGI</span>
+                        </div>
+                        <div id="btn-peach" onclick="selectChar('peach', this)" class="char-card p-2 bg-white text-center rounded flex flex-col items-center">
+                            <span class="text-2xl">👑</span> <span class="pixel-font text-[9px] text-black mt-1">PEACH</span>
+                        </div>
+                        <div id="btn-toad" onclick="selectChar('toad', this)" class="char-card p-2 bg-white text-center rounded flex flex-col items-center">
+                            <span class="text-2xl">🍄</span> <span class="pixel-font text-[9px] text-black mt-1">TOAD</span>
+                        </div>
+                        <div id="btn-bowser" onclick="selectChar('bowser', this)" class="char-card p-2 bg-white text-center rounded flex flex-col items-center">
+                            <span class="text-2xl">🦖</span> <span class="pixel-font text-[9px] text-black mt-1">BOWSER</span>
+                        </div>
+                        <div id="btn-yoshi" onclick="selectChar('yoshi', this)" class="char-card p-2 bg-white text-center rounded flex flex-col items-center">
+                            <span class="text-2xl">🦕</span> <span class="pixel-font text-[9px] text-black mt-1">YOSHI</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="startGame()" class="mario-btn pixel-font text-xs text-black px-8 py-4 rounded font-black tracking-wide cursor-pointer uppercase mt-2">
+                    START GAME 🕹️
+                </button>
+            </div>
+
+            <div id="game-canvas-container" class="w-full flex justify-center overflow-hidden min-h-[400px] bg-[#2b5c8f]"></div>
+
+            <div id="quiz-modal" class="hidden absolute inset-x-6 top-6 bottom-6 mario-card p-6 z-40 flex flex-col justify-between gap-4">
+                <div>
+                    <span id="modal-phase" class="pixel-font text-[11px] text-[#ff0033] block border-b-2 border-black pb-2">💻 QUIZ DE INFORMÁTICA</span>
+                    <h3 id="modal-question" class="text-lg md:text-xl font-black text-black mt-4 font-mono leading-tight">Pergunta?</h3>
+                </div>
+                <div class="grid gap-3 my-2" id="modal-options"></div>
+                <div class="text-[11px] font-mono text-slate-600 text-center font-bold uppercase">Escolha a alternativa correta para demonstrar seus conhecimentos digitais!</div>
+            </div>
+        </section>
+
+        <section id="rules-section" class="lg:col-span-4 mario-card p-6 flex flex-col justify-between gap-4 min-h-[400px] transition-all duration-300">
+            <div>
+                <div class="flex items-center justify-between border-b-4 border-black pb-3 mb-4">
+                    <h2 id="rules-title" class="pixel-font text-xs text-black flex items-center gap-2">
+                        <span>📜</span> GUIA DO USUÁRIO
+                    </h2>
+                    <button onclick="toggleRegras(false)" class="bg-black text-white font-mono text-[10px] px-2 py-1 rounded hover:bg-red-600 uppercase font-bold cursor-pointer transition-colors">
+                        Ocultar ✕
+                    </button>
+                </div>
+                
+                <div id="rules-content" class="space-y-4">
+                    </div>
+            </div>
+            
+            <div id="rules-footer" class="pt-3 border-t-2 border-dashed border-slate-400 text-center text-[10px] font-mono text-blue-600 font-bold uppercase tracking-wider">
+                Fase 1: Conceitos Básicos
+            </div>
+        </section>
+    </main>
+
+    <button id="restore-rules-btn" onclick="toggleRegras(true)" class="hidden fixed bottom-4 right-4 bg-[#ffcc00] border-4 border-black font-mono text-xs font-black text-black p-3 rounded-lg shadow-[4px_4px_0px_#000] z-30 cursor-pointer uppercase hover:bg-yellow-300">
+        📋 Mostrar Regras
+    </button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAWPCCFTUJmFLsaIFjok0kx4v7bnMHd5Tc",
+            authDomain: "superdocentebros.firebaseapp.com",
+            projectId: "superdocentebros",
+            storageBucket: "superdocentebros.firebasestorage.app",
+            messagingSenderId: "116858495170",
+            appId: "1:116858495170:web:9fb0655984426eba125b5b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const ColecaoRanking = collection(db, "ranking_game_mario");
+        const ColecaoAtivos = collection(db, "jogadores_ativos");
+
+        const bonecosDict = { mario: "🔴", luigi: "🟢", peach: "👑", toad: "🍄", bowser: "🦖", yoshi: "🦕" };
+
+        let playerName = "";
+        let selectedCharacter = "mario"; 
+        let gameInstance = null;
+        let idSessaoViva = ""; 
+        
+        let score = 0;
+        let scorePhase1Backup = 0; 
+        let energy = 100;
+        let gameElapsedTime = 0; 
+        let consecutiveWrongAnswers = 0; 
+        
+        let indexDesafioFase1 = 0;
+        let indexDesafioChefao = 0;
+        
+        let correctAnswersPhase1 = 0; 
+        let currentTargetCoinPoints = 100; 
+
+        let correctAnswersBoss = 0; 
+        let isBossFase = false;
+
+        // Declaração explícita dos controladores de eventos de tempo globais
+        let bossAttackEvent = null;
+        let bossBoxSpawnEvent = null;
+        let globalTimerEvent = null;
+
+        const phaserConfig = {
+            type: Phaser.AUTO, 
+            width: 800, 
+            height: 400, 
+            parent: 'game-canvas-container',
+            physics: { default: 'arcade', arcade: { gravity: { y: 700 }, debug: false } },
+            scene: { preload: preload, create: create, update: update }
+        };
+
+        // BANCO 1: Perguntas relacionadas a Informática Básica da primeira fase (Moedas)
+        const quizFase1 = [
+            { q: "Qual componente do computador é considerado o 'cérebro' do sistema, responsável por processar os dados?", a: ["Processador (CPU)", "Memória RAM", "Disco Rígido (HD/SSD)"], c: 0 },
+            { q: "Qual atalho de teclado é amplamente utilizado no Windows para copiar um arquivo ou texto selecionado?", a: ["Ctrl + V", "Ctrl + X", "Ctrl + C"], c: 2 },
+            { q: "Qual é a principal função da memória RAM em um computador?", a: ["Armazenar fotos e arquivos permanentemente, mesmo com o PC desligado", "Armazenar dados temporariamente para rápido acesso pelo processador enquanto executamos programas", "Proteger o sistema contra vírus e invasões da internet"], c: 1 },
+            { q: "Qual dos itens abaixo é um exemplo de Dispositivo de Entrada de dados (Input)?", a: ["Monitor de Vídeo", "Teclado", "Impressora"], c: 1 },
+            { q: "O que é o Windows no contexto da informática?", a: ["Um programa antivírus gratuito", "Um Sistema Operacional que gerencia os recursos do hardware e do software", "Um navegador para acessar sites na internet"], c: 1 },
+            { q: "Para que serve a 'Lixeira' na área de trabalho do Windows?", a: ["Para armazenar temporariamente arquivos e pastas deletados antes da exclusão permanente", "Para limpar o poeira física dos componentes do computador", "Para organizar apenas as fotos recebidas por e-mail"], c: 0 }
+        ];
+
+        // BANCO 2: Perguntas exclusivas da Arena do Chefão (Caixas)
+        const quizChefao = [
+            { q: "O Chefão do Hacker lança um e-mail falso dizendo que você ganhou um prêmio, mas pede sua senha bancária. Isso é um golpe conhecido como:", a: ["Firewall", "Phishing", "Backup"], c: 1 },
+            { q: "Ao navegar na internet, qual elemento no endereço de um site indica uma conexão segura e criptografada?", a: ["A presença do protocolo HTTPS e o ícone de um cadeado fechado", "Terminar obrigatoriamente com a palavra '.com'", "Ter um fundo azul e imagens coloridas na página"], c: 0 },
+            { q: "Qual a melhor prática recomendada para criar uma senha forte e segura?", a: ["Utilizar sua data de nascimento para não esquecer fácil", "Usar a palavra '123456' ou 'senha'", "Combinar letras maiúsculas, minúsculas, números e símbolos especiais"], c: 2 },
+            { q: "O que é um Malware (ou Vírus de Computador)?", a: ["Um programa malicioso projetado para causar danos, roubar dados ou prejudicar o sistema", "Uma peça física quebrada dentro do gabinete do computador", "Um tipo de cabo de rede de alta velocidade"], c: 0 },
+            { q: "Para que serve realizar um 'Backup' dos seus arquivos?", a: ["Aumentar a velocidade de navegação na internet", "Criar cópias de segurança dos seus dados para recuperá-los em caso de perda ou falha no sistema", "Deletar programas antigos sem deixar rastros"], c: 1 },
+            { q: "Qual programa tem a função específica de monitorar o tráfego de rede e bloquear conexões não autorizadas?", a: ["Firewall", "Processador de Texto", "Gerenciador de Tarefas"], c: 0 }
+        ];
+
+        window.toggleRegras = function(mostrar) {
+            const painelRegras = document.getElementById("rules-section");
+            const painelJogo = document.getElementById("game-section");
+            const btnRestaurar = document.getElementById("restore-rules-btn");
+
+            if (mostrar) {
+                painelRegras.classList.remove("hidden");
+                painelJogo.className = "lg:col-span-8 flex flex-col relative min-h-[420px] transition-all duration-300";
+                btnRestaurar.classList.add("hidden");
+            } else {
+                painelRegras.classList.add("hidden");
+                painelJogo.className = "lg:col-span-12 flex flex-col relative min-h-[420px] transition-all duration-300";
+                btnRestaurar.classList.remove("hidden");
+            }
+        };
+
+        window.selectChar = function(charKey, element) {
+            document.querySelectorAll('.char-card').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedCharacter = charKey;
+        };
+
+        window.startGame = async function() {
+            const nameInput = document.getElementById("player-name");
+            if (!nameInput.value.trim()) { alert("Por favor, digite seu nome!"); return; }
+            playerName = nameInput.value.trim().toUpperCase();
+            document.getElementById("login-screen").style.display = "none";
+            
+            score = 0; scorePhase1Backup = 0; energy = 100; gameElapsedTime = 0;
+            consecutiveWrongAnswers = 0; correctAnswersPhase1 = 0;
+            currentTargetCoinPoints = 100; correctAnswersBoss = 0; isBossFase = false;
+            indexDesafioFase1 = 0; indexDesafioChefao = 0;
+
+            atualizarPainelDeRegrasHTML();
+
+            try {
+                const docRef = await addDoc(ColecaoAtivos, {
+                    nome: playerName, personagem: selectedCharacter,
+                    score: 0, vida: 100, acertosFase1: 0, acertosBoss: 0,
+                    isBossFase: false, tempoGasto: 0, status: "JOGANDO", timestamp: new Date()
+                });
+                idSessaoViva = docRef.id;
+            } catch(e) { console.error("Erro heartbeat: ", e); }
+
+            if (gameInstance) { 
+                limparTodosOsLoopsDaCena();
+                gameInstance.destroy(true); 
+                gameInstance = null;
+            }
+
+            setTimeout(() => {
+                gameInstance = new Phaser.Game(phaserConfig);
+            }, 50);
+        };
+
+        function limparTodosOsLoopsDaCena() {
+            if (bossAttackEvent) { bossAttackEvent.destroy(); bossAttackEvent = null; }
+            if (bossBoxSpawnEvent) { bossBoxSpawnEvent.destroy(); bossBoxSpawnEvent = null; }
+            if (globalTimerEvent) { globalTimerEvent.destroy(); globalTimerEvent = null; }
+        }
+
+        function atualizarPainelDeRegrasHTML() {
+            const titulo = document.getElementById("rules-title");
+            const conteudo = document.getElementById("rules-content");
+            const rodape = document.getElementById("rules-footer");
+            if(!titulo || !conteudo) return;
+
+            if (!isBossFase) {
+                titulo.innerHTML = `<span>📜</span> GUIA DO USUÁRIO`;
+                rodape.innerText = "Fase 1: Conceitos Básicos";
+                rodape.className = "pt-3 border-t-2 border-dashed border-slate-400 text-center text-[10px] font-mono text-blue-600 font-bold uppercase tracking-wider";
+                conteudo.innerHTML = `
+                    <div class="bg-white border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-blue-600 block mb-1">🎮 COMANDOS DE NAVEGAÇÃO</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Use as <span class="text-red-600">SETAS LATERAIS</span> para se mover e a <span class="text-red-600">SETA PARA CIMA</span> para pular entre as plataformas digitais.
+                        </p>
+                    </div>
+                    <div class="bg-white border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-amber-500 block mb-1">🪙 MOEDAS DE CONHECIMENTO</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Colete as moedas douradas para responder às questões sobre componentes, sistemas e navegadores.
+                        </p>
+                    </div>
+                    <div class="bg-white border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-emerald-600 block mb-1">🧠 DESEMPENHO DIGITAL</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Acerte <span class="text-emerald-600">5 QUESTÕES</span> para avançar. Respostas certas garantem pontos. Erros seguidos diminuem sua pontuação!
+                        </p>
+                    </div>
+                    <div class="bg-white border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-red-600 block mb-1">🔥 BUG E VÍRUS</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Evite contato com os vírus verdes. Eles reduzem drasticamente sua barra de energia do sistema.
+                        </p>
+                    </div>
+                `;
+            } else {
+                titulo.innerHTML = `<span>🚨</span> ALERTA DE SEGURANÇA`;
+                rodape.innerText = "FASE FINAL: NEUTRALIZE O HACKER";
+                rodape.className = "pt-3 border-t-2 border-dashed border-slate-400 text-center text-[10px] font-mono text-purple-600 font-bold uppercase tracking-wider animate-pulse";
+                conteudo.innerHTML = `
+                    <div class="bg-purple-950 border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-purple-300 block mb-1">👿 O CHEFÃO HACKER</span>
+                        <p class="font-mono text-xs font-bold text-white uppercase leading-tight">
+                            Ele se move verticalmente na tela. A cada acerto seu, a velocidade de ataque dele <span class="text-yellow-400">AUMENTARÁ</span>!
+                        </p>
+                    </div>
+                    <div class="bg-white border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-amber-500 block mb-1">📦 CAIXAS DE PROTOCOLO</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Intercepte as <span class="text-amber-500">caixas amarelas (?)</span> que caem para responder sobre segurança cibernética.
+                        </p>
+                    </div>
+                    <div class="bg-white border-2 border-black p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-emerald-600 block mb-1">⚔️ DEFESA CIBERNÉTICA</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Cada resposta correta remove <span class="text-emerald-600">1 ponto de energia do Chefão</span>. Acerte <span class="text-emerald-600">5 vezes</span> para vencer!
+                        </p>
+                    </div>
+                    <div class="bg-red-50 border-2 border-red-600 p-3 rounded shadow-[4px_4px_0px_#000]">
+                        <span class="pixel-font text-[9px] text-red-600 block mb-1">🔥 ATAQUE DE SPAM</span>
+                        <p class="font-mono text-xs font-bold text-slate-700 uppercase leading-tight">
+                            Desvie dos projéteis lançados pelo vilão. Quanto menor a vida dele, <span class="text-red-600">MAIORES</span> serão os ataques!
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        let player, cursors, coins, enemies, platforms;
+        let scoreText, energyText, timerText, metaText;
+        let playerHealthBar, playerScoreBar;
+
+        let boss, bossHealthBar, bossMaxHealth = 5, bossHealth = 5;
+        let bossProjectiles, bossBoxes;
+        let currentTargetBoxPoints = 100; 
+        let bossMoveSpeed = 120;
+
+function preload() {
+            let pGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            if (selectedCharacter === 'mario') {
+                pGraphics.fillStyle(0xff0000, 1); pGraphics.fillRect(0, 8, 24, 24); pGraphics.fillStyle(0x0000ff, 1); pGraphics.fillRect(4, 14, 16, 12); pGraphics.fillStyle(0xffcca3, 1); pGraphics.fillRect(6, 2, 14, 8); pGraphics.fillStyle(0xcc0000, 1); pGraphics.fillRect(4, 0, 16, 3);
+            } else if (selectedCharacter === 'luigi') {
+                pGraphics.fillStyle(0x00cc00, 1); pGraphics.fillRect(0, 8, 24, 24); pGraphics.fillStyle(0x0000ff, 1); pGraphics.fillRect(4, 14, 16, 12); pGraphics.fillStyle(0xffcca3, 1); pGraphics.fillRect(6, 2, 14, 8); pGraphics.fillStyle(0x009900, 1); pGraphics.fillRect(4, 0, 16, 3);
+            } else if (selectedCharacter === 'peach') {
+                pGraphics.fillStyle(0xff66cc, 1); pGraphics.fillRect(0, 6, 24, 26); pGraphics.fillStyle(0xffcca3, 1); pGraphics.fillRect(6, 2, 14, 8); pGraphics.fillStyle(0xffd700, 1); pGraphics.fillRect(6, 0, 12, 3); 
+            } else if (selectedCharacter === 'toad') {
+                pGraphics.fillStyle(0xffffff, 1); pGraphics.fillRect(2, 12, 20, 20); pGraphics.fillStyle(0x0000cc, 1); pGraphics.fillRect(4, 14, 16, 8); pGraphics.fillStyle(0xffcca3, 1); pGraphics.fillRect(6, 6, 14, 8); pGraphics.fillStyle(0xff0000, 1); pGraphics.fillRect(0, 0, 24, 8); 
+            } else if (selectedCharacter === 'bowser') {
+                pGraphics.fillStyle(0x009933, 1); pGraphics.fillRect(0, 4, 24, 28); pGraphics.fillStyle(0xffcc00, 1); pGraphics.fillRect(2, 8, 16, 20); pGraphics.fillStyle(0xffffff, 1); pGraphics.fillRect(20, 10, 4, 4); pGraphics.fillStyle(0xffffff, 1); pGraphics.fillRect(20, 20, 4, 4);
+            } else if (selectedCharacter === 'yoshi') {
+                pGraphics.fillStyle(0x33cc33, 1); pGraphics.fillRect(4, 4, 16, 28); pGraphics.fillStyle(0xffffff, 1); pGraphics.fillRect(4, 12, 10, 16); pGraphics.fillStyle(0xff0000, 1); pGraphics.fillRect(16, 8, 6, 8); 
+            }
+            pGraphics.generateTexture('player_texture', 24, 32);
+
+            let cGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            cGraphics.fillStyle(0xffd700, 1); cGraphics.fillCircle(12, 12, 10);
+            cGraphics.lineStyle(2, 0xffa500, 1); cGraphics.strokeCircle(12, 12, 10);
+            cGraphics.generateTexture('coin_texture', 24, 24);
+
+            let eGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            eGraphics.fillStyle(0x4caf50, 1); eGraphics.fillRect(0, 0, 24, 24);
+            eGraphics.fillStyle(0xff0000, 1); eGraphics.fillRect(4, 6, 4, 4); eGraphics.fillRect(16, 6, 4, 4);
+            eGraphics.generateTexture('enemy_texture', 24, 24);
+
+            let gGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            gGraphics.fillStyle(0x78909c, 1); gGraphics.fillRect(0, 0, 32, 32);
+            gGraphics.lineStyle(2, 0x000000, 1); gGraphics.strokeRect(0, 0, 32, 32);
+            gGraphics.generateTexture('tile_texture', 32, 32);
+
+            let prGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            prGraphics.fillStyle(0xff3300, 1); prGraphics.fillRect(0, 4, 20, 12);
+            prGraphics.fillStyle(0xffff00, 1); prGraphics.fillRect(14, 6, 6, 8); 
+            prGraphics.generateTexture('projectile_texture', 20, 16);
+
+            let boxGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            boxGraphics.fillStyle(0xffcc00, 1); boxGraphics.fillRect(0, 0, 28, 28);
+            boxGraphics.lineStyle(3, 0x000000, 1); boxGraphics.strokeRect(0, 0, 28, 28);
+            boxGraphics.fillStyle(0x000000, 1); boxGraphics.fillRect(12, 6, 4, 10); boxGraphics.fillRect(12, 18, 4, 4);
+            boxGraphics.generateTexture('box_texture', 28, 28);
+
+            let bGraphics = this.make.graphics({ x: 0, y: 0, add: false });
+            bGraphics.fillStyle(0x4a148c, 1); bGraphics.fillRect(4, 16, 56, 64);
+            bGraphics.fillStyle(0x222222, 1); bGraphics.fillRect(12, 24, 40, 56);
+            bGraphics.fillStyle(0x9c27b0, 1); bGraphics.fillRect(4, 24, 10, 12); bGraphics.fillRect(50, 24, 10, 12);
+            bGraphics.fillStyle(0xb71c1c, 1); bGraphics.fillRect(14, 4, 36, 24);
+            bGraphics.fillStyle(0x111111, 1); bGraphics.fillRect(14, 0, 6, 6); bGraphics.fillRect(44, 0, 6, 6);
+            bGraphics.fillStyle(0xffeb3b, 1); bGraphics.fillRect(20, 10, 6, 4); bGraphics.fillRect(38, 10, 6, 4);
+            bGraphics.fillStyle(0xffffff, 1); bGraphics.fillRect(24, 18, 16, 4);
+            bGraphics.generateTexture('boss_texture', 64, 80);
+        }
+
+        function create() {
+            limparTodosOsLoopsDaCena();
+
+            if (isBossFase) {
+                this.cameras.main.setBackgroundColor('#1a0022');
+                this.add.rectangle(400, 200, 800, 400, 0x1a0022);
+            } else {
+                this.cameras.main.setBackgroundColor('#2b5c8f');
+                this.add.rectangle(400, 200, 800, 400, 0x2b5c8f);
+            }
+
+            platforms = this.physics.add.staticGroup();
+            for(let x = 16; x < 800; x += 32) { platforms.create(x, 384, 'tile_texture'); }
+            for(let x = 180; x <= 320; x += 32) { platforms.create(x, 260, 'tile_texture'); }
+            for(let x = 500; x <= 680; x += 32) { platforms.create(x, 180, 'tile_texture'); }
+
+            player = this.physics.add.sprite(50, 300, 'player_texture').setCollideWorldBounds(true).setBounce(0.05);
+            cursors = this.input.keyboard.createCursorKeys();
+
+            bossProjectiles = this.physics.add.group();
+            bossBoxes = this.physics.add.group();
+            coins = this.physics.add.group();
+            enemies = this.physics.add.group();
+
+            this.physics.add.collider(player, platforms); 
+            this.physics.add.collider(enemies, platforms);
+            this.physics.add.collider(bossBoxes, platforms);
+
+            this.physics.add.overlap(player, coins, touchCoin, null, this); 
+            this.physics.add.overlap(player, enemies, handleZombieContact, null, this);
+            this.physics.add.overlap(player, bossBoxes, touchBossBox, null, this);
+            this.physics.add.overlap(player, bossProjectiles, hitByProjectile, null, this);
+
+            energyText = this.add.text(16, 12, `SAÚDE: 100%`, { fontFamily: '"Press Start 2P"', fontSize: '9px', fill: '#ffffff' }).setShadow(2, 2, '#000000', 0);
+            scoreText = this.add.text(16, 40, `SEGURANÇA: 0%`, { fontFamily: '"Press Start 2P"', fontSize: '9px', fill: '#ffffff' }).setShadow(2, 2, '#000000', 0);
+            
+            metaText = this.add.text(230, 12, `PTS: 0`, { fontFamily: '"Press Start 2P"', fontSize: '10px', fill: '#00ffff' }).setShadow(2, 2, '#000000', 0);
+            timerText = this.add.text(630, 12, `TEMPO: ${gameElapsedTime}s`, { fontFamily: '"Press Start 2P"', fontSize: '10px', fill: '#ffff00' }).setShadow(2, 2, '#000000', 0);
+
+            playerHealthBar = this.add.graphics();
+            playerScoreBar = this.add.graphics();
+            
+            globalTimerEvent = this.time.addEvent({
+                delay: 1000, loop: true,
+                callback: () => { 
+                    if (!document.getElementById("quiz-modal").classList.contains("hidden")) return;
+                    gameElapsedTime++; 
+                    timerText.setText(`TEMPO: ${gameElapsedTime}s`); 
+                    sincronizarDadosEmTempoReal();
+                }
+            });
+
+            if (isBossFase) {
+                ativarLogicaChefaoNaCena(this);
+            } else {
+                spawnGrupodeMoedasFase1(this);
+                enemies.create(250, 300, 'enemy_texture').setVelocityX(-70).setCollideWorldBounds(true).setBounce(1);
+                enemies.create(580, 120, 'enemy_texture').setVelocityX(70).setCollideWorldBounds(true).setBounce(1);
+            }
+
+            atualizarGraficosHUD();
+            if (typeof atualizarPainelDeRegrasHTML === 'function') atualizarPainelDeRegrasHTML();
+        }
+
+        function update() {
+            if (!document.getElementById("quiz-modal").classList.contains("hidden")) {
+                player.setVelocityX(0);
+                return;
+            }
+
+            if (cursors.left.isDown) { player.setVelocityX(-180); player.flipX = true; }
+            else if (cursors.right.isDown) { player.setVelocityX(180); player.flipX = false; }
+            else { player.setVelocityX(0); }
+            if (cursors.up.isDown && player.body.touching.down) { player.setVelocityY(-410); }
+
+            if (isBossFase && boss && boss.active && boss.body) {
+                if (boss.y <= 60) { boss.setVelocityY(bossMoveSpeed); }
+                else if (boss.y >= 310) { boss.setVelocityY(-bossMoveSpeed); }
+            }
+        }
+
+        function spawnGrupodeMoedasFase1(sceneContext) {
+            coins.clear(true, true);
+            const posicoesX = [210, 280, 420, 540, 640];
+            posicoesX.forEach((x, i) => {
+                let yPos = i % 2 === 0 ? 120 : 210;
+                gerarUmaMoedaEsquema(sceneContext, x, yPos, i);
+            });
+        }
+
+        function gerarUmaMoedaEsquema(sceneContext, x, y, index) {
+            let c = coins.create(x, y, 'coin_texture');
+            if(c) {
+                c.body.setAllowGravity(false);
+                c.coletada = false; 
+                sceneContext.tweens.add({ 
+                    targets: c, y: y - 8, duration: 1000 + (index * 100), yoyo: true, repeat: -1, ease: 'Sine.easeInOut' 
+                });
+            }
+        }
+
+        function spawnMoedaAvulsaAleatoria(sceneContext) {
+            if (isBossFase) return;
+            let rotasValidas = [
+                {x: Phaser.Math.Between(180, 320), y: 210},
+                {x: Phaser.Math.Between(500, 680), y: 130},
+                {x: Phaser.Math.Between(60, 740), y: 330}
+            ];
+            let escolha = rotasValidas[Phaser.Math.Between(0, rotasValidas.length - 1)];
+            gerarUmaMoedaEsquema(sceneContext, escolha.x, escolha.y, Phaser.Math.Between(1, 4));
+        }
+
+        function atualizarGraficosHUD() {
+            let exibicaoHP = Math.max(Math.floor(energy), 0);
+            energyText.setText(`SAÚDE: ${exibicaoHP}%`);
+
+            playerHealthBar.clear();
+            playerHealthBar.fillStyle(0x000000, 1);
+            playerHealthBar.fillRect(16, 25, 150, 10);
+            
+            let corVida = 0x00ff00;
+            if (energy <= 30) corVida = 0xff0033;
+            else if (energy <= 65) corVida = 0xffcc00;
+            
+            let fillVida = (exibicaoHP / 100) * 146;
+            playerHealthBar.fillStyle(corVida, 1);
+            playerHealthBar.fillRect(18, 27, fillVida, 6);
+
+            playerScoreBar.clear();
+            playerScoreBar.fillStyle(0x000000, 1);
+            playerScoreBar.fillRect(16, 53, 150, 10);
+
+            let pctProgresso = 0;
+            if (!isBossFase) {
+                pctProgresso = Math.min(Phaser.Math.Percent(correctAnswersPhase1, 0, 5) * 100, 100);
+                scoreText.setText(`META F1: ${pctProgresso}%`);
+            } else {
+                pctProgresso = Math.min(Phaser.Math.Percent(correctAnswersBoss, 0, 5) * 100, 100);
+                scoreText.setText(`BOSS HP: ${100 - pctProgresso}%`);
+            }
+            
+            let fillProgresso = (pctProgresso / 100) * 146;
+            playerScoreBar.fillStyle(isBossFase ? 0xd500f9 : 0x00bfff, 1); 
+            playerScoreBar.fillRect(18, 55, fillProgresso, 6);
+
+            let rotuloFase = isBossFase ? ` | ANÁLISE: ${correctAnswersBoss + 1}` : ` | PREVENÇÕES: ${correctAnswersPhase1}/5`;
+            metaText.setText(`PTS: ${score}${rotuloFase}`);
+        }
+
+        function sincronizarDadosEmTempoReal() {
+            if (typeof idSessaoViva !== 'undefined' && idSessaoViva) {
+                updateDoc(doc(db, "jogadores_ativos", idSessaoViva), {
+                    score: score,
+                    vida: Math.max(Math.floor(energy), 0),
+                    acertosFase1: correctAnswersPhase1,
+                    acertosBoss: correctAnswersBoss,
+                    isBossFase: isBossFase,
+                    tempoGasto: gameElapsedTime
+                }).catch(e => console.error("Erro real-time link: ", e));
+            }
+        }
+
+        function handleZombieContact(playerObj, enemy) {
+            if (!document.getElementById("quiz-modal").classList.contains("hidden")) return;
+            energy = Math.max(energy - 0.5, 0); 
+            atualizarGraficosHUD();
+            playerObj.setTint(0xff0000);
+            setTimeout(() => { if(playerObj && playerObj.active) playerObj.clearTint(); }, 100);
+            if(energy <= 0) { lidarComMorteJogador(this); }
+        }
+
+        function touchCoin(playerObj, coin) {
+            if (coin.coletada) return; 
+            coin.coletada = true;
+            
+            coin.disableBody(true, true);
+            coin.destroy();
+            
+            this.physics.world.pause();
+            abrirQuizDesafio(this);
+        }
+
+        function abrirQuizDesafio(sceneContext) {
+            const modal = document.getElementById("quiz-modal");
+            
+            let data;
+            if (!isBossFase) {
+                data = quizFase1[indexDesafioFase1 % quizFase1.length];
+                document.getElementById("modal-phase").innerText = `INSPEÇÃO DE ROTINA (VALENDO ${currentTargetCoinPoints} PTS)`;
+            } else {
+                data = quizChefao[indexDesafioChefao % quizChefao.length];
+                document.getElementById("modal-phase").innerText = `🚨 AUDITORIA DO CHEFÃO (NÍVEL ${correctAnswersBoss + 1}) - VALENDO ${currentTargetBoxPoints} PTS`;
+            }
+                
+            document.getElementById("modal-question").innerText = data.q;
+            
+            const optionsContainer = document.getElementById("modal-options");
+            optionsContainer.innerHTML = "";
+            data.a.forEach((opcao, idx) => {
+                let btn = document.createElement("button");
+                btn.className = "w-full text-left p-3.5 bg-white border-4 border-black hover:bg-yellow-100 font-mono font-bold text-black text-sm rounded shadow-[3px_3px_0px_#000] transition-all cursor-pointer";
+                btn.innerText = opcao;
+                btn.onclick = () => processAnswer(idx, data.c, sceneContext);
+                optionsContainer.appendChild(btn);
+            });
+            modal.classList.remove("hidden");
+        }
+
+        function processAnswer(escolhida, correta, activeScene) {
+            document.getElementById("quiz-modal").classList.add("hidden");
+            activeScene.physics.world.resume();
+            
+            const isCorrect = (escolhida === correta);
+
+            if (isCorrect) {
+                consecutiveWrongAnswers = 0; 
+                
+                if (!isBossFase) {
+                    score += currentTargetCoinPoints;
+                    correctAnswersPhase1++;
+                    energy = Math.min(energy + 10, 100);
+                    indexDesafioFase1++;
+                    
+                    if (correctAnswersPhase1 >= 5) { 
+                        scorePhase1Backup = score; 
+                        limparTodosOsLoopsDaCena(); 
+                        carregarFaseChefao(activeScene); 
+                        return; 
+                    }
+                } else {
+                    score += currentTargetBoxPoints;
+                    correctAnswersBoss++;
+                    indexDesafioChefao++;
+                    damageBoss(1, activeScene);
+                    if (correctAnswersBoss >= 5) return;
+                }
+            } else {
+                score = Math.max(score - 50, 0);
+                consecutiveWrongAnswers++;
+                alert(`❌ Prática Insegura Adotada! Violações seguidas: ${consecutiveWrongAnswers}/3. (-50 PTS)`);
+                
+                if (consecutiveWrongAnswers >= 3) {
+                    alert("⚠️ O setor técnico foi interditado devido a reincidência em falhas críticas de SST. Reiniciando a rodada!");
+                    limparTodosOsLoopsDaCena();
+                    reiniciarFaseAtual(activeScene);
+                    return;
+                }
+                
+                if (!isBossFase) { indexDesafioFase1++; } 
+                else { indexDesafioChefao++; }
+            }
+
+            if (!isBossFase && correctAnswersPhase1 < 5) {
+                if (coins.countActive() === 0) {
+                    spawnMoedaAvulsaAleatoria(activeScene);
+                }
+            }
+
+            atualizarGraficosHUD();
+            sincronizarDadosEmTempoReal();
+        }
+
+        function reiniciarFaseAtual(activeScene) {
+            limparTodosOsLoopsDaCena();
+            energy = 100;
+            consecutiveWrongAnswers = 0;
+            
+            if (!isBossFase) {
+                score = 0;
+                correctAnswersPhase1 = 0;
+                currentTargetCoinPoints = 100;
+                indexDesafioFase1 = 0;
+            } else {
+                score = scorePhase1Backup; 
+                correctAnswersBoss = 0;
+                bossHealth = bossMaxHealth;
+                bossMoveSpeed = 120;
+                indexDesafioChefao = 0;
+            }
+
+            activeScene.scene.restart();
+        }
+
+        function lidarComMorteJogador(activeScene) {
+            if (isBossFase) {
+                alert("💥 Crise na segurança industrial! O Monstro da Imprudência se fortaleceu. Reiniciando auditoria!");
+                reiniciarFaseAtual(activeScene);
+            } else {
+                endGameSession(false);
+            }
+        }
+
+        function carregarFaseChefao(activeScene) {
+            isBossFase = true;
+            correctAnswersBoss = 0;
+            bossHealth = bossMaxHealth;
+            bossMoveSpeed = 120;
+            indexDesafioChefao = 0;
+
+            limparTodosOsLoopsDaCena();
+            alert("👿 PERIGO! O Grande Monstro da Imprudência assumiu a fábrica! Corrija os atos inseguros capturando os protocolos de inspeção instantâneos.");
+            
+            activeScene.scene.restart();
+        }
+
+        function ativarLogicaChefaoNaCena(cena) {
+            boss = cena.physics.add.sprite(720, 200, 'boss_texture');
+            boss.setCollideWorldBounds(true);
+            boss.body.setAllowGravity(false);
+            boss.setVelocityY(bossMoveSpeed);
+
+            bossHealthBar = cena.add.graphics();
+            desenharBarraChefe();
+
+            configurarLoopAtaqueChefe(3500, cena); 
+            configurarLoopSpawnCaixas(cena);
+        }
+
+        function configurarLoopAtaqueChefe(intervalo, cena) {
+            if(bossAttackEvent) bossAttackEvent.destroy();
+            
+            bossAttackEvent = cena.time.addEvent({
+                delay: intervalo, loop: true,
+                callback: () => {
+                    if (!boss || !boss.active || !player || !player.active || !document.getElementById("quiz-modal").classList.contains("hidden")) return;
+                    
+                    let proj = bossProjectiles.create(boss.x - 40, boss.y, 'projectile_texture');
+                    if(proj) {
+                        proj.body.setAllowGravity(false);
+                        let fatorEscala = 1.1 + (correctAnswersBoss * 0.5); 
+                        proj.setScale(fatorEscala);
+
+                        let angulo = Phaser.Math.Angle.Between(boss.x - 40, boss.y, player.x, player.y);
+                        let velocidadeProjetil = 170 + (correctAnswersBoss * 30); 
+                        cena.physics.velocityFromRotation(angulo, velocidadeProjetil, proj.body.velocity);
+                    }
+                }
+            });
+        }
+
+        function configurarLoopSpawnCaixas(cena) {
+            if(bossBoxSpawnEvent) bossBoxSpawnEvent.destroy();
+            
+            bossBoxSpawnEvent = cena.time.addEvent({
+                delay: 2000, 
+                loop: true,
+                callback: () => {
+                    if (!isBossFase || !document.getElementById("quiz-modal").classList.contains("hidden")) return;
+                    if (bossBoxes.countActive() >= 1) return;
+
+                    const locaisDisponiveis = [
+                        { x: 350, y: 320, pontos: 100 }, 
+                        { x: 250, y: 200, pontos: 180 }, 
+                        { x: 580, y: 120, pontos: 260 }  
+                    ];
+
+                    let escolha = locaisDisponiveis[Phaser.Math.Between(0, locaisDisponiveis.length - 1)];
+                    let novaCaixa = bossBoxes.create(escolha.x, escolha.y - 40, 'box_texture');
+                    if(novaCaixa) {
+                        novaCaixa.coletada = false; 
+                        novaCaixa.setData('valorPontos', escolha.pontos);
+                        novaCaixa.body.setAllowGravity(true);
+                        novaCaixa.setBounceY(0.2);
+                    }
+                }
+            });
+        }
+
+        function touchBossBox(playerObj, caixa) {
+            if (caixa.coletada) return;
+            caixa.coletada = true;
+
+            currentTargetBoxPoints = caixa.getData('valorPontos') || 100;
+            
+            caixa.disableBody(true, true);
+            caixa.destroy(); 
+            
+            this.physics.world.pause();
+            abrirQuizDesafio(this);
+        }
+
+        function hitByProjectile(playerObj, projectile) {
+            projectile.destroy();
+            if (!document.getElementById("quiz-modal").classList.contains("hidden")) return;
+            
+            playerObj.setTint(0xff0000);
+            setTimeout(() => { if(playerObj && playerObj.active) playerObj.clearTint(); }, 150);
+            
+            let danoBase = 8 + (correctAnswersBoss * 3); 
+            energy = Math.max(energy - danoBase, 0);
+            atualizarGraficosHUD();
+
+            if (energy <= 0) { lidarComMorteJogador(this); }
+        }
+
+        function damageBoss(dano, cena) {
+            bossHealth = Math.max(bossHealth - dano, 0);
+            desenharBarraChefe();
+
+            if (correctAnswersBoss >= 5 || bossHealth <= 0) {
+                limparTodosOsLoopsDaCena();
+                endGameSession(true);
+            } else {
+                bossMoveSpeed = 120 + (correctAnswersBoss * 40); 
+                if(boss.body && boss.body.velocity.y > 0) boss.setVelocityY(bossMoveSpeed);
+                else if(boss.body) boss.setVelocityY(-bossMoveSpeed);
+
+                let proximoIntervalo = Math.max(3500 - (correctAnswersBoss * 600), 1400);
+                configurarLoopAtaqueChefe(proximoIntervalo, cena);
+            }
+        }
+
+        function desenharBarraChefe() {
+            if(!bossHealthBar || !boss || !boss.active) return;
+            bossHealthBar.clear();
+            bossHealthBar.fillStyle(0x000000, 1);
+            bossHealthBar.fillRect(480, 42, 300, 12);
+            
+            let fillChefe = (bossHealth / bossMaxHealth) * 296;
+            bossHealthBar.fillStyle(0xcc0000, 1);
+            bossHealthBar.fillRect(482, 44, fillChefe, 8);
+        }
+
+        async function endGameSession(vitoria) {
+            limparTodosOsLoopsDaCena();
+            let bonecoEmoji = typeof bonecosDict !== 'undefined' ? (bonecosDict[selectedCharacter] || "🍄") : "🍄";
+
+            if (typeof idSessaoViva !== 'undefined' && idSessaoViva) {
+                updateDoc(doc(db, "jogadores_ativos", idSessaoViva), { status: "FINALIZADO" }).catch(() => {});
+            }
+
+            if (vitoria) {
+                if(gameInstance) { gameInstance.destroy(true); gameInstance = null; }
+                document.getElementById("game-canvas-container").innerHTML = `
+                    <div class="text-center py-10 bg-emerald-50 border-6 border-black w-full rounded p-6 shadow-[8px_8px_0px_#000] space-y-4">
+                        <span class="pixel-font text-2xl text-emerald-600 block">🏆 CERTIFICAÇÃO EM SST CONCLUÍDA!</span>
+                        <p class="text-md font-bold font-mono text-black uppercase max-w-xl mx-auto">
+                            O Monstro da Imprudência foi neutralizado pelas suas decisões preventivas e técnicas!
+                        </p>
+                        <div class="bg-white border-4 border-black p-4 inline-block rounded shadow-[4px_4px_0px_#000] space-y-1">
+                            <span class="pixel-font text-xs text-blue-600 block">SCORE TOTAL: ${score} PTS</span>
+                            <span class="pixel-font text-xs text-amber-500 block">TEMPO DE REAÇÃO: ${gameElapsedTime}s</span>
+                        </div>
+                    </div>
+                `;
+                
+                try {
+                    if (typeof ColecaoRanking !== 'undefined') {
+                        await addDoc(ColecaoRanking, {
+                            nome: `${playerName}`, personagem: selectedCharacter,
+                            pontuacao: score, tempoGasto: gameElapsedTime, timestamp: new Date()
+                        });
+                    }
+                } catch (err) { console.error("Erro ao salvar no Firestore: ", err); }
+
+            } else {
+                if(gameInstance) { gameInstance.destroy(true); gameInstance = null; }
+                document.getElementById("game-canvas-container").innerHTML = `
+                    <div class="text-center py-16 bg-[#f8f8f8] border-6 border-black w-full rounded p-6 shadow-[8px_8px_0px_#000]">
+                        <span class="pixel-font text-xl text-[#ff0033] block mb-4">${bonecoEmoji} INFRAÇÃO CRÍTICA</span>
+                        <p class="font-mono text-xs text-slate-700 max-w-md mx-auto mb-4 font-bold uppercase">Sua integridade física esgotou devido ao contato com riscos não mitigados!</p>
+                        <span class="pixel-font text-xs text-black block">SCORE TÉCNICO: ${score} PTS | TEMPO: ${gameElapsedTime}s</span>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

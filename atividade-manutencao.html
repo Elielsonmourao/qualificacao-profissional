@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Avaliativa - Manutenção de Computadores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                padding: 0;
+            }
+            .container-print {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            .question-card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1 !important;
+                margin-bottom: 12px !important;
+                padding: 12px !important;
+            }
+            .print-page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body class="py-8 px-4 sm:px-6 lg:px-8 min-h-screen">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md border border-slate-200 p-6 sm:p-10 container-print">
+        
+        <!-- CABEÇALHO DA ATIVIDADE -->
+        <header class="border-b-2 border-slate-800 pb-6 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div>
+                    <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">Atividade Prática / Avaliativa</span>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">Manutenção de Computadores</h1>
+                    <p class="text-slate-600 text-sm mt-1">Arquitetura de Hardware, Diagnóstico, BIOS/UEFI e Softwares de Manutenção</p>
+                </div>
+                <div class="text-right no-print">
+                    <span id="score-badge" class="hidden px-4 py-2 bg-emerald-100 text-emerald-800 font-bold rounded-lg border border-emerald-300">
+                        Nota: <span id="score-text">0</span> / 30
+                    </span>
+                </div>
+            </div>
+
+            <!-- IDENTIFICAÇÃO DO ALUNO -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <div class="sm:col-span-2">
+                    <label for="nome" class="block text-xs font-semibold uppercase text-slate-700 mb-1">Nome do Aluno(a):</label>
+                    <input type="text" id="nome" placeholder="Digite seu nome completo..." class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900 font-medium">
+                </div>
+                <div>
+                    <label for="turma" class="block text-xs font-semibold uppercase text-slate-700 mb-1">Turma / Período:</label>
+                    <input type="text" id="turma" placeholder="Ex: 2º Ano Técnico / Manhã" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900 font-medium">
+                </div>
+            </div>
+        </header>
+
+        <!-- BARRA DE AÇÕES (EXPORTAR / IMPRIMIR) -->
+        <div class="no-print bg-slate-100 p-4 rounded-lg border border-slate-300 flex flex-wrap gap-3 justify-between items-center mb-8">
+            <div class="text-xs text-slate-600 font-medium">
+                📌 Responda as 30 questões abaixo. Ao finalizar, clique em <strong class="text-slate-800">Verificar Respostas</strong> para obter seu gabarito e exportar a atividade.
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="corrigirAtividade()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Verificar Respostas
+                </button>
+                <button onclick="exportarPDF()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm rounded-lg shadow transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 2 0 002-2v-4a2 2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Exportar PDF / Imprimir
+                </button>
+                <button onclick="exportarHTML()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-lg shadow transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Salvar Arquivo HTML
+                </button>
+            </div>
+        </div>
+
+        <!-- FORMULÁRIO DE QUESTÕES -->
+        <form id="quiz-form">
+            <div id="questions-container" class="space-y-6">
+                <!-- As questões serão renderizadas aqui dinamicamente -->
+            </div>
+        </form>
+
+        <!-- RODAPÉ DA ATIVIDADE -->
+        <footer class="mt-12 pt-6 border-t border-slate-300 text-center text-xs text-slate-500">
+            <p>Atividade Avaliativa de Manutenção e Suporte em Informática</p>
+            <p class="mt-1">Documento gerado para entregas presenciais ou digitais.</p>
+        </footer>
+
+    </div>
+
+    <!-- SCRIPT DAS QUESTÕES E LÓGICA -->
+    <script>
+        const questaoDados = [
+            {
+                q: "Qual é a principal finalidade da Manutenção Preventiva em um computador?",
+                opts: [
+                    "Aumentar a velocidade do processador além dos limites de fábrica (Overclocking).",
+                    "Reduzir a probabilidade de falhas e paradas inesperadas por meio de rotinas periódicas de limpeza e inspeção.",
+                    "Substituir componentes danificados imediatamente após a ocorrência de uma pane mecânica ou elétrica.",
+                    "Instalar jogos e programas pesados para testar o desempenho máximo do hardware."
+                ],
+                correct: 1
+            },
+            {
+                q: "Um computador apresenta lentidão extrema ao ligar e emissão de ruídos mecânicos estalados vindos do gabinete. Qual componente é o principal suspeito de falha?",
+                opts: [
+                    "Memória RAM.",
+                    "Processador (CPU).",
+                    "Disco Rígido (HD mecânico).",
+                    "Placa de Vídeo Integrada."
+                ],
+                correct: 2
+            },
+            {
+                q: "A descarga eletrostática (ESD) é um dos maiores riscos ao manusear placas eletrônicas. Qual das opções abaixo é uma boa prática para prevenção?",
+                opts: [
+                    "Manusear os pentes de memória tocando diretamente nos contatos dourados para descarregar a energia.",
+                    "Trabalhar utilizando calçados de borracha sobre um tapete de lã sintética.",
+                    "Utilizar pulseira antiestática devidamente aterrada ou tocar periodicamente no chassi metálico do gabinete antes de manusear os componentes.",
+                    "Lavar as mãos com água e sabão e não secá-las completamente antes de mexer na placa-mãe."
+                ],
+                correct: 2
+            },
+            {
+                q: "O que é o POST (Power-On Self-Test) executado pela BIOS/UEFI durante a inicialização do computador?",
+                opts: [
+                    "Um teste de estabilidade de rede realizado no sistema operacional.",
+                    "Um autoteste de diagnóstico de hardware básico que verifica componentes vitais (memória, placa de vídeo, teclado) antes do boot do sistema.",
+                    "Um comando para formatar automaticamente a unidade de armazenamento padrão.",
+                    "Um protocolo de segurança contra vírus gravado no disco rígido."
+                ],
+                correct: 1
+            },
+            {
+                q: "Se um computador emite uma sequência de apitos (beeps) ao ser ligado e não exibe imagem no monitor, qual componente costuma ser a causa mais frequente desse sintoma?",
+                opts: [
+                    "Falha ou mau contato nos módulos de Memória RAM ou Placa de Vídeo.",
+                    "Defeito no cabo de alimentação da impressora.",
+                    "Arquivo de sistema corrompido na pasta do Windows.",
+                    "Superaquecimento do cooler do gabinete."
+                ],
+                correct: 0
+            },
+            {
+                q: "Qual é a função da Pasta Térmica aplicada entre o processador (CPU) e o dissipador do cooler?",
+                opts: [
+                    "Colar o processador permanentemente no soquete para evitar movimentações.",
+                    "Preencher as microimperfeições microscópicas das superfícies metálicas para otimizar a condução de calor.",
+                    "Isolar eletricamente o processador do restante da placa-mãe para evitar curto-circuito.",
+                    "Aumentar a voltagem de funcionamento do processador."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual produto é mais recomendado para a limpeza dos contatos elétricos de placas circo-impressas e conectores de memória?",
+                opts: [
+                    "Água sanitária diluída.",
+                    "Álcool etílico 70% com aroma.",
+                    "Álcool Isopropílico (99.8% puro) ou limpa-contatos spray apropriado.",
+                    "Detergente neutro líquido com pano úmido."
+                ],
+                correct: 2
+            },
+            {
+                q: "A bateria modelo CR2032 presente na placa-mãe tem como função principal:",
+                opts: [
+                    "Alimentar o processador em caso de queda na rede elétrica residencial.",
+                    "Fornecer energia para manter atualizadas as configurações do CMOS e o relógio de tempo real (RTC) quando o PC está desligado.",
+                    "Carregar a memória RAM para que os arquivos não sejam perdidos ao desligar o micro.",
+                    "Resfriar o chipset sul quando o computador está sob carga pesada."
+                ],
+                correct: 1
+            },
+            {
+                q: "Diferente do HD tradicional, o SSD (Solid State Drive) se destaca por:",
+                opts: [
+                    "Possuir discos magnéticos que giram a mais de 10.000 RPM.",
+                    "Utlizar chips de memória Flash (NAND) sem partes móveis, oferecendo velocidades de leitura e escrita drasticamente superiores.",
+                    "Ter menor custo por gigabyte do que qualquer outra tecnologia de armazenamento.",
+                    "Exigir desfragmentação semanal para manter o desempenho de fábrica."
+                ],
+                correct: 1
+            },
+            {
+                q: "O que indica a certificação '80 Plus' encontrada em fontes de alimentação de computadores?",
+                opts: [
+                    "Que a fonte suporta temperaturas acima de 80 graus Celsius.",
+                    "Que a fonte garante pelo menos 80% de eficiência energética sob diferentes níveis de carga.",
+                    "Que a fonte possui 80 meses de garantia direta com o fabricante.",
+                    "Que a fonte só funciona em redes elétricas de 80 Volts."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual das seguintes alternativas descreve uma rotina de Manutenção Corretiva?",
+                opts: [
+                    "Remoção periódica de poeira dos coolers a cada 6 meses.",
+                    "Execução de verificações de antivírus agendadas para todas as madrugadas.",
+                    "Substituição de uma fonte queimada após o computador parar de ligar.",
+                    "Organização interna dos cabos (cable management) do gabinete recém-comprado."
+                ],
+                correct: 2
+            },
+            {
+                q: "Para verificar a saúde física de um disco rígido (HD) ou SSD através dos atributos de diagnóstico S.M.A.R.T., qual software é comumente utilizado?",
+                opts: [
+                    "MemTest86.",
+                    "CrystalDiskInfo.",
+                    "CPU-Z.",
+                    "HWMonitor."
+                ],
+                correct: 1
+            },
+            {
+                q: "Ao montar um computador, em qual slot da placa-mãe deve ser instalada uma placa de vídeo dedicada moderna?",
+                opts: [
+                    "Slot PCI antigo.",
+                    "Slot PCIe (PCI Express) x16.",
+                    "Slot AGP 8x.",
+                    "Slot SATA III."
+                ],
+                correct: 1
+            },
+            {
+                q: "O que acontece se o cooler do processador estiver mal encaixado ou com a trava quebrada?",
+                opts: [
+                    "O computador desligará repentinamente por proteção térmica (superaquecimento) ou sofrerá estrangulamento térmico (thermal throttling).",
+                    "A memória RAM perderá capacidade de armazenamento temporário.",
+                    "A fonte de alimentação queimará por excesso de corrente.",
+                    "O sistema operacional será desinstalado automaticamente."
+                ],
+                correct: 0
+            },
+            {
+                q: "O comando 'chkdsk /f /r' executado no Prompt de Comando do Windows serve para:",
+                opts: [
+                    "Formatá-lo instantaneamente apagando todas as partições existentes.",
+                    "Verificar a integridade do sistema de arquivos no disco, corrigindo erros e tentando recuperar setores defeituosos (bad sectors).",
+                    "Aumentar a quantidade de memória RAM disponível no sistema.",
+                    "Limpar a memória cache do navegador de internet."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual é o conector de alimentação principal fornecido pela fonte para energizar a placa-mãe?",
+                opts: [
+                    "Conector PCIe de 8 pinos.",
+                    "Conector ATX 24 Pinos (20+4 pinos).",
+                    "Conector Molex de 4 pinos.",
+                    "Conector EPS de 12V."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual opção de configuração da BIOS/UEFI deve ser alterada quando desejamos instalar o sistema operacional através de um pendrive bootável?",
+                opts: [
+                    "Ordem de Inicialização (Boot Priority / Boot Order).",
+                    "Frequência da Memória XMP.",
+                    "Senha do Administrador do Supervisor.",
+                    "Ativação do Áudio Onboard."
+                ],
+                correct: 0
+            },
+            {
+                q: "O que significa a sigla RAM no contexto de manutenção de hardware?",
+                opts: [
+                    "Read Access Module.",
+                    "Random Access Memory (Memória de Acesso Aleatório).",
+                    "Rapid Application Management.",
+                    "Run Active Memory."
+                ],
+                correct: 1
+            },
+            {
+                q: "Para testar a estabilidade individual dos módulos de memória RAM em busca de erros de leitura/escrita, qual ferramenta bootável é a mais recomendada?",
+                opts: [
+                    "MemTest86.",
+                    "Speccy.",
+                    "FurMark.",
+                    "Cinebench."
+                ],
+                correct: 0
+            },
+            {
+                q: "O fenómeno de 'Thermal Throttling' ocorre quando:",
+                opts: [
+                    "O processador reduz automaticamente sua frequência de operação para diminuir a temperatura e evitar danos físicos.",
+                    "A placa de vídeo aumenta sua velocidade máxima ao detectar um jogo pesado.",
+                    "A fonte de alimentação desliga os leds para economizar energia.",
+                    "O cooler atinge sua rotação máxima durante a inicialização."
+                ],
+                correct: 0
+            },
+            {
+                q: "Qual é a principal função do componente chamado Chipset na placa-mãe?",
+                opts: [
+                    "Armazenar exclusivamente as fotos do usuário.",
+                    "Gerenciar e controlar o fluxo de dados entre o processador, memórias, barramentos de expansão e periféricos.",
+                    "Converter corrente alternada (AC) em corrente contínua (DC).",
+                    "Gerar os sons emitidos pelas caixas de som."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual ferramenta de sistema do Windows permite visualizar dispositivos instalados e checar se há drivers ausentes ou com erros (exibindo uma exclamação amarela)?",
+                opts: [
+                    "Gerenciador de Tarefas.",
+                    "Gerenciador de Dispositivos.",
+                    "Visualizador de Eventos.",
+                    "Monitor de Recursos."
+                ],
+                correct: 1
+            },
+            {
+                q: "O barramento USB-C se destaca das gerações USB anteriores por:",
+                opts: [
+                    "Transmitir apenas energia elétrica sem suporte a dados.",
+                    "Ser um conector reversível com capacidade de alta taxa de transferência de dados, vídeo e suporte ao fornecimento de alta potência (Power Delivery).",
+                    "Exigir obrigatoriamente placas de expansão específicas PCI.",
+                    "Ser compatível mecanicamente com os conectores PS/2 antigos."
+                ],
+                correct: 1
+            },
+            {
+                q: "Ao realizar a limpeza interna de um gabinete com um soprador de ar comprimido, qual cuidado deve ser tomado com as ventoinhas (coolers)?",
+                opts: [
+                    "Segurá-las para que as hélices não girem em alta rotação, evitando a indução de corrente contrária na placa-mãe e danos aos rolamentos.",
+                    "Remover todas as hélices com uma chave de fenda antes de soprar.",
+                    "Mendilhar as ventoinhas em óleo mineral enquanto sopra o ar.",
+                    "Soprar apenas com o computador ligado na tomada elétrica."
+                ],
+                correct: 0
+            },
+            {
+                q: "O que é o sistema de arquivos NTFS no Windows?",
+                opts: [
+                    "Um firmware de inicialização pré-instalado na CPU.",
+                    "Uma estrutura de organização e armazenamento de dados em disco que oferece suporte a arquivos grandes, permissões de segurança e journaling.",
+                    "Um protocolo exclusivo de comunicação para impressoras.",
+                    "Um utilitário para aceleração de placas gráficas."
+                ],
+                correct: 1
+            },
+            {
+                q: "Caso o sistema operacional não reconheça a placa de rede de um computador recém-formatado, o procedimento correto é:",
+                opts: [
+                    "Trocar imediatamente a placa-mãe por um modelo novo.",
+                    "Baixar e instalar o driver de rede oficial apropriado para o modelo da placa ou placa-mãe a partir do site do fabricante.",
+                    "Desabilitar a memória RAM na BIOS.",
+                    "Inverter os cabos da fonte de alimentação."
+                ],
+                correct: 1
+            },
+            {
+                q: "A tela azul da morte (BSOD - Blue Screen of Death) no Windows geralmente indica:",
+                opts: [
+                    "Aviso de atualização de rotina com sucesso.",
+                    "Um erro fatal do sistema causado por falhas graves de hardware, drivers incompatíveis ou corrupção do núcleo (kernel).",
+                    "Que o monitor está sem cabo conectado.",
+                    "Aviso de que o disco rígido está com espaço 100% livre."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual é o benefício de habilitar o perfil XMP (Extreme Memory Profile) na BIOS/UEFI?",
+                opts: [
+                    "Permite formatar o sistema operacional duas vezes mais rápido.",
+                    "Configura automaticamente os módulos de memória RAM para operarem em suas frequências e tempos nominais de alto desempenho homologados pelo fabricante.",
+                    "Aumenta a velocidade da conexão de internet banda larga.",
+                    "Evita o acúmulo de poeira dentro dos slots de memória."
+                ],
+                correct: 1
+            },
+            {
+                q: "A técnica de solução de problemas (Troubleshooting) baseada no 'Método da Eliminação' consiste em:",
+                opts: [
+                    "Trocar todas as peças do computador de uma só vez sem realizar testes.",
+                    "Isolar o problema desconectando periféricos não essenciais e testando componentes suspeitos um a um em uma bancada de testes confiável.",
+                    "Formatar o computador toda vez que um programa travar.",
+                    "Ignorar os sintomas até que o computador pare de funcionar definitivamente."
+                ],
+                correct: 1
+            },
+            {
+                q: "Qual é a recomendação de ouro antes de realizar qualquer manutenção corretiva complexa ou formatação no computador de um cliente?",
+                opts: [
+                    "Apagar a partição de restauração.",
+                    "Realizar o Backup completo dos dados importantes e arquivos pessoais do cliente.",
+                    "Aumentar a voltagem da fonte de alimentação.",
+                    "Trocar o processador por um modelo inferior."
+                ],
+                correct: 1
+            }
+        ];
+
+        // RENDERIZAR QUESTÕES
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            questaoDados.forEach((item, index) => {
+                const qNum = index + 1;
+                const card = document.createElement('div');
+                card.className = "question-card bg-white p-5 rounded-lg border border-slate-200 shadow-sm transition-all";
+                card.id = `q-card-${index}`;
+
+                let optionsHTML = '';
+                const letras = ['A', 'B', 'C', 'D'];
+
+                item.opts.forEach((opt, optIdx) => {
+                    optionsHTML += `
+                        <label class="flex items-start gap-3 p-3 rounded-md border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors text-sm text-slate-800">
+                            <input type="radio" name="q${index}" value="${optIdx}" class="mt-0.5 h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300">
+                            <span><strong class="text-slate-900">${letras[optIdx]})</strong> ${opt}</span>
+                        </label>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-semibold text-slate-900 text-base">
+                            <span class="inline-flex items-center justify-center w-7 h-7 bg-slate-800 text-white rounded-full text-xs font-bold mr-2">${qNum}</span>
+                            ${item.q}
+                        </h3>
+                        <span id="feedback-badge-${index}" class="hidden text-xs font-bold px-2.5 py-1 rounded"></span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 mt-3">
+                        ${optionsHTML}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // CORRIGIR E CALCULAR NOTA
+        function corrigirAtividade() {
+            let acertos = 0;
+            const form = document.getElementById('quiz-form');
+
+            questaoDados.forEach((item, index) => {
+                const selected = form.querySelector(`input[name="q${index}"]:checked`);
+                const card = document.getElementById(`q-card-${index}`);
+                const badge = document.getElementById(`feedback-badge-${index}`);
+
+                badge.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+                if (selected) {
+                    const userAns = parseInt(selected.value);
+                    if (userAns === item.correct) {
+                        acertos++;
+                        card.className = "question-card bg-emerald-50/40 p-5 rounded-lg border border-emerald-300 shadow-sm";
+                        badge.innerText = "✓ Correto";
+                        badge.classList.add('bg-emerald-100', 'text-emerald-800');
+                    } else {
+                        card.className = "question-card bg-rose-50/40 p-5 rounded-lg border border-rose-300 shadow-sm";
+                        badge.innerText = `✗ Incorreto (Correta: ${['A','B','C','D'][item.correct]})`;
+                        badge.classList.add('bg-rose-100', 'text-rose-800');
+                    }
+                } else {
+                    card.className = "question-card bg-amber-50/40 p-5 rounded-lg border border-amber-300 shadow-sm";
+                    badge.innerText = `⚠ Não Respondida (Correta: ${['A','B','C','D'][item.correct]})`;
+                    badge.classList.add('bg-amber-100', 'text-amber-800');
+                }
+            });
+
+            // Exibir pontuação
+            const scoreBadge = document.getElementById('score-badge');
+            const scoreText = document.getElementById('score-text');
+            scoreText.innerText = acertos;
+            scoreBadge.classList.remove('hidden');
+
+            // Rolar suavemente para o topo para ver o resultado
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // EXPORTAR PARA PDF / IMPRIMIR
+        function exportarPDF() {
+            window.print();
+        }
+
+        // EXPORTAR PARA ARQUIVO HTML COM O ESTADO ATUAL
+        function exportarHTML() {
+            const nome = document.getElementById('nome').value || 'Aluno';
+            const turma = document.getElementById('turma').value || 'Turma';
+            
+            // Garantir atualização dos inputs no código fonte antes de salvar
+            document.getElementById('nome').setAttribute('value', nome);
+            document.getElementById('turma').setAttribute('value', turma);
+
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            const sanitizedNome = nome.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            a.href = url;
+            a.download = `Atividade_Manutencao_${sanitizedNome}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Inicializar a renderização das questões
+        document.addEventListener('DOMContentLoaded', renderQuestions);
+    </script>
+</body>
+</html>
+```eof
+
+A atividade interativa de **30 questões sobre Manutenção de Computadores** está pronta no arquivo HTML acima.
+
+### Recursos inclusos:
+1. **Cabeçalho de Identificação:** Campos para preenchimento de **Nome do Aluno** e **Turma/Período**.
+2. **30 Questões Abrangentes:** Cobre manutenção preventiva e corretiva, ESD, pasta térmica, BIOS/UEFI, memórias RAM, HD/SSD, fontes 80 Plus, diagnósticos SMART, bip de erro e comandos do sistema (`chkdsk`, gerenciador de dispositivos, etc.).
+3. **Botão de Verificação Automática:** Corrige na hora as respostas selecionadas e exibe a pontuação do aluno.
+4. **Exportação em PDF:** Abre o assistente de impressão do navegador totalmente formatado para folha A4 (ocultando botões e ajustando layout).
+5. **Download em HTML:** Baixa uma cópia digital interativa salva do arquivo para envio por e-mail ou portal de tarefas.

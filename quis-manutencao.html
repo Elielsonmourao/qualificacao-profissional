@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Técnica - Montador e Reparador de Computadores</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Desativar seleção de texto estritamente em toda a página */
+        *, *::before, *::after {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        /* Permitir digitação visual na área de texto sem colar ou copiar */
+        textarea, input[type="text"] {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Estilos de impressão para gerar relatório PDF profissional */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-card {
+                border: 1px solid #cbd5e1 !important;
+                background: #ffffff !important;
+                color: #0f172a !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+        }
+
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between font-sans antialiased bg-slate-950 text-slate-100 overflow-x-hidden" oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <!-- Top Header Bar -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-microchip text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-100 leading-tight">Avaliação Técnica de Hardware</h1>
+                    <p class="text-xs text-cyan-400 font-medium">Montador e Reparador de Computadores</p>
+                </div>
+            </div>
+
+            <!-- Student Badge & Security Indicator -->
+            <div id="header-student-info" class="hidden flex items-center space-x-4 text-xs sm:text-sm">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+                    <i class="fa-solid fa-user-gear text-cyan-400"></i>
+                    <span id="student-display-name" class="font-semibold text-slate-200">Aluno</span>
+                </div>
+                <div class="bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+                    <i class="fa-solid fa-lock"></i>
+                    <span class="font-mono font-medium">Anti-Cópia Ativo</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div class="w-full max-w-4xl mx-auto">
+
+            <!-- SCREEN 1: WELCOME & REGISTRATION -->
+            <div id="screen-welcome" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-2xl space-y-8">
+                <div class="text-center space-y-3">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 mb-2">
+                        <i class="fa-solid fa-screwdriver-wrench text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Exame de Certificação Prática & Teórica</h2>
+                    <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
+                        Bem-vindo(a) à avaliação oficial da turma de **Montador e Reparador de Computadores**. Identifique-se abaixo para desbloquear o exame.
+                    </p>
+                </div>
+
+                <!-- Rules Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm">
+                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="text-cyan-400 font-semibold flex items-center space-x-2">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>50 Questões Totais</span>
+                        </div>
+                        <p class="text-slate-400">40 questões de Múltipla Escolha e 10 de Resposta em Texto fundamentada.</p>
+                    </div>
+
+                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="text-amber-400 font-semibold flex items-center space-x-2">
+                            <i class="fa-solid fa-ban font-bold"></i>
+                            <span>Navegação Bloqueada</span>
+                        </div>
+                        <p class="text-slate-400">Ao confirmar uma questão, **não será possível retornar** para alterá-la.</p>
+                    </div>
+
+                    <div class="bg-slate-800/50 border border-slate-800 p-4 rounded-xl space-y-2">
+                        <div class="text-emerald-400 font-semibold flex items-center space-x-2">
+                            <i class="fa-solid fa-award"></i>
+                            <span>Nota Máxima Objetiva: 90.0</span>
+                        </div>
+                        <p class="text-slate-400">As 40 objetivas somam 90 pts. As 10 dissertativas serão corrigidas pelo professor.</p>
+                    </div>
+                </div>
+
+                <!-- Anti-Cheat Banner -->
+                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-start space-x-3 text-red-300 text-xs sm:text-sm">
+                    <i class="fa-solid fa-shield-halved text-red-400 text-lg mt-0.5"></i>
+                    <div>
+                        <strong class="font-semibold text-red-200">Protocolo Anti-Cópia e Integridade:</strong>
+                        <p class="mt-0.5 text-slate-300">Ações de Copiar, Colar, Selecionar Texto e Atalhos do Teclado foram completamente desativadas nesta prova. A tentativa de colar texto na área de escrita está bloqueada.</p>
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <form id="form-start" onsubmit="startQuiz(event)" class="space-y-4 pt-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label for="student-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Nome Completo do Aluno *</label>
+                            <input type="text" id="student-name" required placeholder="Digite seu nome completo" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="student-id" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Matrícula / Turma *</label>
+                            <input type="text" id="student-id" required placeholder="Ex: MRC-2026-T1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-cyan-600/25 transition transform active:scale-[0.99] flex items-center justify-center space-x-2 text-base">
+                        <span>Iniciar Prova Técnica</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- SCREEN 2: QUIZ INTERFACE -->
+            <div id="screen-quiz" class="hidden space-y-6">
+                <!-- Status & Progress Header -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 sm:p-5 shadow-lg space-y-3">
+                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                        <div class="flex items-center space-x-2">
+                            <span id="question-type-badge" class="px-2.5 py-1 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold uppercase text-xs tracking-wider">
+                                Múltipla Escolha
+                            </span>
+                            <span class="text-slate-400 font-medium">Questão <span id="current-q-num" class="text-white font-bold">1</span> de 50</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-slate-400 font-mono text-xs">
+                            <i class="fa-regular fa-clock text-cyan-400"></i>
+                            <span>Tempo: <span id="quiz-timer" class="text-slate-200 font-semibold">00:00</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden p-0.5 border border-slate-800">
+                        <div id="progress-bar-fill" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full rounded-full transition-all duration-300" style="width: 2%;"></div>
+                    </div>
+                </div>
+
+                <!-- Main Question Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+                    <!-- Question Header & Category -->
+                    <div class="space-y-3">
+                        <div class="text-xs font-mono text-slate-500 uppercase tracking-widest flex items-center justify-between">
+                            <span id="q-category">Hardware & Componentes</span>
+                            <span id="q-weight-badge" class="text-amber-400 font-semibold">Vale 2.25 Pts</span>
+                        </div>
+                        <h3 id="question-title" class="text-lg sm:text-xl font-bold text-slate-100 leading-snug">
+                            <!-- Dynamic Question Text -->
+                        </h3>
+                    </div>
+
+                    <hr class="border-slate-800">
+
+                    <!-- Multiple Choice Container -->
+                    <div id="mcq-options-container" class="space-y-3">
+                        <!-- Shuffled Options Rendered Here -->
+                    </div>
+
+                    <!-- Essay Input Container -->
+                    <div id="essay-container" class="hidden space-y-3">
+                        <label for="essay-input" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            Digite sua resposta técnica fundamentada (A função colar texto está desativada):
+                        </label>
+                        <textarea id="essay-input" rows="6" placeholder="Escreva aqui sua resposta técnica detalhada..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition font-sans text-sm sm:text-base leading-relaxed resize-y" onpaste="return false;" oncopy="return false;" oncut="return false;"></textarea>
+                        <p class="text-xs text-amber-400/80 flex items-center space-x-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>Esta resposta será corrigida e pontuada manualmente pelo professor.</span>
+                        </p>
+                    </div>
+
+                    <!-- Action Footer -->
+                    <div class="pt-4 flex items-center justify-between border-t border-slate-800">
+                        <div class="text-xs text-slate-500 flex items-center space-x-1">
+                            <i class="fa-solid fa-lock text-slate-600"></i>
+                            <span>Após confirmar, não é possível retornar a esta questão.</span>
+                        </div>
+
+                        <button id="btn-submit-q" onclick="handleQuestionSubmit()" disabled class="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-xl shadow-lg transition flex items-center space-x-2">
+                            <span>Confirmar Resposta</span>
+                            <i class="fa-solid fa-check text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL DE FEEDBACK DA RESPOSTA (ACERTO / ERRO) -->
+            <div id="feedback-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl transform transition-all">
+                    <!-- Dynamic Header -->
+                    <div id="feedback-header" class="flex items-center space-x-3">
+                        <!-- Icon injected dynamically -->
+                        <div>
+                            <h3 id="feedback-title" class="text-xl font-bold text-white">Feedback da Questão</h3>
+                            <p id="feedback-subtitle" class="text-xs text-slate-400">Confirmação de Registro</p>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Text / Rationale -->
+                    <div id="feedback-body" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-sm text-slate-300 leading-relaxed space-y-2">
+                        <!-- Content injected dynamically -->
+                    </div>
+
+                    <!-- Continue Button -->
+                    <button onclick="advanceToNextQuestion()" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                        <span>Avançar para a Próxima Questão</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SCREEN 3: RESULTS & EXPORT -->
+            <div id="screen-results" class="hidden space-y-8">
+                <!-- Result Score Summary Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-2xl text-center space-y-6">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shadow-inner">
+                        <i class="fa-solid fa-trophy text-4xl"></i>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Avaliação Concluída!</h2>
+                        <p class="text-slate-400 text-sm sm:text-base">Suas respostas foram registradas e travadas com sucesso no sistema.</p>
+                    </div>
+
+                    <!-- Score Box (Objetivas Max 90.0) -->
+                    <div class="max-w-md mx-auto bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-inner space-y-3">
+                        <span class="text-xs font-semibold uppercase tracking-widest text-slate-400">Nota Final (Múltipla Escolha)</span>
+                        <div class="flex items-baseline justify-center space-x-2">
+                            <span id="final-score" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-mono">0.0</span>
+                            <span class="text-2xl font-bold text-slate-500 font-mono">/ 90.0</span>
+                        </div>
+                        <div id="score-feedback" class="text-xs font-medium px-3 py-1 rounded-full inline-block">
+                            <!-- Dynamic Badge -->
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left max-w-2xl mx-auto">
+                        <div class="bg-slate-800/40 border border-slate-800 p-4 rounded-xl space-y-1">
+                            <span class="text-xs text-slate-400 block">Acertos Objetivos</span>
+                            <span id="stat-correct-count" class="text-xl font-bold text-emerald-400 font-mono">0 / 40</span>
+                        </div>
+                        <div class="bg-slate-800/40 border border-slate-800 p-4 rounded-xl space-y-1">
+                            <span class="text-xs text-slate-400 block">Aproveitamento</span>
+                            <span id="stat-percentage" class="text-xl font-bold text-cyan-400 font-mono">0%</span>
+                        </div>
+                        <div class="bg-slate-800/40 border border-slate-800 p-4 rounded-xl space-y-1">
+                            <span class="text-xs text-slate-400 block">Questões Dissertativas</span>
+                            <span class="text-xl font-bold text-amber-400 font-mono">10 Pendentes</span>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Note -->
+                    <div class="bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs sm:text-sm rounded-xl p-4 text-left flex items-start space-x-3">
+                        <i class="fa-solid fa-circle-info text-amber-400 text-lg mt-0.5"></i>
+                        <div>
+                            <strong>Observação do Professor:</strong>
+                            <p class="mt-0.5 text-slate-300">A pontuação máxima objetiva é 90.0. As 10 respostas de texto foram registradas na íntegra no relatório abaixo e serão avaliadas manualmente para compor a nota final integral.</p>
+                        </div>
+                    </div>
+
+                    <!-- Export Actions -->
+                    <div class="pt-4 border-t border-slate-800 space-y-3 no-print">
+                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider">Exportar Prova para Entrega ao Professor:</h4>
+                        
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <button onclick="exportToPDF()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-file-pdf text-lg"></i>
+                                <span>Imprimir / Salvar Relatório PDF</span>
+                            </button>
+
+                            <button onclick="exportToJSON()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold py-3.5 px-6 rounded-xl transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-download text-lg text-cyan-400"></i>
+                                <span>Baixar Arquivo Oficial (.json)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Student Printable Report -->
+                <div id="printable-report" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
+                    <div class="border-b border-slate-800 pb-4 flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Relatório Completo do Exame</h3>
+                            <p class="text-xs text-slate-400">Montador e Reparador de Computadores - Registro para Avaliação Técnica</p>
+                        </div>
+                        <div class="text-right text-xs text-slate-400 font-mono">
+                            <p>Data: <span id="report-date">2026-08-24</span></p>
+                            <p>Status: Concluído</p>
+                        </div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="grid grid-cols-2 gap-4 text-xs sm:text-sm bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div>
+                            <span class="text-slate-500 block uppercase font-mono text-[10px]">Nome do Aluno</span>
+                            <span id="rep-student-name" class="font-bold text-slate-200">-</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block uppercase font-mono text-[10px]">Matrícula / Turma</span>
+                            <span id="rep-student-id" class="font-bold text-slate-200">-</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block uppercase font-mono text-[10px]">Nota de Múltipla Escolha (Máx 90.0)</span>
+                            <span id="rep-student-score" class="font-bold text-cyan-400 font-mono">-</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block uppercase font-mono text-[10px]">Aproveitamento Objetivas</span>
+                            <span id="rep-student-pct" class="font-bold text-emerald-400 font-mono">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Essay Responses for Teacher Review -->
+                    <div class="space-y-4">
+                        <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wider border-b border-slate-800 pb-2">
+                            Respostas das 10 Questões Dissertativas (Para Correção Manual)
+                        </h4>
+                        <div id="report-essay-list" class="space-y-4">
+                            <!-- Dynamic Essay Cards -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-900/50 py-4 no-print text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>&copy; Curso Técnico em Montagem e Reparo de Computadores. Todos os direitos reservados.</p>
+            <p class="font-mono text-slate-600 flex items-center space-x-1">
+                <i class="fa-solid fa-lock text-slate-500"></i>
+                <span>Proteção Anti-Cópia e Validação Habilitadas</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           1. QUESTION DATABASE (40 Multiple Choice + 10 Essay Questions)
+           ========================================================================== */
+
+        const mcqQuestions = [
+            {
+                category: "Processadores (CPU)",
+                question: "Ao instalar um processador Intel moderno com soquete LGA (Land Grid Array) na placa-mãe, qual cuidado fundamental deve ser observado pelo montador?",
+                options: [
+                    "Os pinos ficam no soquete da placa-mãe e são extremamente frágeis, devendo-se alinhar as marcas sem exercer pressão lateral.",
+                    "Os pinos ficam no próprio processador e devem ser lubrificados com pasta térmica antes da trava.",
+                    "Os pinos devem ser encaixados sob rotação para garantir a condutividade elétrica adequada.",
+                    "Não há pinos envolvidos, pois o encaixe ocorre por indução eletromagnética em placas LGA."
+                ],
+                correctText: "Os pinos ficam no soquete da placa-mãe e são extremamente frágeis, devendo-se alinhar as marcas sem exercer pressão lateral.",
+                rationale: "No padrão LGA (Land Grid Array), os pinos situam-se no soquete da placa-mãe. Danificar qualquer pino pode inutilizar a placa."
+            },
+            {
+                category: "Memória RAM",
+                question: "Como se configura adequadamente o recurso Dual Channel em uma placa-mãe de 4 slots com dois pentes idênticos de memória RAM?",
+                options: [
+                    "Instalando os pentes nos slots alternados de mesmo canal (ex: A2 e B2 ou A1 e B1).",
+                    "Instalando os dois pentes lado a lado obrigatoriamente nos slots A1 e A2.",
+                    "Instalando apenas um pente, pois Dual Channel opera com um único módulo de alta frequência.",
+                    "Conectando os dois pentes exclusivamente nos slots de energia auxiliar da fonte."
+                ],
+                correctText: "Instalando os pentes nos slots alternados de mesmo canal (ex: A2 e B2 ou A1 e B1).",
+                rationale: "Para ativar o Dual Channel e dobrar a largura de banda da memória, os módulos devem ser dispostos nos canais correspondentes (frequentemente A2 e B2)."
+            },
+            {
+                category: "Fontes de Alimentação",
+                question: "O que o selo de certificação '80 Plus' garante em relação a uma fonte de alimentação ATX?",
+                options: [
+                    "Garante eficiência energética de no mínimo 80% na conversão de AC para DC em diferentes níveis de carga.",
+                    "Garante que a fonte fornece exatamente 80 Amperes no barramento principal de +12V.",
+                    "Garante funcionamento contínuo em temperaturas de até 80°C sem queda de tensão.",
+                    "Garante que a garantia da fábrica será estendida por 80 meses consecutivos."
+                ],
+                correctText: "Garante eficiência energética de no mínimo 80% na conversão de AC para DC em diferentes níveis de carga.",
+                rationale: "A certificação 80 Plus atesta que a fonte desperdiça menos de 20% da energia consumida sob forma de calor."
+            },
+            {
+                category: "Armazenamento",
+                question: "Qual é a principal vantagem de um SSD M.2 NVMe em relação a um SSD SATA tradicional?",
+                options: [
+                    "Comunica-se pelo barramento PCI Express, oferecendo taxas de transferência e IOPS significativamente superiores.",
+                    "Consome o dobro da energia elétrica e exige cabos de dados SATA adicionais.",
+                    "Utiliza discos magnéticos rotativos em vez de chips de memória flash NAND.",
+                    "Não requer suporte do sistema operacional para ser reconhecido no boot."
+                ],
+                correctText: "Comunica-se pelo barramento PCI Express, oferecendo taxas de transferência e IOPS significativamente superiores.",
+                rationale: "O protocolo NVMe elimina o gargalo da interface SATA III (6 Gbps), alcançando altas velocidades via pistas PCIe."
+            },
+            {
+                category: "Diagnóstico & POST",
+                question: "Um computador liga, os coolers giram, mas não dá vídeo e a placa-mãe emite 3 beeps curtos. Qual a causa mais provável?",
+                options: [
+                    "Falha ou mau contato na inicialização da Memória RAM.",
+                    "Defeito irreversível no cabo de força da fonte.",
+                    "Processador sem pasta térmica aplicada.",
+                    "Superaquecimento na placa de rede sem fio."
+                ],
+                correctText: "Falha ou mau contato na inicialização da Memória RAM.",
+                rationale: "Na maioria dos firmwares BIOS/UEFI, 3 beeps curtos no POST indicam erro de leitura nos primeiros 64KB da memória RAM."
+            },
+            {
+                category: "Proteção ESD",
+                question: "Qual é a função primária da pulseira antiestática (ESD) na bancada do técnico?",
+                options: [
+                    "Dissipar a carga eletrostática do corpo do técnico para o aterramento, protegendo circuitos sensíveis.",
+                    "Proteger o técnico contra choques de alta tensão provenientes da rede elétrica residencial.",
+                    "Garantir maior aderência ao manusear parafusos pequenos do gabinete.",
+                    "Evitar a formação de poeira nas trilhas eletrônicas durante a montagem."
+                ],
+                correctText: "Dissipar a carga eletrostática do corpo do técnico para o aterramento, protegendo circuitos sensíveis.",
+                rationale: "Descargas eletrostáticas imperceptíveis ao ser humano podem queimar semicondutores e transistores de microchips."
+            },
+            {
+                category: "Refrigeração & Térmica",
+                question: "Qual é a função da pasta térmica colocada entre o processador e o cooler?",
+                options: [
+                    "Preencher as microimperfeições metálicas das superfícies para eliminar o ar e otimizar a condução de calor.",
+                    "Colar o cooler de forma definitiva sobre o processador.",
+                    "Gerar corrente elétrica extra para alimentar as ventoinhas.",
+                    "Proteger o processador contra surtos de alta voltagem."
+                ],
+                correctText: "Preencher as microimperfeições metálicas das superfícies para eliminar o ar e otimizar a condução de calor.",
+                rationale: "O ar é um péssimo condutor térmico. A pasta térmica preenche as frestas microscópicas permitindo transferência direta de calor."
+            },
+            {
+                category: "Sistemas & Particionamento",
+                question: "Para instalar o Windows 11 em modo UEFI nativo com suporte a Secure Boot e discos maiores que 2TB, qual tabela de partição é obrigatória?",
+                options: [
+                    "GPT (GUID Partition Table)",
+                    "MBR (Master Boot Record)",
+                    "FAT32",
+                    "EXT4"
+                ],
+                correctText: "GPT (GUID Partition Table)",
+                rationale: "O padrão GPT é pré-requisito para inicialização em UEFI e elimina as limitações do MBR (máximo 4 partições primárias e 2TB)."
+            },
+            {
+                category: "Solução de Problemas",
+                question: "Se um computador desliga sozinho após 5 minutos de jogos pesados e apresenta 98°C no processador, qual o diagnóstico?",
+                options: [
+                    "Thermal Throttling / Desligamento de proteção térmica devido ao resfriamento inadequado.",
+                    "Defeito na placa de som integrada.",
+                    "Ausência de espaço livre no SSD.",
+                    "Incompatibilidade do teclado USB."
+                ],
+                correctText: "Thermal Throttling / Desligamento de proteção térmica devido ao resfriamento inadequado.",
+                rationale: "A CPU desliga automaticamente para evitar danos físicos irreversíveis por superaquecimento."
+            },
+            {
+                category: "Barramentos",
+                question: "O slot PCI Express x16 da placa-mãe é destinado prioritariamente a qual componente?",
+                options: [
+                    "Placa de Vídeo dedicada (GPU) de alto desempenho.",
+                    "Módulos de expansão de memória RAM.",
+                    "Placa de som interna de baixo consumo.",
+                    "Drive de disquete ou leitor de cartão."
+                ],
+                correctText: "Placa de Vídeo dedicada (GPU) de alto desempenho.",
+                rationale: "O slot PCIe x16 oferece a maior largura de banda da placa-mãe, ideal para o alto volume de dados da GPU."
+            },
+            {
+                category: "Processadores (AMD)",
+                question: "Qual padrão de soquete passou a ser adotado pela AMD a partir da plataforma AM5?",
+                options: [
+                    "LGA (Land Grid Array), com os pinos situados no soquete da placa-mãe.",
+                    "PGA (Pin Grid Array), mantendo os pinos no processador.",
+                    "BGA (Ball Grid Array) soldado sem possibilidade de remoção.",
+                    "Slot mecânico de cartucho."
+                ],
+                correctText: "LGA (Land Grid Array), com os pinos situados no soquete da placa-mãe.",
+                rationale: "A AMD migrou do PGA (AM4) para o LGA (AM5), permitindo maior densidade de conexões na CPU."
+            },
+            {
+                category: "Fontes ATX",
+                question: "O conector principal de energia da placa-mãe no padrão ATX moderno possui quantos pinos?",
+                options: [
+                    "20 ou 24 Pinos (20+4).",
+                    "4 Pinos Molex.",
+                    "8 Pinos EPS isolados.",
+                    "15 Pinos SATA."
+                ],
+                correctText: "20 ou 24 Pinos (20+4).",
+                rationale: "O conector ATX de 24 pinos fornece as tensões de +3.3V, +5V, +12V e sinais de controle para a placa-mãe."
+            },
+            {
+                category: "Manutenção Preventiva",
+                question: "Qual produto químico é recomendado para a limpeza de placas de circuito e remoção de pasta térmica antiga?",
+                options: [
+                    "Álcool Isopropílico (99,8% de pureza).",
+                    "Água sanitária misturada com detergente.",
+                    "Álcool etílico 70% de uso doméstico.",
+                    "Óleo lubrificante spray."
+                ],
+                correctText: "Álcool Isopropílico (99,8% de pureza).",
+                rationale: "O álcool isopropílico possui percentual residual de água praticamente nulo (<0,2%), evitando oxidação e curto-circuito."
+            },
+            {
+                category: "BIOS / UEFI",
+                question: "Qual procedimento limpa as configurações do Setup da BIOS/UEFI e restaura os padrões de fábrica em hardware?",
+                options: [
+                    "Clear CMOS (via jumper CLR_CMOS ou remoção temporária da bateria CR2032).",
+                    "Formatação do disco rígido.",
+                    "Troca do cabo HDMI do monitor.",
+                    "Execução do utilitário de desfragmentação."
+                ],
+                correctText: "Clear CMOS (via jumper CLR_CMOS ou remoção temporária da bateria CR2032).",
+                rationale: "O Clear CMOS corta a alimentação da memória volátil que armazena as parâmetros configurados no Setup."
+            },
+            {
+                category: "Sistemas & Drivers",
+                question: "O que é um 'Driver de Dispositivo' no contexto de hardware de computadores?",
+                options: [
+                    "Um programa de software que permite ao Sistema Operacional se comunicar com o hardware.",
+                    "Um componente físico interno da fonte de alimentação.",
+                    "Um cabo de dados de alta velocidade.",
+                    "Um microchip soldado na placa de vídeo."
+                ],
+                correctText: "Um programa de software que permite ao Sistema Operacional se comunicar com o hardware.",
+                rationale: "Sem o driver adequado, o sistema operacional não sabe quais instruções enviar para o componente físico."
+            },
+            {
+                category: "Fontes de Alimentação",
+                question: "Para efetuar o teste de bancada ('jump') em uma fonte ATX desconectada da placa-mãe, quais pinos devem ser unidos?",
+                options: [
+                    "O pino Verde (PS-ON) com qualquer pino Preto (GND / Terra).",
+                    "O pino Amarelo (+12V) com o pino Vermelho (+5V).",
+                    "O pino Laranja (+3.3V) com o pino Azul (-12V).",
+                    "Dois pinos Vermelhos quaisquer."
+                ],
+                correctText: "O pino Verde (PS-ON) com qualquer pino Preto (GND / Terra).",
+                rationale: "Aterrar o pino PS-ON envia o sinal lógico baixo necessário para a fonte disparar as saídas principais."
+            },
+            {
+                category: "Painel Frontal",
+                question: "Ao conectar o painel frontal do gabinete na placa-mãe, qual conector exige atenção obrigatória à polaridade (+ e -)?",
+                options: [
+                    "Os conectores de LED (POWER LED e HDD LED).",
+                    "O botão mecânico POWER SW.",
+                    "O botão mecânico RESET SW.",
+                    "Nenhum conector do painel possui polaridade."
+                ],
+                correctText: "Os conectores de LED (POWER LED e HDD LED).",
+                rationale: "LEDs são díodos emissores de luz e só conduzem e acendem se alimentados com a polaridade correta."
+            },
+            {
+                category: "Redes & Conectividade",
+                question: "Qual conector padrão é utilizado em placas de rede local (NIC) para cabos UTP de par trançado?",
+                options: [
+                    "RJ-45",
+                    "RJ-11",
+                    "BNC Coaxial",
+                    "USB Type-B"
+                ],
+                correctText: "RJ-45",
+                rationale: "O conector RJ-45 de 8 vias é o padrão universal para redes Ethernet cabeadas."
+            },
+            {
+                category: "Arquitetura de CPU",
+                question: "O que representa o parâmetro TDP (Thermal Design Power) divulgado pelos fabricantes de processadores?",
+                options: [
+                    "A quantidade máxima de calor (em Watts) que o sistema de refrigeração precisa dissipar.",
+                    "A velocidade máxima de leitura da memória RAM.",
+                    "A voltagem exata que deve ser configurada na BIOS.",
+                    "A quantidade de arquivos temporários suportados."
+                ],
+                correctText: "A quantidade máxima de calor (em Watts) que o sistema de refrigeração precisa dissipar.",
+                rationale: "O TDP guia a escolha do cooler adequado para manter a CPU dentro de limites operacionais seguros."
+            },
+            {
+                category: "Placa-Mãe",
+                question: "Qual é a função do circuito VRM (Voltage Regulator Module) localizado ao lado do soquete da CPU?",
+                options: [
+                    "Converter a tensão de +12V da fonte para a tensão baixa e precisa exigida pelo núcleo do processador.",
+                    "Gerenciar as transmissões de áudio do painel traseiro.",
+                    "Armazenar os arquivos de inicialização do sistema.",
+                    "Aumentar a velocidade do barramento SATA."
+                ],
+                correctText: "Converter a tensão de +12V da fonte para a tensão baixa e precisa exigida pelo núcleo do processador.",
+                rationale: "O VRM regula e reduz os 12V da fonte para valores como 1.1V ~ 1.3V de forma extremamente estável."
+            },
+            {
+                category: "Armazenamento & RAID",
+                question: "Qual nível de RAID é focado em espelhamento, gravando os mesmos dados simultaneamente em dois discos para redundância?",
+                options: [
+                    "RAID 1",
+                    "RAID 0",
+                    "RAID 5",
+                    "JBOD"
+                ],
+                correctText: "RAID 1",
+                rationale: "O RAID 1 duplica os dados nos dois discos. Se um falhar, o outro assume imediatamente sem perda."
+            },
+            {
+                category: "Interfaces de Vídeo",
+                question: "Qual conexão de vídeo digital transmite áudio/vídeo e suporta altas taxas de atualização com G-Sync/FreeSync?",
+                options: [
+                    "DisplayPort",
+                    "VGA (DB-15 analógico)",
+                    "S-Video",
+                    "RCA Composto"
+                ],
+                correctText: "DisplayPort",
+                rationale: "O DisplayPort é a interface padrão da indústria para altas resoluções, taxas de atualização elevadas e sincronização adaptativa."
+            },
+            {
+                category: "Multímetro & Testes",
+                question: "Qual escala do Multímetro Digital deve ser selecionada para medir a tensão de uma linha de +12V da fonte de alimentação?",
+                options: [
+                    "Tensão Contínua (DCV / V=) na escala adequada (ex: 20V).",
+                    "Tensão Alternada (ACV / V~).",
+                    "Resistência Elétrica (Ohms / Ω).",
+                    "Corrente Alternada (ACA)."
+                ],
+                correctText: "Tensão Contínua (DCV / V=) na escala adequada (ex: 20V).",
+                rationale: "Fontes de computador entregam corrente contínua (DC). A medição exige a escala DCV superior a 12V."
+            },
+            {
+                category: "Barramentos e Conflitos",
+                question: "Quando a placa-mãe desativa certas portas SATA ao instalar um SSD M.2 NVMe, qual a causa técnica?",
+                options: [
+                    "Compartilhamento de linhas/lanes do chipset entre a porta M.2 e as portas SATA especificadas.",
+                    "Defeito de fábrica no SSD M.2.",
+                    "Falta de potência total na fonte de alimentação.",
+                    "Incompatibilidade da versão do Windows."
+                ],
+                correctText: "Compartilhamento de linhas/lanes do chipset entre a porta M.2 e as portas SATA especificadas.",
+                rationale: "Devido ao limite de barramentos do chipset, certas portas compartilham caminhos físicos e desativam-se mutuamente."
+            },
+            {
+                category: "Overclock & Perfis",
+                question: "O que é o perfil XMP (Extreme Memory Profile) / DOCP nas configurações da placa-mãe?",
+                options: [
+                    "Um perfil pré-gravado nos módulos que aplica as frequências e tempos nominais de fábrica.",
+                    "Um utilitário de formatação rápida do SSD.",
+                    "Um antivírus integrado na memória ROM.",
+                    "Um teste de diagnóstico de erros físicos de trilha."
+                ],
+                correctText: "Um perfil pré-gravado nos módulos que aplica as frequências e tempos nominais de fábrica.",
+                rationale: "Sem ativar o XMP/DOCP, as memórias operam na frequência padrão JEDEC mais baixa."
+            },
+            {
+                category: "Montagem de Gabinete",
+                question: "Qual a função dos espaçadores metálicos (Standoffs) colocados entre o gabinete e a placa-mãe?",
+                options: [
+                    "Evitar o contato direto das soldas traseiras da placa-mãe com o chassi metálico, impedindo curto-circuito.",
+                    "Servir como dissipadores de calor para a memória RAM.",
+                    "Prender os cabos de dados da fonte de alimentação.",
+                    "Aumentar o sinal da placa de rede sem fio."
+                ],
+                correctText: "Evitar o contato direto das soldas traseiras da placa-mãe com o chassi metálico, impedindo curto-circuito.",
+                rationale: "Sem espaçadores, as trilhas energizadas encostam no metal do gabinete provocando curto e queima de componentes."
+            },
+            {
+                category: "Notebooks",
+                question: "Qual é o formato padrão reduzido de memória RAM utilizado em notebooks?",
+                options: [
+                    "SO-DIMM",
+                    "DIMM Desktop 288 pinos",
+                    "ECC Registered Server",
+                    "Micro-SATA"
+                ],
+                correctText: "SO-DIMM",
+                rationale: "Módulos SO-DIMM (Small Outline DIMM) possuem tamanho físico reduzido para caber nos gabinetes compactos de notebooks."
+            },
+            {
+                category: "Fontes de Alimentação",
+                question: "Qual é a principal vantagem da tecnologia PFC Ativo em fontes de alimentação?",
+                options: [
+                    "Otimiza o fator de potência (~0.99) e elimina a chave seletora manual de voltagem (110V/220V).",
+                    "Converte a fonte em um no-break interno com bateria de 30 minutos.",
+                    "Desliga automaticamente o cooler para silenciar o computador.",
+                    "Reduz o consumo de energia do monitor."
+                ],
+                correctText: "Otimiza o fator de potência (~0.99) e elimina a chave seletora manual de voltagem (110V/220V).",
+                rationale: "O PFC Ativo ajusta automaticamente a tensão de entrada (Bivolt automático) e reduz desperdícios na rede."
+            },
+            {
+                category: "Ferramentas de Teste",
+                question: "Para testar exaustivamente a integridade física dos módulos de Memória RAM em busca de setores defeituosos, qual software é indicado?",
+                options: [
+                    "MemTest86",
+                    "CrystalDiskInfo",
+                    "GPU-Z",
+                    "HWMonitor"
+                ],
+                correctText: "MemTest86",
+                rationale: "O MemTest86 é executado fora do sistema operacional (via boot) gravando e lendo padrões complexos de dados na RAM."
+            },
+            {
+                category: "BIOS / Segurança",
+                question: "Qual módulo de segurança na placa-mãe armazena chaves criptográficas e é exigido para a instalação do Windows 11?",
+                options: [
+                    "TPM 2.0 (Trusted Platform Module)",
+                    "Bateria CR2032",
+                    "Controlador AHCI",
+                    "VRM Controller"
+                ],
+                correctText: "TPM 2.0 (Trusted Platform Module)",
+                rationale: "O TPM 2.0 provê recursos de segurança baseados em hardware para criptografia do sistema (ex: BitLocker)."
+            },
+            {
+                category: "Processadores",
+                question: "O que é a tecnologia Hyper-Threading (Intel) ou SMT (AMD)?",
+                options: [
+                    "Permite que um único núcleo físico execute duas threads simultaneamente.",
+                    "Dobra a quantidade física de transistores gravados no silício.",
+                    "Aumenta a rotação das ventoinhas do gabinete.",
+                    "Converte a memória RAM em cache L3 extra."
+                ],
+                correctText: "Permite que um único núcleo físico execute duas threads simultaneamente.",
+                rationale: "O SMT/Hyper-Threading otimiza o pipeline da CPU permitindo que recursos ociosos processem uma segunda linha de instruções."
+            },
+            {
+                category: "Processadores & Vídeo",
+                question: "Uma CPU com o sufixo 'F' na linha Intel Core (ex: i5-12400F) possui qual característica?",
+                options: [
+                    "Não possui vídeo integrado e necessita obrigatoriamente de uma placa de vídeo dedicada.",
+                    "Possui cooler líquido incluso na caixa.",
+                    "É um modelo exclusivo para notebooks.",
+                    "Possui overclock liberado de fábrica."
+                ],
+                correctText: "Não possui vídeo integrado e necessita obrigatoriamente de uma placa de vídeo dedicada.",
+                rationale: "A letra 'F' nos processadores Intel indica a ausência de iGPU funcional na pastilha do chip."
+            },
+            {
+                category: "Diagnóstico de Armazenamento",
+                question: "A mensagem 'S.M.A.R.T. Status BAD, Backup and Replace' exibida no boot indica qual situação?",
+                options: [
+                    "O sistema do HD/SSD detectou falha física iminente e perda iminente de dados.",
+                    "A memória RAM está mal encaixada no slot.",
+                    "O cabo de vídeo do monitor está solto.",
+                    "A fonte está operando em 220V incorretamente."
+                ],
+                correctText: "O sistema do HD/SSD detectou falha física iminente e perda iminente de dados.",
+                rationale: "O S.M.A.R.T. monitora atributos críticos de discos. Um alerta BAD indica que o dispositivo está em degradação severa."
+            },
+            {
+                category: "Interfaces USB",
+                question: "Qual padrão USB alcança velocidades de até 40 Gbps e utiliza o conector formato Type-C?",
+                options: [
+                    "USB4 / Thunderbolt 4",
+                    "USB 2.0",
+                    "USB 3.0 (USB 3.2 Gen 1)",
+                    "USB Type-A Standard"
+                ],
+                correctText: "USB4 / Thunderbolt 4",
+                rationale: "O USB4 utiliza exclusivamente a interface física Type-C entregando até 40 Gbps de banda."
+            },
+            {
+                category: "Fluxo de Ar (Airflow)",
+                question: "Para um fluxo de ar eficiente (Airflow) dentro do gabinete, qual é a orientação recomendada das ventoinhas?",
+                options: [
+                    "Ventoinhas frontais/inferiores injetam ar frio; ventoinhas traseiras/superiores exaurem o ar quente.",
+                    "Todas as ventoinhas do gabinete devem jogar ar quente para dentro do gabinete.",
+                    "Todas as ventoinhas devem apenas retirar ar, criando vácuo total.",
+                    "A posição dos coolers não afeta as temperaturas internas."
+                ],
+                correctText: "Ventoinhas frontais/inferiores injetam ar frio; ventoinhas traseiras/superiores exaurem o ar quente.",
+                rationale: "Como o ar quente tende a subir (convecção), o fluxo ideal entra pela frente/baixo e sai por trás/cima."
+            },
+            {
+                category: "Armazenamento HDD",
+                question: "Como são chamados os setores danificados na superfície dos pratos magnéticos de um HD que impedem leitura/escrita?",
+                options: [
+                    "Bad Blocks (ou Bad Sectors)",
+                    "Cluster Ativo",
+                    "LBA Reset",
+                    "Throttling Sectors"
+                ],
+                correctText: "Bad Blocks (ou Bad Sectors)",
+                rationale: "Bad Blocks são falhas físicas ou lógicas na superfície magnética que tornam aquele setor ilegível."
+            },
+            {
+                category: "Placa-Mãe & CMOS",
+                question: "Qual a tensão nominal fornecida pela bateria CR2032 instalada na placa-mãe para alimentar o relógio RTC/CMOS?",
+                options: [
+                    "3.0V DC",
+                    "1.5V DC",
+                    "5.0V DC",
+                    "12.0V DC"
+                ],
+                correctText: "3.0V DC",
+                rationale: "A pilha moeda CR2032 fornece 3 Volts contínuos para manter o relógio interno e parâmetros da memória CMOS acionados."
+            },
+            {
+                category: "Comandos do Sistema",
+                question: "Qual comando no Prompt de Comando (CMD) do Windows verifica e repara arquivos corrompidos do sistema operacional?",
+                options: [
+                    "sfc /scannow",
+                    "ipconfig /renew",
+                    "format C:",
+                    "diskpart clean"
+                ],
+                correctText: "sfc /scannow",
+                rationale: "O System File Checker (SFC) verifica a assinatura digital dos arquivos do sistema e substitui cópias corrompidas."
+            },
+            {
+                category: "Manutenção de Notebooks",
+                question: "Qual o papel do componente 'Inverter' em telas antigas de notebook do tipo LCD CCFL?",
+                options: [
+                    "Converter a baixa tensão DC do notebook na alta tensão AC necessária para acender a lâmpada fluorescente (backlight).",
+                    "Aumentar a memória RAM da placa de vídeo.",
+                    "Controlar a velocidade das ventoinhas internas.",
+                    "Carregar a bateria principal do notebook."
+                ],
+                correctText: "Converter a baixa tensão DC do notebook na alta tensão AC necessária para acender a lâmpada fluorescente (backlight).",
+                rationale: "Lâmpadas CCFL exigem centenas de Volts alternados para acender, função desempenhada pelo Inverter."
+            },
+            {
+                category: "Proteção Elétrica",
+                question: "Por que o uso de estabilizadores de tensão é contraindicado em fontes modernas com PFC Ativo?",
+                options: [
+                    "Os relés lentos do estabilizador geram picos de corrente e cavas de tensão que desgastam a fonte com PFC Ativo.",
+                    "O estabilizador altera a frequência do processador para valores inseguros.",
+                    "O estabilizador queima os pentes de memória RAM por indução.",
+                    "Fontes modernas não funcionam se ligadas em 110V."
+                ],
+                correctText: "Os relés lentos do estabilizador geram picos de corrente e cavas de tensão que desgastam a fonte com PFC Ativo.",
+                rationale: "Fontes com PFC Ativo corrigem flutuações em milissegundos. Os relés ruidosos dos estabilizadores atrapalham esse circuito interno."
+            }
+        ];
+
+        const essayQuestions = [
+            {
+                category: "Diagnóstico Prático",
+                question: "Um cliente traz uma máquina que liga (leds do gabinete e coolers acendem), mas não dá vídeo nem emite beeps. Liste em ordem lógica os 4 primeiros procedimentos técnicos de bancada que você executaria para isolar o problema."
+            },
+            {
+                category: "Refrigeração & Montagem",
+                question: "Explique detalhadamente o procedimento correto para a aplicação de pasta térmica no processador (quantidade, padrão de distribuição) e os riscos de aplicar em excesso ou em quantidade insuficiente."
+            },
+            {
+                category: "Proteção & Laboratório",
+                question: "O que é a Carga Eletrostática (ESD)? Quais as principais ferramentas e condutas técnicas que uma bancada de reparo deve possuir para garantir a integridade dos chips sensíveis?"
+            },
+            {
+                category: "Sistemas & Boot",
+                question: "Compare as arquiteturas de inicialização MBR/Legacy BIOS e GPT/UEFI. Explique por que a combinação GPT/UEFI é obrigatória em sistemas operacionais e hardwares modernos."
+            },
+            {
+                category: "Fontes & Testes",
+                question: "Descreva o passo a passo para testar as tensões de saída de uma fonte ATX utilizando um Multímetro Digital no conector de 24 pinos e nos conectores Molex/SATA."
+            },
+            {
+                category: "Manutenção de Notebooks",
+                question: "Notebooks sofrem frequentemente com problemas de superaquecimento e 'Thermal Throttling'. Descreva o procedimento completo de manutenção preventiva interna em um notebook com este sintoma."
+            },
+            {
+                category: "Compatibilidade de Peças",
+                question: "Você foi contratado para orçar um computador do zero. Quais são os 5 pontos cruciais de compatibilidade física e elétrica entre componentes que você deve checar antes de efetuar a compra?"
+            },
+            {
+                category: "Formatação & Instalação",
+                question: "Descreva o fluxo completo do processo de formatação limpa do Windows 11 em um PC recém-montado, desde a criação do pendrive bootável até a instalação dos drivers oficiais."
+            },
+            {
+                category: "Diagnóstico de Memória",
+                question: "Quais são os principais sintomas apresentados por um computador quando há defeito ou instabilidade nos módulos de memória RAM? Como validar a suspeita usando ferramentas de software?"
+            },
+            {
+                category: "Relatório Técnico",
+                question: "Um cliente corporativo exige um laudo técnico após o reparo de uma máquina que sofreu queima da fonte de alimentação por surto na rede elétrica. Elabore um pequeno texto sintético descrevendo o diagnóstico, a causa raiz e a solução aplicada."
+            }
+        ];
+
+        /* ==========================================================================
+           2. APP STATE & UTILITIES
+           ========================================================================== */
+
+        let currentQuestionIndex = 0; // Total 0 to 49
+        let studentData = { name: "", id: "", startTime: null, endTime: null };
+        let activeMCQ = [];
+        let activeEssay = [];
+        let userAnswersMCQ = [];
+        let userAnswersEssay = [];
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let selectedOptionIndex = null;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        /* ==========================================================================
+           3. ANTI-CHEAT & INTEGRITY LOCKS
+           ========================================================================== */
+
+        function setupAntiCheatGuards() {
+            // Block Context Menu (Right Click)
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Block Copy, Cut, Paste globally
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('cut', e => e.preventDefault());
+            document.addEventListener('paste', e => e.preventDefault());
+
+            // Block Key Combinations (F12, Ctrl+Shift+I, Ctrl+C, Ctrl+V, etc.)
+            document.addEventListener('keydown', e => {
+                if (e.keyCode === 123) { // F12
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey || e.metaKey) {
+                    const key = e.key.toLowerCase();
+                    if (['c', 'v', 'x', 'u', 's', 'p', 'i', 'j', 'a'].includes(key)) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+            });
+        }
+
+        /* ==========================================================================
+           4. QUIZ ENGINE LOGIC
+           ========================================================================== */
+
+        function startQuiz(event) {
+            event.preventDefault();
+
+            const nameInput = document.getElementById('student-name').value.trim();
+            const idInput = document.getElementById('student-id').value.trim();
+
+            if (!nameInput || !idInput) return;
+
+            studentData.name = nameInput;
+            studentData.id = idInput;
+            studentData.startTime = new Date();
+
+            // Prepare MCQ questions: Shuffle alternatives and store correct reference
+            activeMCQ = mcqQuestions.map(q => {
+                const optionsArray = q.options.map(opt => ({
+                    text: opt,
+                    isCorrect: opt === q.correctText
+                }));
+                shuffleArray(optionsArray);
+
+                return {
+                    category: q.category,
+                    question: q.question,
+                    options: optionsArray,
+                    rationale: q.rationale,
+                    correctIndex: optionsArray.findIndex(o => o.isCorrect)
+                };
+            });
+            shuffleArray(activeMCQ); // Randomize MCQ question order
+
+            // Prepare Essay questions
+            activeEssay = [...essayQuestions];
+            shuffleArray(activeEssay);
+
+            userAnswersMCQ = new Array(activeMCQ.length).fill(null);
+            userAnswersEssay = new Array(activeEssay.length).fill("");
+
+            document.getElementById('student-display-name').textContent = studentData.name;
+            document.getElementById('header-student-info').classList.remove('hidden');
+
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+
+            startTimer();
+            renderQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+                document.getElementById('quiz-timer').textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function renderQuestion() {
+            selectedOptionIndex = null;
+            const btnSubmit = document.getElementById('btn-submit-q');
+            btnSubmit.disabled = true;
+
+            const totalQuestions = activeMCQ.length + activeEssay.length; // 50
+            const qNum = currentQuestionIndex + 1;
+
+            document.getElementById('current-q-num').textContent = qNum;
+            const progressPct = Math.round((qNum / totalQuestions) * 100);
+            document.getElementById('progress-bar-fill').style.width = `${progressPct}%`;
+
+            const mcqContainer = document.getElementById('mcq-options-container');
+            const essayContainer = document.getElementById('essay-container');
+            const qTypeBadge = document.getElementById('question-type-badge');
+            const qWeightBadge = document.getElementById('q-weight-badge');
+
+            if (currentQuestionIndex < activeMCQ.length) {
+                /* MULTIPLE CHOICE QUESTION */
+                const q = activeMCQ[currentQuestionIndex];
+                qTypeBadge.textContent = "Múltipla Escolha";
+                qTypeBadge.className = "px-2.5 py-1 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold uppercase text-xs tracking-wider";
+                qWeightBadge.textContent = "Vale 2.25 Pts";
+
+                document.getElementById('q-category').textContent = q.category;
+                document.getElementById('question-title').textContent = q.question;
+
+                mcqContainer.classList.remove('hidden');
+                essayContainer.classList.add('hidden');
+                mcqContainer.innerHTML = '';
+
+                q.options.forEach((optObj, optIdx) => {
+                    const optBtn = document.createElement('div');
+                    optBtn.className = "group border border-slate-800 hover:border-cyan-500/50 bg-slate-950 hover:bg-slate-800/60 rounded-xl p-4 cursor-pointer transition flex items-start space-x-3";
+                    optBtn.onclick = () => selectMcqOption(optIdx, optBtn);
+
+                    const letter = String.fromCharCode(65 + optIdx); // A, B, C, D
+
+                    optBtn.innerHTML = `
+                        <div class="opt-radio w-6 h-6 rounded-full border-2 border-slate-700 group-hover:border-cyan-400 flex items-center justify-center text-xs font-bold text-slate-400 flex-shrink-0 mt-0.5 transition">
+                            ${letter}
+                        </div>
+                        <div class="text-slate-300 group-hover:text-white text-sm sm:text-base leading-relaxed">
+                            ${optObj.text}
+                        </div>
+                    `;
+                    mcqContainer.appendChild(optBtn);
+                });
+
+            } else {
+                /* ESSAY TEXT QUESTION */
+                const essayIdx = currentQuestionIndex - activeMCQ.length;
+                const q = activeEssay[essayIdx];
+
+                qTypeBadge.textContent = "Resposta de Texto";
+                qTypeBadge.className = "px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold uppercase text-xs tracking-wider";
+                qWeightBadge.textContent = "Correção do Professor";
+
+                document.getElementById('q-category').textContent = q.category;
+                document.getElementById('question-title').textContent = q.question;
+
+                mcqContainer.classList.add('hidden');
+                essayContainer.classList.remove('hidden');
+
+                const essayInput = document.getElementById('essay-input');
+                essayInput.value = '';
+                
+                essayInput.oninput = () => {
+                    btnSubmit.disabled = essayInput.value.trim().length === 0;
+                };
+            }
+        }
+
+        function selectMcqOption(optIdx, element) {
+            selectedOptionIndex = optIdx;
+
+            const allOptions = document.querySelectorAll('#mcq-options-container > div');
+            allOptions.forEach((el) => {
+                el.classList.remove('border-cyan-500', 'bg-cyan-950/30');
+                el.classList.add('border-slate-800', 'bg-slate-950');
+                const radio = el.querySelector('.opt-radio');
+                radio.classList.remove('bg-cyan-500', 'border-cyan-400', 'text-slate-950');
+                radio.classList.add('border-slate-700', 'text-slate-400');
+            });
+
+            element.classList.remove('border-slate-800', 'bg-slate-950');
+            element.classList.add('border-cyan-500', 'bg-cyan-950/30');
+
+            const radio = element.querySelector('.opt-radio');
+            radio.classList.remove('border-slate-700', 'text-slate-400');
+            radio.classList.add('bg-cyan-500', 'border-cyan-400', 'text-slate-950');
+
+            document.getElementById('btn-submit-q').disabled = false;
+        }
+
+        function handleQuestionSubmit() {
+            if (currentQuestionIndex < activeMCQ.length) {
+                if (selectedOptionIndex === null) return;
+                
+                const q = activeMCQ[currentQuestionIndex];
+                const isCorrect = selectedOptionIndex === q.correctIndex;
+                userAnswersMCQ[currentQuestionIndex] = selectedOptionIndex;
+
+                showFeedbackModal(isCorrect, q);
+            } else {
+                const essayIdx = currentQuestionIndex - activeMCQ.length;
+                const essayText = document.getElementById('essay-input').value.trim();
+                userAnswersEssay[essayIdx] = essayText;
+
+                // For essay questions, move directly to next without feedback modal
+                advanceToNextQuestion();
+            }
+        }
+
+        function showFeedbackModal(isCorrect, q) {
+            const modal = document.getElementById('feedback-modal');
+            const header = document.getElementById('feedback-header');
+            const title = document.getElementById('feedback-title');
+            const subtitle = document.getElementById('feedback-subtitle');
+            const body = document.getElementById('feedback-body');
+
+            const selectedOptionText = q.options[selectedOptionIndex].text;
+            const correctOptionText = q.options[q.correctIndex].text;
+
+            if (isCorrect) {
+                header.innerHTML = `
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-emerald-400">Você Acertou!</h3>
+                        <p class="text-xs text-slate-400">Resposta Correta Confirmada (+2.25 Pts)</p>
+                    </div>
+                `;
+                body.innerHTML = `
+                    <p class="font-semibold text-emerald-300">Sua escolha está perfeitamente correta:</p>
+                    <p class="italic text-slate-200 bg-slate-900 p-2.5 rounded-lg border border-slate-800">"${escapeHtml(selectedOptionText)}"</p>
+                    <p class="text-xs text-slate-400 pt-1"><strong>Fundamentação Técnica:</strong> ${q.rationale}</p>
+                `;
+            } else {
+                header.innerHTML = `
+                    <div class="w-12 h-12 rounded-2xl bg-red-500/20 border border-red-500/30 text-red-400 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-red-400">Você Errou!</h3>
+                        <p class="text-xs text-slate-400">Resposta Incorreta Registrada (0 Pts)</p>
+                    </div>
+                `;
+                body.innerHTML = `
+                    <p class="font-semibold text-red-300">Você selecionou:</p>
+                    <p class="italic text-slate-300 bg-slate-900/80 p-2 rounded-lg border border-red-900/40 line-through">"${escapeHtml(selectedOptionText)}"</p>
+                    <p class="font-semibold text-emerald-400 pt-2">A alternativa correta era:</p>
+                    <p class="italic text-slate-100 bg-emerald-950/40 p-2.5 rounded-lg border border-emerald-800/50">"${escapeHtml(correctOptionText)}"</p>
+                    <p class="text-xs text-slate-400 pt-1"><strong>Fundamentação Técnica:</strong> ${q.rationale}</p>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function advanceToNextQuestion() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            currentQuestionIndex++;
+
+            const totalQuestions = activeMCQ.length + activeEssay.length;
+            if (currentQuestionIndex < totalQuestions) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        /* ==========================================================================
+           5. RESULTS & EVALUATION
+           ========================================================================== */
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            studentData.endTime = new Date();
+
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-results').classList.remove('hidden');
+
+            let correctCount = 0;
+            userAnswersMCQ.forEach((ansIdx, qIdx) => {
+                if (ansIdx === activeMCQ[qIdx].correctIndex) {
+                    correctCount++;
+                }
+            });
+
+            // Score out of 90.0 (40 questions * 2.25 pts = 90.0)
+            const scorePerQuestion = 90.0 / activeMCQ.length;
+            const calculatedScore = (correctCount * scorePerQuestion).toFixed(1);
+            const percentage = Math.round((correctCount / activeMCQ.length) * 100);
+
+            document.getElementById('final-score').textContent = calculatedScore;
+            document.getElementById('stat-correct-count').textContent = `${correctCount} / ${activeMCQ.length}`;
+            document.getElementById('stat-percentage').textContent = `${percentage}%`;
+
+            const feedbackEl = document.getElementById('score-feedback');
+            if (calculatedScore >= 70) {
+                feedbackEl.textContent = "Aprovado na Etapa Objetiva";
+                feedbackEl.className = "text-xs font-semibold px-3 py-1 rounded-full inline-block bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            } else if (calculatedScore >= 50) {
+                feedbackEl.textContent = "Desempenho Mediano - Requer Revisão";
+                feedbackEl.className = "text-xs font-semibold px-3 py-1 rounded-full inline-block bg-amber-500/20 text-amber-400 border border-amber-500/30";
+            } else {
+                feedbackEl.textContent = "Abaixo da Média de Corte";
+                feedbackEl.className = "text-xs font-semibold px-3 py-1 rounded-full inline-block bg-red-500/20 text-red-400 border border-red-500/30";
+            }
+
+            // Report Details
+            document.getElementById('rep-student-name').textContent = studentData.name;
+            document.getElementById('rep-student-id').textContent = studentData.id;
+            document.getElementById('rep-student-score').textContent = `${calculatedScore} / 90.0`;
+            document.getElementById('rep-student-pct').textContent = `${percentage}% (${correctCount}/${activeMCQ.length})`;
+            document.getElementById('report-date').textContent = new Date().toLocaleDateString('pt-BR');
+
+            // Render Essay Section for Printable Report
+            const reportEssayContainer = document.getElementById('report-essay-list');
+            reportEssayContainer.innerHTML = '';
+
+            activeEssay.forEach((q, idx) => {
+                const ansText = userAnswersEssay[idx] || "(Sem resposta fornecida pelo aluno)";
+                const essayCard = document.createElement('div');
+                essayCard.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 print-card";
+                essayCard.innerHTML = `
+                    <div class="text-xs font-mono text-cyan-400 font-semibold uppercase">
+                        Questão Dissertativa ${idx + 1} (${q.category})
+                    </div>
+                    <p class="text-slate-200 font-medium text-xs sm:text-sm">${q.question}</p>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80">
+                        <span class="text-[10px] font-mono text-slate-500 uppercase block mb-1">Resposta Registrada do Aluno:</span>
+                        <p class="text-slate-300 text-xs sm:text-sm font-sans whitespace-pre-wrap leading-relaxed">${escapeHtml(ansText)}</p>
+                    </div>
+                `;
+                reportEssayContainer.appendChild(essayCard);
+            });
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        /* ==========================================================================
+           6. EXPORTING FUNCTIONS
+           ========================================================================== */
+
+        function exportToPDF() {
+            window.print();
+        }
+
+        function exportToJSON() {
+            const dataToExport = {
+                course: "Montador e Reparador de Computadores",
+                student: studentData,
+                evaluationDate: new Date().toISOString(),
+                timeTakenSeconds: secondsElapsed,
+                objectiveScore: {
+                    totalMCQ: activeMCQ.length,
+                    correctMCQ: userAnswersMCQ.filter((ansIdx, qIdx) => ansIdx === activeMCQ[qIdx].correctIndex).length,
+                    calculatedScore: parseFloat(document.getElementById('final-score').textContent),
+                    maxPossibleScore: 90.0
+                },
+                multipleChoiceDetails: activeMCQ.map((q, idx) => ({
+                    questionNumber: idx + 1,
+                    category: q.category,
+                    question: q.question,
+                    selectedOptionText: q.options[userAnswersMCQ[idx]] ? q.options[userAnswersMCQ[idx]].text : "N/A",
+                    correctOptionText: q.options[q.correctIndex].text,
+                    isCorrect: userAnswersMCQ[idx] === q.correctIndex
+                })),
+                essayDetails: activeEssay.map((q, idx) => ({
+                    questionNumber: idx + 41,
+                    category: q.category,
+                    question: q.question,
+                    studentAnswer: userAnswersEssay[idx]
+                }))
+            };
+
+            const jsonString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", jsonString);
+            downloadAnchor.setAttribute("download", `Avaliacao_Hardware_${studentData.name.replace(/\s+/g, '_')}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        window.onload = function() {
+            setupAntiCheatGuards();
+        };
+    </script>
+</body>
+</html>

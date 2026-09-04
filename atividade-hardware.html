@@ -1,172 +1,1066 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atividade de Pesquisa: Hardware</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #f8fafc;
-            color: #1e293b;
-        }
-        .component-card:hover {
-            transform: translateY(-5px);
-            transition: all 0.3s ease;
-        }
-        @media print {
-            .no-print { display: none; }
-            body { background-color: white; }
-            .print-break { page-break-after: always; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber-Hardware Quest - Laboratório Prático Avançado (20 Etapas)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- html2pdf.js para exportação do laudo em PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Fontes Google Inter e JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      user-select: none;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass-card {
+      background: rgba(22, 31, 50, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .drop-target {
+      min-height: 52px;
+      border: 2px dashed #334155;
+      transition: all 0.2s ease;
+    }
+    .drop-target.drag-over {
+      border-color: #06b6d4;
+      background-color: rgba(6, 182, 212, 0.1);
+    }
+    .draggable-item {
+      cursor: grab;
+      touch-action: none;
+    }
+    .draggable-item:active {
+      cursor: grabbing;
+    }
+    /* Estilos de Impressão */
+    @media print {
+      body { background-color: #ffffff !important; color: #000000 !important; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+    }
+    .print-only { display: none; }
+  </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
-        <!-- Header -->
-        <header class="bg-blue-600 p-8 text-white">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">Desafio de Hardware 💻</h1>
-                    <p class="text-blue-100 italic">Curso: Operador de Computador</p>
-                </div>
-                <div class="bg-blue-700 p-4 rounded-lg border border-blue-500 text-sm">
-                    <p class="font-bold">Instrutor: <span class="font-normal text-blue-100">Elielson Mourão</span></p>
-                    <p class="font-bold">Entrega: <span class="font-normal text-blue-100">elielson.mourao@ap.senai.br</span></p>
-                </div>
-            </div>
-            <div class="mt-6 flex flex-wrap gap-4 text-sm font-medium">
-                <span class="bg-blue-500 px-3 py-1 rounded-full border border-blue-400">Atividade Individual ou em Dupla</span>
-                <span class="bg-blue-500 px-3 py-1 rounded-full border border-blue-400">Tempo: 3 a 4 aulas</span>
-            </div>
-        </header>
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
 
-        <!-- Introdução -->
-        <section class="p-8 border-b border-slate-100">
-            <h2 class="text-xl font-semibold mb-4 text-blue-700">Objetivo do Projeto</h2>
-            <p class="leading-relaxed text-slate-600">
-                Olá, futuro Operador de Computador! O seu desafio é realizar uma pesquisa técnica aprofundada sobre os pilares do hardware moderno. Você não apenas listará o que são, mas aprenderá a diferenciar tecnologias e entender como elas influenciam no desempenho da máquina.
-            </p>
-        </section>
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-700/80 bg-slate-900/90 no-print backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-cyan-500/20">
+          ⚙️
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
+            CYBER-HARDWARE QUEST
+            <span class="text-xs font-normal px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">20 Módulos Interativos</span>
+          </h1>
+          <p class="text-xs text-slate-400">Montador e Reparador de Computadores | Laboratório de Prática Intensiva (4h)</p>
+        </div>
+      </div>
 
-        <!-- Parte 1: Pesquisa Técnica -->
-        <section class="p-8">
-            <h2 class="text-xl font-semibold mb-6 flex items-center">
-                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
-                Parte I: Mergulho Técnico
-            </h2>
-            
-            <p class="mb-6 text-slate-500">Para cada componente abaixo, pesquise e descreva as características solicitadas:</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Placa-mãe -->
-                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
-                    <h3 class="font-bold text-lg mb-2 text-blue-600">Placa-Mãe (Motherboard)</h3>
-                    <ul class="text-sm space-y-2 text-slate-600">
-                        <li>• O que é um <strong>Socket</strong> e por que ele é importante?</li>
-                        <li>• Diferença entre Chipsets de entrada e de alta performance.</li>
-                        <li>• O que é o Form Factor (ATX, Micro-ATX)?</li>
-                    </ul>
-                </div>
-
-                <!-- Processador -->
-                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
-                    <h3 class="font-bold text-lg mb-2 text-blue-600">Processador (CPU)</h3>
-                    <ul class="text-sm space-y-2 text-slate-600">
-                        <li>• O que são <strong>Cores</strong> (Núcleos) e <strong>Threads</strong>?</li>
-                        <li>• Qual a função da memória Cache L1, L2 e L3?</li>
-                        <li>• O que significa o "Clock" (GHz) do processador?</li>
-                    </ul>
-                </div>
-
-                <!-- Memória RAM -->
-                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
-                    <h3 class="font-bold text-lg mb-2 text-blue-600">Memória RAM</h3>
-                    <ul class="text-sm space-y-2 text-slate-600">
-                        <li>• Qual a diferença entre DDR4 e DDR5?</li>
-                        <li>• O que é a tecnologia <strong>Dual Channel</strong>?</li>
-                        <li>• Por que a frequência (MHz) afeta o processamento?</li>
-                    </ul>
-                </div>
-
-                <!-- Armazenamento -->
-                <div class="component-card p-5 rounded-xl border border-slate-200 bg-slate-50">
-                    <h3 class="font-bold text-lg mb-2 text-blue-600">HD vs SSD</h3>
-                    <ul class="text-sm space-y-2 text-slate-600">
-                        <li>• Explique a diferença de velocidade entre um HD e um SSD NVMe.</li>
-                        <li>• O que é a vida útil (TBW) de um SSD?</li>
-                        <li>• Vale a pena ter os dois no mesmo PC? Explique.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Parte 2: Desafio Prático -->
-        <section class="p-8 bg-slate-50 border-y border-slate-200">
-            <h2 class="text-xl font-semibold mb-6 flex items-center">
-                <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">2</span>
-                Parte II: Simulação de Montagem
-            </h2>
-            <p class="mb-4 text-slate-600">
-                Imagine que você recebeu um orçamento de <strong>R$ 3.500,00</strong> para comprar apenas esses 4 componentes para um PC de edição de vídeo.
-            </p>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse bg-white rounded-lg overflow-hidden">
-                    <thead>
-                        <tr class="bg-slate-200 text-slate-700 uppercase text-xs">
-                            <th class="p-3">Componente</th>
-                            <th class="p-3">Modelo Escolhido</th>
-                            <th class="p-3">Motivo da Escolha</th>
-                            <th class="p-3">Preço Est.</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm text-slate-600">
-                        <tr class="border-b border-slate-100">
-                            <td class="p-3 font-medium">Placa-Mãe</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
-                        </tr>
-                        <tr class="border-b border-slate-100">
-                            <td class="p-3 font-medium">Processador</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
-                        </tr>
-                        <tr class="border-b border-slate-100">
-                            <td class="p-3 font-medium">Memória RAM</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-medium">HD ou SSD</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50 italic text-slate-400">Pesquisar...</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">---</td>
-                            <td class="p-3 border-b border-slate-200 bg-slate-50">R$</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Instruções de Entrega -->
-        <footer class="p-8 bg-blue-50">
-            <h3 class="font-bold text-blue-800 mb-2">Instruções de Entrega:</h3>
-            <ul class="list-disc list-inside text-sm text-blue-700 space-y-1">
-                <li>O trabalho deve ser entregue em formato PDF ou impresso.</li>
-                <li>Enviar para o e-mail: <strong class="underline">elielson.mourao@ap.senai.br</strong></li>
-                <li>Identifique o assunto do e-mail como: [HARDWARE] Nome do Aluno - Turma.</li>
-                <li>Inclua as fontes de pesquisa e justifique a compatibilidade entre as peças.</li>
-            </ul>
-            <div class="mt-6 flex justify-between items-center no-print">
-                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-md transition-colors">
-                    Imprimir / Salvar PDF
-                </button>
-                <p class="text-xs text-slate-400">© 2024 SENAI AP - Professor Elielson Mourão</p>
-            </div>
-        </footer>
+      <div class="flex items-center gap-4 text-xs md:text-sm">
+        <div class="bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-2">
+          <span class="text-slate-400">⏱️ Tempo em Lab:</span>
+          <span id="timerDisplay" class="font-mono font-bold text-emerald-400 text-base">00:00:00</span>
+        </div>
+        <div class="bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-2">
+          <span class="text-slate-400">📊 Progresso:</span>
+          <span id="progressText" class="font-mono font-bold text-cyan-400 text-base">0 / 20</span>
+        </div>
+      </div>
     </div>
+
+    <div class="w-full bg-slate-800/80 h-2">
+      <div id="progressBar" class="bg-gradient-to-r from-cyan-500 via-emerald-400 to-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+
+    <!-- CARD DE DADOS DO ALUNO -->
+    <section class="glass-card rounded-2xl p-5 mb-6 border border-slate-700/80 no-print">
+      <h2 class="text-sm font-semibold text-cyan-400 mb-3 uppercase tracking-wider flex items-center gap-2">
+        <span>👤</span> Ficha do Técnico em Treinamento
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Nome Completo do Aluno:</label>
+          <input type="text" id="studentName" placeholder="Ex: Carlos Eduardo Lima" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-400 transition-colors">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Turma / Código da Classe:</label>
+          <input type="text" id="studentClass" placeholder="Ex: MRC-2026-N1" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-400 transition-colors">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Data da Atividade:</label>
+          <input type="date" id="labDate" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-400 transition-colors">
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVEGAÇÃO ENTRE ETAPAS -->
+    <section class="mb-8 no-print">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mapa do Laboratório (Etapas 1 a 20)</h3>
+        <span class="text-xs text-slate-500">Clique para navegar até a etapa correspondente</span>
+      </div>
+      <div id="stageGrid" class="grid grid-cols-5 sm:grid-cols-10 md:grid-cols-20 gap-2">
+        <!-- Renderizado dinamicamente pelo JS -->
+      </div>
+    </section>
+
+    <!-- CONTAINER DAS ETAPAS INTERATIVAS -->
+    <div id="stagesContainer" class="space-y-8 no-print">
+      <!-- 20 etapas injetadas via JavaScript com mecânicas diversificadas -->
+    </div>
+
+    <!-- SEÇÃO FINAL DE EMISSÃO DE LAUDO -->
+    <section id="finalReportSection" class="glass-card rounded-3xl p-8 border border-emerald-500/40 text-center my-12 hidden no-print shadow-2xl">
+      <div class="inline-flex p-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-5xl mb-4">
+        🏆
+      </div>
+      <h2 class="text-3xl font-extrabold text-white mb-2">Todas as 20 Etapas Concluídas!</h2>
+      <p class="text-slate-300 max-w-2xl mx-auto mb-6 text-sm leading-relaxed">
+        Você concluiu o treinamento prático de montagem, manutenção, análise de circuitos e diagnósticos avançados de bancada.
+      </p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <button onclick="generatePDF()" class="bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 text-sm">
+          <span>📄</span> Exportar Laudo Técnico em PDF
+        </button>
+        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-semibold px-6 py-3.5 rounded-xl transition-all flex items-center gap-2 text-sm">
+          <span>🖨️</span> Imprimir Laudo
+        </button>
+      </div>
+    </section>
+
+    <!-- ÁREA EXCLUSIVA DE IMPRESSÃO / PDF -->
+    <div id="pdfPrintArea" class="print-only p-8 bg-white text-slate-900">
+      <!-- Conteúdo formatado dinamicamente via JS -->
+    </div>
+
+  </main>
+
+  <script>
+    // Estado do App
+    let startTime = Date.now();
+    let timerInterval = null;
+    let completedStages = new Set();
+    let stageAnswers = {};
+
+    // SINTETIZADOR DE BIPES DE PLACA-MÃE (Web Audio API - Sem bibliotecas externas)
+    function playMotherboardBeep(pattern) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        function beep(start, duration, freq = 880) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.15, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + duration);
+        }
+
+        if (pattern === 'RAM') {
+          // 3 Bipes Curtos
+          beep(now, 0.15);
+          beep(now + 0.25, 0.15);
+          beep(now + 0.50, 0.15);
+        } else if (pattern === 'GPU') {
+          // 1 Bip longo e 3 curto
+          beep(now, 0.5);
+          beep(now + 0.65, 0.15);
+          beep(now + 0.90, 0.15);
+          beep(now + 1.15, 0.15);
+        } else if (pattern === 'OK') {
+          // 1 Bip Curto Suave
+          beep(now, 0.1, 1046);
+        }
+      } catch (e) {
+        console.log("Audio not supported or blocked", e);
+      }
+    }
+
+    const STAGES = [
+      {
+        id: 1,
+        type: "drag_match",
+        title: "Etapa 01: Conectores da Fonte (Drag & Drop)",
+        description: "Arraste cada conector da fonte até a sua respectiva aplicação na placa-mãe e periféricos.",
+        instructions: "Clique e arraste as caixas azuis da esquerda para os campos pontilhados à direita.",
+        items: [
+          { id: "atx24", text: "Conector ATX 24 Pinos" },
+          { id: "eps8", text: "Conector EPS 12V (8 Pinos)" },
+          { id: "pcie", text: "Conector PCIe (6+2 Pinos / 12VHPWR)" },
+          { id: "sata", text: "Conector SATA Power" }
+        ],
+        targets: [
+          { id: "t_eps8", label: "Alimenta as fases do VRM do Processador (+12V dedicado)", correct: "eps8" },
+          { id: "t_atx24", label: "Alimentação principal da placa-mãe (+3.3V, +5V, +12V)", correct: "atx24" },
+          { id: "t_sata", label: "Alimenta SSDs de 2.5 polegadas e HDs mecânicos SATA", correct: "sata" },
+          { id: "t_pcie", label: "Alimentação auxiliar dedicada para Placas de Vídeo (GPU)", correct: "pcie" }
+        ]
+      },
+      {
+        id: 2,
+        type: "card_match",
+        title: "Etapa 02: Compatibilidade de Soquetes & Processadores",
+        description: "Associe o soquete da placa-mãe com a família de processadores compatível selecionando as opções.",
+        instructions: "Selecione o soquete correto para cada família de CPU apresentada.",
+        pairs: [
+          { id: "q_lga1700", text: "Intel Core 12ª, 13ª e 14ª Geração (Alder/Raptor Lake)", options: ["LGA 1200", "LGA 1700", "AM4", "AM5"], correct: "LGA 1700" },
+          { id: "q_am5", text: "AMD Ryzen Séries 7000 e 9000 (Com DDR5 nativo em matriz LGA)", options: ["AM3+", "AM4", "AM5", "TR4"], correct: "AM5" },
+          { id: "q_am4", text: "AMD Ryzen Séries 1000 a 5000 (Arquitetura PGA clássica)", options: ["AM4", "AM5", "LGA 1151", "FM2+"], correct: "AM4" }
+        ]
+      },
+      {
+        id: 3,
+        type: "calculator",
+        title: "Etapa 03: Dimensionamento de Fonte & Picos Transientes",
+        description: "Calcule a potência mínima e escolha o selo de eficiência comercial adequado.",
+        instructions: "Considere: CPU (180W), GPU (290W), Placa/RAM/SSDs (60W). Aplique margem de 30% contra transientes.",
+        calcData: {
+          baseWattage: 530, // 180 + 290 + 60
+          headroomMultiplier: 1.3, // +30%
+          minWattage: 689 // 530 * 1.3
+        }
+      },
+      {
+        id: 4,
+        type: "order_puzzle",
+        title: "Etapa 04: Hierarquia de Armazenamento (Ranking de Velocidade)",
+        description: "Ordene as tecnologias de armazenamento da MAIS LENTA (Topo) para a MAIS RÁPIDA (Base).",
+        instructions: "Use os botões ⬆️ e ⬇️ para reordenar os cards até obter a hierarquia correta.",
+        initialOrder: [
+          { id: "nvme4", text: "SSD M.2 NVMe PCIe 4.0 (7.000 MB/s)" },
+          { id: "hd5400", text: "HD Mecânico Notebook 5400 RPM (80 MB/s)" },
+          { id: "sata3", text: "SSD SATA III 2.5 polegadas (550 MB/s)" },
+          { id: "nvme5", text: "SSD M.2 NVMe PCIe 5.0 (14.000 MB/s)" },
+          { id: "hd7200", text: "HD Mecânico Desktop 7200 RPM (150 MB/s)" }
+        ],
+        correctOrder: ["hd5400", "hd7200", "sata3", "nvme4", "nvme5"]
+      },
+      {
+        id: 5,
+        type: "ram_simulator",
+        title: "Etapa 05: Arquitetura de Memória & Dual Channel",
+        description: "Configure os slots DIMM para ativar o modo Dual Channel otimizado na placa-mãe.",
+        instructions: "Clique nos slots para instalar os 2 módulos de memória RAM de 16GB. Escolha os 2 slots recomendados.",
+        slots: ["DIMM_A1", "DIMM_A2", "DIMM_B1", "DIMM_B2"],
+        correctSlots: ["DIMM_A2", "DIMM_B2"]
+      },
+      {
+        id: 6,
+        type: "drag_match",
+        title: "Etapa 06: Mapeamento dos Cabos do Painel Frontal (JFP1)",
+        description: "Conecte os cabos do gabinete aos respectivos pinos do bloco JFP1 na placa-mãe.",
+        instructions: "Arraste os conectores da esquerda até os descritores de pinos à direita.",
+        items: [
+          { id: "pwr_sw", text: "POWER SW" },
+          { id: "rst_sw", text: "RESET SW" },
+          { id: "hdd_led", text: "HDD LED (+ / -)" },
+          { id: "pwr_led", text: "POWER LED (+ / -)" }
+        ],
+        targets: [
+          { id: "t_pwr_sw", label: "Chave momentânea para ligar o sistema (Sem polaridade estrita)", correct: "pwr_sw" },
+          { id: "t_hdd_led", label: "LED indicador de atividade de leitura do disco (Exige polaridade +/-)", correct: "hdd_led" },
+          { id: "t_rst_sw", label: "Chave momentânea para reiniciar a máquina (Sem polaridade estrita)", correct: "rst_sw" },
+          { id: "t_pwr_led", label: "LED indicador de computador ligado (Exige polaridade +/-)", correct: "pwr_led" }
+        ]
+      },
+      {
+        id: 7,
+        type: "beep_diagnosis",
+        title: "Etapa 07: Diagnóstico por Bipes de Inicialização (POST)",
+        description: "Ouça o código de áudio simulado da BIOS e identifique a falha física no hardware.",
+        instructions: "Clique no botão de áudio para ouvir a frequência do speaker e escolha o componente defeituoso.",
+        tests: [
+          { id: "beep_1", sound: "RAM", label: "Teste Sonora A", correct: "Memória RAM ausente ou com mau contato" },
+          { id: "beep_2", sound: "GPU", label: "Teste Sonoro B", correct: "Falha na Placa de Vídeo / Ausência de GPU" }
+        ]
+      },
+      {
+        id: 8,
+        type: "discursive_vrm",
+        title: "Etapa 08: Análise Térmica do Circuito VRM",
+        description: "Explique o fenômeno de VRM Throttling e a função dos MOSFETs na alimentação da CPU.",
+        instructions: "Escreva uma resposta técnica justificando o aquecimento do VRM e seus impactos na performance.",
+        textId: "e8_discursive",
+        placeholder: "Explique o que ocorre com o clock do processador quando os MOSFETs do VRM superaquecem e qual a função dos Chokes e Capacitores..."
+      },
+      {
+        id: 9,
+        type: "card_match",
+        title: "Etapa 09: Fatores de Forma (Form Factors)",
+        description: "Associe o tamanho padrão da placa-mãe ao seu número de slots PCIe e dimensões.",
+        instructions: "Selecione o fator de forma correto para cada especificação.",
+        pairs: [
+          { id: "ff_mini", text: "Dimensão exata de 17cm x 17cm com apenas 1 slot PCIe x16:", options: ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"], correct: "Mini-ITX" },
+          { id: "ff_matx", text: "Padrão intermediário com até 4 slots de expansão (24.4cm x 24.4cm):", options: ["Micro-ATX", "Mini-ITX", "Standard ATX", "BTX"], correct: "Micro-ATX" }
+        ]
+      },
+      {
+        id: 10,
+        type: "error_hunter",
+        title: "Etapa 10: Caça às Falhas - Erros Críticos de Montagem",
+        description: "Identifique o sintoma gerado por falhas humanas durante a montagem em bancada.",
+        instructions: "Selecione o sintoma imediato correspondente a cada erro técnico.",
+        pairs: [
+          { id: "err_sticker", text: "Não remover o plástico protetor na base de cobre do Water Cooler:", options: ["PC não liga as ventoinhas", "Aquecimento instantâneo (95°C+) e Thermal Throttling/Desligamento", "Erro de leitura de HD", "Tela azul de memória RAM"], correct: "Aquecimento instantâneo (95°C+) e Thermal Throttling/Desligamento" },
+          { id: "err_standoff", text: "Montar a placa-mãe sem os espaçadores metálicos (Standoffs) no gabinete:", options: ["Curto-circuito nas trilhas e acionamento da proteção da fonte", "Aumento da velocidade das ventoinhas", "Melhoria na dissipação de calor", "Nenhum impacto técnico"], correct: "Curto-circuito nas trilhas e acionamento da proteção da fonte" }
+        ]
+      },
+      {
+        id: 11,
+        type: "budget_builder",
+        title: "Etapa 11: Montador de Setup - Workstation de Edição",
+        description: "Monte uma configuração equilibrada evitando gargalos de processamento (Bottleneck).",
+        instructions: "Selecione os componentes mantendo o equilíbrio de desempenho e compatibilidade.",
+        textId: "e11_justificativa",
+        placeholder: "Justifique a escolha da placa de vídeo dedicada e da quantidade de RAM para edição de vídeo 4K..."
+      },
+      {
+        id: 12,
+        type: "bios_simulator",
+        title: "Etapa 12: Configuração do Firmware UEFI / BIOS",
+        description: "Navegue pelo firmware simulado e habilite os recursos exigidos para o Windows 11 e Memórias de alta velocidade.",
+        instructions: "Alterne as opções do simulador UEFI para colocar o sistema em conformidade.",
+        options: [
+          { id: "tpm", label: "TPM 2.0 / fTPM (Security)", correct: "Enabled" },
+          { id: "sec_boot", label: "Secure Boot Mode", correct: "Enabled" },
+          { id: "xmp", label: "XMP / EXPO Profile (Memory)", correct: "Profile 1 (3600MHz/6000MHz)" }
+        ]
+      },
+      {
+        id: 13,
+        type: "card_match",
+        title: "Etapa 13: Interface PCI Express & Bandwidth",
+        description: "Calcule a limitação de velocidade ao misturar gerações e pistas PCIe.",
+        instructions: "Responda à questão sobre a largura de banda de placas de vídeo.",
+        pairs: [
+          { id: "pcie_lane", text: "Uma GPU PCIe 4.0 x16 instalada em um slot elétrico PCIe 3.0 x4 funcionará em qual velocidade limite?", options: ["Não dará vídeo", "PCIe 3.0 x4 (limitada pela menor taxa do barramento)", "PCIe 4.0 x16 com overclock automático", "Queimará o slot PCIe"], correct: "PCIe 3.0 x4 (limitada pela menor taxa do barramento)" }
+        ]
+      },
+      {
+        id: 14,
+        type: "order_puzzle",
+        title: "Etapa 14: Sequência Correta de Manutenção Térmica",
+        description: "Ordene os passos para a troca adequada da pasta térmica e instalação do cooler da CPU.",
+        instructions: "Organize as etapas da PRIMEIRA (Topo) à ÚLTIMA (Base).",
+        initialOrder: [
+          { id: "step_paste", text: "3. Aplicar uma gota do tamanho de um grão de ervilha no centro do IHS" },
+          { id: "step_clean", text: "1. Limpar a pasta antiga com Álcool Isopropílico 99.8% e pano microfibra" },
+          { id: "step_mount", text: "4. Fixar o cooler aplicando aperto cruzado (X) nos parafusos" },
+          { id: "step_remove", text: "2. Remover o cooler antigo com cuidado rotacionando suavemente" },
+          { id: "step_fan", text: "5. Conectar o cabo do Fan na conexão CPU_FAN de 4 pinos PWM" }
+        ],
+        correctOrder: ["step_clean", "step_remove", "step_paste", "step_mount", "step_fan"]
+      },
+      {
+        id: 15,
+        type: "card_match",
+        title: "Etapa 15: Leitura de Etiqueta de Fonte de Alimentação",
+        description: "Analise a distribuição de correntes nas linhas de tensão secundárias e primárias.",
+        instructions: "Responda sobre a linha de barramento mais importante para computadores modernos.",
+        pairs: [
+          { id: "rail_12v", text: "Por que a linha de +12V representa mais de 90% da potência real necessária em um PC moderno?", options: ["Porque ela alimenta as portas USB do painel frontal", "Porque CPU e GPU (os maiores consumidores) usam primariamente a linha de +12V", "Porque os coolers só funcionam em +12V", "Porque as memórias RAM exigem +12V para operar"], correct: "Porque CPU e GPU (os maiores consumidores) usam primariamente a linha de +12V" }
+        ]
+      },
+      {
+        id: 16,
+        type: "card_match",
+        title: "Etapa 16: Hierarquia de Chipsets (Intel vs AMD)",
+        description: "Diferencie recursos entre chipsets de entrada, intermediários e avançados.",
+        instructions: "Selecione o chipset correspondente ao recurso solicitado.",
+        pairs: [
+          { id: "chipset_z", text: "Qual linha de chipsets Intel permite Overclocking completo do multiplicador de CPUs K-Series?", options: ["Linha H (ex: H610)", "Linha B (ex: B760)", "Linha Z (ex: Z790)", "Linha Q corporativa"], correct: "Linha Z (ex: Z790)" }
+        ]
+      },
+      {
+        id: 17,
+        type: "card_match",
+        title: "Etapa 17: Segurança Eletrostática (ESD) & Ferramentas",
+        description: "Selecione os insumos homologados para bancada de reparo de placas.",
+        instructions: "Escolha o produto correto para limpeza e prevenção de curtos.",
+        pairs: [
+          { id: "esd_product", text: "Qual fluido é o único recomendado para lavagem de placas de circuito e remoção de oxidação sem deixar umidade?", options: ["Água boricada", "Álcool Isopropílico 99.8%", "Álcool 70% de farmácia", "Detergente neutro"], correct: "Álcool Isopropílico 99.8%" }
+        ]
+      },
+      {
+        id: 18,
+        type: "order_puzzle",
+        title: "Etapa 18: Procedimento de Atualização BIOS Flashback",
+        description: "Ordene os passos para regravar a BIOS sem a necessidade de CPU ou Memória instalados.",
+        instructions: "Organize o procedimento técnico na ordem correta de execução.",
+        initialOrder: [
+          { id: "fb_rename", text: "2. Renomear o arquivo de BIOS conforme o padrão da fabricante (ex: MSI.ROM / creative.bin)" },
+          { id: "fb_btn", text: "4. Pressionar o botão BIOS Flashback na placa traseira por 3 segundos até o LED piscar" },
+          { id: "fb_format", text: "1. Formatar um Pendrive em sistema de arquivos FAT32" },
+          { id: "fb_psu", text: "3. Conectar a fonte de alimentação (24 Pinos e EPS) na placa-mãe desligada" },
+          { id: "fb_wait", text: "5. Aguardar o LED parar de piscar, indicando a gravação completa" }
+        ],
+        correctOrder: ["fb_format", "fb_rename", "fb_psu", "fb_btn", "fb_wait"]
+      },
+      {
+        id: 19,
+        type: "card_match",
+        title: "Etapa 19: Árvore Lógica de Diagnóstico de Bancada",
+        description: "Resolva o chamado técnico: 'PC Liga ventoinhas, não dá imagem e desliga em 5 segundos'.",
+        instructions: "Selecione o procedimento de isolamento primário na bancada.",
+        pairs: [
+          { id: "diag_step1", text: "Qual deve ser o primeiro passo antes de condenar qualquer peça?", options: ["Trocar a placa-mãe imediatamente", "Montar a bancada mínima fora do gabinete (Apenas CPU, 1 RAM e Fonte) para descartar curtos no chassis", "Formatar o SSD do cliente", "Atualizar a placa de vídeo"], correct: "Montar a bancada mínima fora do gabinete (Apenas CPU, 1 RAM e Fonte) para descartar curtos no chassis" }
+        ]
+      },
+      {
+        id: 20,
+        type: "discursive_final",
+        title: "Etapa 20: Parecer Técnico & Laudo Final do Profissional",
+        description: "Sintetize a importância dos procedimentos de bancada, compatibilidade de peças e normas de segurança ESD.",
+        instructions: "Escreva uma síntese técnica (mínimo de 30 caracteres) para inclusão automática no seu Laudo em PDF.",
+        textId: "e20_parecer_final",
+        placeholder: "Descreva a relevância do teste de bancada mínima, checagem de margem de watts em fontes e cuidados com eletrostática na vida do técnico de manutenção..."
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('labDate');
+      if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+
+      startTimer();
+      loadSavedState();
+      renderStageGrid();
+      renderStages();
+    });
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const hrs = String(Math.floor(elapsedSeconds / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, '0');
+        const secs = String(elapsedSeconds % 60).padStart(2, '0');
+        document.getElementById('timerDisplay').innerText = `${hrs}:${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function renderStageGrid() {
+      const grid = document.getElementById('stageGrid');
+      grid.innerHTML = '';
+
+      STAGES.forEach(stage => {
+        const isDone = completedStages.has(stage.id);
+        const btn = document.createElement('button');
+        btn.onclick = () => scrollToStage(stage.id);
+        btn.className = `h-9 rounded-lg font-mono font-bold text-xs border transition-all flex items-center justify-center ${
+          isDone 
+            ? 'bg-emerald-500/20 border-emerald-500/80 text-emerald-300 font-extrabold' 
+            : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:border-cyan-400 hover:text-cyan-300'
+        }`;
+        btn.id = `grid-btn-${stage.id}`;
+        btn.innerText = `${stage.id < 10 ? '0' + stage.id : stage.id}${isDone ? '✓' : ''}`;
+        grid.appendChild(btn);
+      });
+    }
+
+    function renderStages() {
+      const container = document.getElementById('stagesContainer');
+      container.innerHTML = '';
+
+      STAGES.forEach(stage => {
+        const card = document.createElement('div');
+        card.id = `stage-card-${stage.id}`;
+        card.className = "glass-card rounded-2xl p-6 md:p-8 border border-slate-700/80 shadow-2xl transition-all";
+
+        let contentHTML = '';
+
+        // RENDEREIZAÇÃO CONFORME O TIPO
+        if (stage.type === "drag_match") {
+          contentHTML = renderDragMatch(stage);
+        } else if (stage.type === "card_match") {
+          contentHTML = renderCardMatch(stage);
+        } else if (stage.type === "calculator") {
+          contentHTML = renderCalculator(stage);
+        } else if (stage.type === "order_puzzle") {
+          contentHTML = renderOrderPuzzle(stage);
+        } else if (stage.type === "ram_simulator") {
+          contentHTML = renderRamSimulator(stage);
+        } else if (stage.type === "beep_diagnosis") {
+          contentHTML = renderBeepDiagnosis(stage);
+        } else if (stage.type === "bios_simulator") {
+          contentHTML = renderBiosSimulator(stage);
+        } else if (stage.type === "budget_builder") {
+          contentHTML = renderBudgetBuilder(stage);
+        } else if (stage.type.startsWith("discursive")) {
+          contentHTML = renderDiscursive(stage);
+        }
+
+        const isDone = completedStages.has(stage.id);
+
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl ${isDone ? 'bg-emerald-500 text-slate-950 font-black' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40'} flex items-center justify-center text-xs font-mono font-bold">
+                ${stage.id}
+              </span>
+              <div>
+                <h3 class="text-base md:text-lg font-bold text-white">${stage.title}</h3>
+                <p class="text-xs text-slate-400">${stage.description}</p>
+              </div>
+            </div>
+            <span id="badge-stage-${stage.id}" class="text-xs px-3 py-1 rounded-full font-semibold ${
+              isDone ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 border border-slate-700'
+            }">
+              ${isDone ? '✓ Concluído' : 'Pendente'}
+            </span>
+          </div>
+
+          <div class="mb-5 bg-slate-900/60 p-3 rounded-xl border border-slate-800 text-xs text-cyan-300 flex items-center gap-2 font-mono">
+            <span>💡</span> <span><strong>Instrução:</strong> ${stage.instructions}</span>
+          </div>
+
+          <div id="content-stage-${stage.id}">
+            ${contentHTML}
+          </div>
+
+          <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-800/80">
+            <div id="feedback-stage-${stage.id}" class="text-xs font-semibold hidden"></div>
+            <button type="button" onclick="validateStage(${stage.id})" 
+              class="ml-auto bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+              <span>💾</span> Validar e Salvar Etapa ${stage.id}
+            </button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Inicializa escutadores de Drag & Drop após inserção
+      initDragEvents();
+    }
+
+    function renderDragMatch(stage) {
+      const itemsHTML = stage.items.map(item => `
+        <div draggable="true" id="drag-${item.id}" data-item-id="${item.id}" 
+          class="draggable-item bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 p-3 rounded-xl text-xs font-semibold shadow-md cursor-grab active:cursor-grabbing transition-all">
+          <span>☰</span> ${item.text}
+        </div>
+      `).join('');
+
+      const targetsHTML = stage.targets.map(tgt => {
+        const savedVal = stageAnswers[`drag_${stage.id}_${tgt.id}`];
+        const savedItemObj = stage.items.find(i => i.id === savedVal);
+        return `
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <p class="text-xs text-slate-300 mb-2">${tgt.label}</p>
+            <div id="target-${tgt.id}" data-target-id="${tgt.id}" data-correct="${tgt.correct}" 
+              class="drop-target bg-slate-900 rounded-lg p-2 flex items-center justify-center text-xs text-slate-400 font-mono">
+              ${savedItemObj ? `<span class="text-cyan-400 font-bold">${savedItemObj.text}</span>` : 'Solte o conector aqui'}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-3 bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Opções de Conectores</h4>
+            <div class="space-y-2" id="drag-source-${stage.id}">
+              ${itemsHTML}
+            </div>
+          </div>
+          <div class="md:col-span-2 space-y-3">
+            ${targetsHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCardMatch(stage) {
+      return stage.pairs.map((p, idx) => {
+        const savedVal = stageAnswers[p.id] || '';
+        const opts = p.options.map(opt => `
+          <option value="${opt}" ${savedVal === opt ? 'selected' : ''}>${opt}</option>
+        `).join('');
+
+        return `
+          <div class="mb-4 bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+            <p class="text-xs md:text-sm text-slate-200 mb-3 font-medium">${idx + 1}. ${p.text}</p>
+            <select id="select-${p.id}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-cyan-300 font-mono focus:border-cyan-400 focus:outline-none">
+              <option value="">-- Selecione o Componente / Padrão --</option>
+              ${opts}
+            </select>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCalculator(stage) {
+      const savedInput = stageAnswers['e3_user_wattage'] || '';
+      const savedSelo = stageAnswers['e3_selo'] || '';
+
+      return `
+        <div class="bg-slate-950/50 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <div>⚡ CPU TDP Max: <span class="text-cyan-400">180 Watts</span></div>
+            <div>🎮 GPU TDP Max: <span class="text-cyan-400">290 Watts</span></div>
+            <div>💽 SSDs/Coolers/RAM: <span class="text-cyan-400">60 Watts</span></div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">1. Qual a potência MÍNIMA recomendada calculada (com +30% de margem)?</label>
+            <input type="number" id="calc_wattage" placeholder="Ex: 689" value="${savedInput}"
+              class="w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-emerald-400 font-mono focus:outline-none focus:border-cyan-400">
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">2. Qual fonte comercial com certificação 80 Plus você deve escolher?</label>
+            <select id="calc_selo" class="w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-cyan-300 font-mono focus:outline-none focus:border-cyan-400">
+              <option value="">-- Escolha o Modelo Comercial --</option>
+              <option value="500w" ${savedSelo === '500w' ? 'selected' : ''}>Fonte 500W 80 Plus White (Insuficiente)</option>
+              <option value="600w" ${savedSelo === '600w' ? 'selected' : ''}>Fonte 600W 80 Plus Bronze (Sem margem de segurança)</option>
+              <option value="750w" ${savedSelo === '750w' ? 'selected' : ''}>Fonte 750W 80 Plus Gold (Ideal com margem de segurança)</option>
+            </select>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOrderPuzzle(stage) {
+      let currentItems = stageAnswers[`order_${stage.id}`] || stage.initialOrder;
+
+      const itemsHTML = currentItems.map((item, idx) => `
+        <div class="flex items-center justify-between bg-slate-900 border border-slate-700 p-3 rounded-xl text-xs text-slate-200">
+          <span class="font-mono text-cyan-400 mr-2">${idx + 1}.</span>
+          <span class="flex-grow">${item.text}</span>
+          <div class="flex items-center gap-1 ml-2">
+            <button type="button" onclick="moveOrderItem(${stage.id}, ${idx}, -1)" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-2 py-1 rounded text-xs">⬆️</button>
+            <button type="button" onclick="moveOrderItem(${stage.id}, ${idx}, 1)" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-2 py-1 rounded text-xs">⬇️</button>
+          </div>
+        </div>
+      `).join('');
+
+      return `
+        <div id="order-list-${stage.id}" class="space-y-2 bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
+          ${itemsHTML}
+        </div>
+      `;
+    }
+
+    function moveOrderItem(stageId, index, direction) {
+      const stage = STAGES.find(s => s.id === stageId);
+      let currentItems = stageAnswers[`order_${stageId}`] || [...stage.initialOrder];
+
+      const targetIdx = index + direction;
+      if (targetIdx < 0 || targetIdx >= currentItems.length) return;
+
+      const temp = currentItems[index];
+      currentItems[index] = currentItems[targetIdx];
+      currentItems[targetIdx] = temp;
+
+      stageAnswers[`order_${stageId}`] = currentItems;
+      renderStages();
+    }
+
+    function renderRamSimulator(stage) {
+      let selected = stageAnswers[`ram_slots_${stage.id}`] || [];
+
+      const slotsHTML = stage.slots.map(s => {
+        const isSelected = selected.includes(s);
+        return `
+          <button type="button" onclick="toggleRamSlot(${stage.id}, '${s}')"
+            class="h-24 rounded-xl border flex flex-col items-center justify-center font-mono text-xs transition-all ${
+              isSelected 
+                ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold shadow-lg shadow-cyan-500/20' 
+                : 'bg-slate-900 border-slate-800 text-slate-500 hover:border-slate-700'
+            }">
+            <span>${s}</span>
+            <span class="text-[10px] mt-2 ${isSelected ? 'text-emerald-400 font-extrabold' : 'text-slate-600'}">
+              ${isSelected ? 'RAM 16GB [OK]' : '[ VAZIO ]'}
+            </span>
+          </button>
+        `;
+      }).join('');
+
+      return `
+        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
+          <p class="text-xs text-slate-400 mb-3">Placa-Mãe DDR5 - Clique em 2 slots para preenchê-los com memórias:</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            ${slotsHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleRamSlot(stageId, slot) {
+      let selected = stageAnswers[`ram_slots_${stageId}`] || [];
+      if (selected.includes(slot)) {
+        selected = selected.filter(s => s !== slot);
+      } else {
+        if (selected.length >= 2) selected.shift();
+        selected.push(slot);
+      }
+      stageAnswers[`ram_slots_${stageId}`] = selected;
+      renderStages();
+    }
+
+    function renderBeepDiagnosis(stage) {
+      return stage.tests.map(t => {
+        const savedVal = stageAnswers[t.id] || '';
+        return `
+          <div class="mb-4 bg-slate-950/60 p-4 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-bold text-white mb-1">${t.label}</p>
+              <p class="text-xs text-slate-400">Clique para emitir o código sonoro do Speaker interno:</p>
+            </div>
+            <button type="button" onclick="playMotherboardBeep('${t.sound}')" 
+              class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2">
+              <span>🔊</span> Ouvir Bip do Speaker (${t.sound})
+            </button>
+            <div class="w-full">
+              <select id="select-${t.id}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-cyan-300 font-mono focus:outline-none">
+                <option value="">-- Diagnostique o Defeito --</option>
+                <option value="Memória RAM ausente ou com mau contato" ${savedVal.includes('RAM') ? 'selected' : ''}>Falha crítica no módulo de Memória RAM</option>
+                <option value="Falha na Placa de Vídeo / Ausência de GPU" ${savedVal.includes('Vídeo') || savedVal.includes('GPU') ? 'selected' : ''}>Falha na Placa de Vídeo / Sistema de Exibição</option>
+              </select>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBiosSimulator(stage) {
+      return `
+        <div class="bg-slate-950 p-5 rounded-2xl border border-cyan-500/30 font-mono space-y-4">
+          <div class="bg-slate-900 p-2 rounded-lg text-cyan-400 text-xs text-center font-bold border border-slate-800">
+            Aptio Setup Utility - Firmware UEFI Config
+          </div>
+          ${stage.options.map(opt => {
+            const savedVal = stageAnswers[`bios_${opt.id}`] || 'Disabled';
+            return `
+              <div class="flex items-center justify-between text-xs bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                <span class="text-slate-300">${opt.label}:</span>
+                <select id="bios-${opt.id}" class="bg-slate-950 border border-cyan-500/40 text-cyan-300 rounded px-2 py-1 text-xs">
+                  <option value="Disabled" ${savedVal === 'Disabled' ? 'selected' : ''}>[Disabled]</option>
+                  <option value="Enabled" ${savedVal === 'Enabled' ? 'selected' : ''}>[Enabled]</option>
+                  <option value="Profile 1 (3600MHz/6000MHz)" ${savedVal.includes('Profile') ? 'selected' : ''}>[Profile 1 (Ativo)]</option>
+                </select>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderBudgetBuilder(stage) {
+      const savedText = stageAnswers[stage.textId] || '';
+      return `
+        <div class="bg-slate-950/60 p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-slate-300">
+              <span class="text-slate-500 block text-[10px]">CPU Sugerido:</span> Core i5 13600K / Ryzen 5 7600X
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-slate-300">
+              <span class="text-slate-500 block text-[10px]">RAM Recomendada:</span> 32GB DDR5 (2x16GB Dual)
+            </div>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-slate-300">
+              <span class="text-slate-500 block text-[10px]">GPU Recomendada:</span> RTX 4060 Ti 16GB / RX 7700 XT
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-300 mb-1">Justificativa Técnica do Orçamento:</label>
+            <textarea id="${stage.textId}" rows="3" placeholder="${stage.placeholder}"
+              class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">${savedText}</textarea>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDiscursive(stage) {
+      const savedText = stageAnswers[stage.textId] || '';
+      return `
+        <div class="space-y-2">
+          <textarea id="${stage.textId}" rows="4" placeholder="${stage.placeholder}"
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">${savedText}</textarea>
+        </div>
+      `;
+    }
+
+    function initDragEvents() {
+      const draggables = document.querySelectorAll('.draggable-item');
+      const dropTargets = document.querySelectorAll('.drop-target');
+
+      draggables.forEach(drv => {
+        drv.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', drv.dataset.itemId);
+        });
+      });
+
+      dropTargets.forEach(tgt => {
+        tgt.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          tgt.classList.add('drag-over');
+        });
+
+        tgt.addEventListener('dragleave', () => {
+          tgt.classList.remove('drag-over');
+        });
+
+        tgt.addEventListener('drop', (e) => {
+          e.preventDefault();
+          tgt.classList.remove('drag-over');
+          const itemId = e.dataTransfer.getData('text/plain');
+          const drvEl = document.getElementById(`drag-${itemId}`);
+          if (!drvEl) return;
+
+          const targetId = tgt.dataset.targetId;
+          const stageId = tgt.closest('[id^="stage-card-"]').id.replace('stage-card-', '');
+
+          stageAnswers[`drag_${stageId}_${targetId}`] = itemId;
+
+          tgt.innerHTML = `<span class="text-cyan-400 font-bold">${drvEl.innerText.replace('☰ ', '')}</span>`;
+          saveAnswers();
+        });
+      });
+    }
+
+    function validateStage(stageId) {
+      const stage = STAGES.find(s => s.id === stageId);
+      const feedbackDiv = document.getElementById(`feedback-stage-${stageId}`);
+      let isValid = true;
+      let errorMsg = "";
+
+      if (stage.type === "drag_match") {
+        stage.targets.forEach(tgt => {
+          const val = stageAnswers[`drag_${stageId}_${tgt.id}`];
+          if (val !== tgt.correct) isValid = false;
+        });
+        if (!isValid) errorMsg = "⚠️ Conectores arrastados incorretamente. Revise os padrões elétricos.";
+      } 
+      else if (stage.type === "card_match") {
+        stage.pairs.forEach(p => {
+          const sel = document.getElementById(`select-${p.id}`)?.value;
+          stageAnswers[p.id] = sel;
+          if (sel !== p.correct) isValid = false;
+        });
+        if (!isValid) errorMsg = "❌ Uma ou mais opções selecionadas estão incorretas.";
+      }
+      else if (stage.type === "calculator") {
+        const valWattage = parseInt(document.getElementById('calc_wattage')?.value || '0');
+        const valSelo = document.getElementById('calc_selo')?.value;
+
+        stageAnswers['e3_user_wattage'] = valWattage;
+        stageAnswers['e3_selo'] = valSelo;
+
+        if (valWattage < 680 || valWattage > 720 || valSelo !== '750w') {
+          isValid = false;
+          errorMsg = "⚠️ Cálculo de potência ou escolha de fonte incorretos (Lembre-se da margem de +30%).";
+        }
+      }
+      else if (stage.type === "order_puzzle") {
+        const currentItems = stageAnswers[`order_${stageId}`] || stage.initialOrder;
+        const currentIds = currentItems.map(i => i.id);
+        if (JSON.stringify(currentIds) !== JSON.stringify(stage.correctOrder)) {
+          isValid = false;
+          errorMsg = "⚠️ A sequência informada não está correta. Reordene os itens.";
+        }
+      }
+      else if (stage.type === "ram_simulator") {
+        const selected = stageAnswers[`ram_slots_${stageId}`] || [];
+        if (JSON.stringify(selected.sort()) !== JSON.stringify(stage.correctSlots.sort())) {
+          isValid = false;
+          errorMsg = "⚠️ Para ativar o Dual Channel otimizado, use os Slots A2 e B2 (2ª e 4ª posições).";
+        }
+      }
+      else if (stage.type === "beep_diagnosis") {
+        stage.tests.forEach(t => {
+          const sel = document.getElementById(`select-${t.id}`)?.value;
+          stageAnswers[t.id] = sel;
+          if (sel !== t.correct) isValid = false;
+        });
+        if (!isValid) errorMsg = "❌ Diagnóstico sonoro incorreto.";
+      }
+      else if (stage.type === "bios_simulator") {
+        stage.options.forEach(opt => {
+          const val = document.getElementById(`bios-${opt.id}`)?.value;
+          stageAnswers[`bios_${opt.id}`] = val;
+          if (val !== opt.correct) isValid = false;
+        });
+        if (!isValid) errorMsg = "⚠️ Configure TPM 2.0 como Enabled, Secure Boot como Enabled e XMP/EXPO como Profile 1.";
+      }
+      else if (stage.type.startsWith("discursive") || stage.type === "budget_builder") {
+        const txt = document.getElementById(stage.textId)?.value.trim() || '';
+        stageAnswers[stage.textId] = txt;
+        if (txt.length < 25) {
+          isValid = false;
+          errorMsg = "⚠️ Por favor, elabore uma explicação mais abrangente (mínimo de 25 caracteres).";
+        }
+      }
+
+      if (!isValid) {
+        showFeedback(feedbackDiv, 'error', errorMsg);
+        return;
+      }
+
+      completedStages.add(stageId);
+      showFeedback(feedbackDiv, 'success', '✅ Etapa validada com sucesso!');
+
+      document.getElementById(`badge-stage-${stageId}`).className = 'text-xs px-3 py-1 rounded-full font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+      document.getElementById(`badge-stage-${stageId}`).innerText = '✓ Concluído';
+
+      updateProgress();
+      saveAnswers();
+      renderStageGrid();
+    }
+
+    function showFeedback(el, type, msg) {
+      el.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+      el.classList.add(type === 'success' ? 'text-emerald-400' : 'text-rose-400');
+      el.innerText = msg;
+    }
+
+    function updateProgress() {
+      const count = completedStages.size;
+      const pct = (count / 20) * 100;
+      document.getElementById('progressText').innerText = `${count} / 20`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+
+      if (count === 20) {
+        document.getElementById('finalReportSection').classList.remove('hidden');
+      }
+    }
+
+    function scrollToStage(stageId) {
+      const el = document.getElementById(`stage-card-${stageId}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function saveAnswers() {
+      const studentName = document.getElementById('studentName')?.value || '';
+      const studentClass = document.getElementById('studentClass')?.value || '';
+      const labDate = document.getElementById('labDate')?.value || '';
+
+      const payload = {
+        studentName, studentClass, labDate,
+        completedStages: Array.from(completedStages),
+        stageAnswers, startTime
+      };
+
+      localStorage.setItem('cyber_hardware_quest_v2', JSON.stringify(payload));
+    }
+
+    function loadSavedState() {
+      const dataStr = localStorage.getItem('cyber_hardware_quest_v2');
+      if (!dataStr) return;
+
+      try {
+        const data = JSON.parse(dataStr);
+        if (data.studentName) document.getElementById('studentName').value = data.studentName;
+        if (data.studentClass) document.getElementById('studentClass').value = data.studentClass;
+        if (data.labDate) document.getElementById('labDate').value = data.labDate;
+
+        if (Array.isArray(data.completedStages)) completedStages = new Set(data.completedStages);
+        if (data.stageAnswers) stageAnswers = data.stageAnswers;
+        if (data.startTime) startTime = data.startTime;
+
+        updateProgress();
+      } catch (e) {
+        console.error('Erro ao recarregar estado:', e);
+      }
+    }
+
+    // GERAÇÃO DE RELATÓRIO TÉCNICO FORMAL EM PDF
+    function generatePDF() {
+      const name = document.getElementById('studentName').value.trim() || "Aluno Não Identificado";
+      const turma = document.getElementById('studentClass').value.trim() || "Turma N/A";
+      const data = document.getElementById('labDate').value || new Date().toLocaleDateString('pt-BR');
+      const totalTempo = document.getElementById('timerDisplay').innerText;
+
+      const printArea = document.getElementById('pdfPrintArea');
+
+      let respuestasHTML = '';
+
+      STAGES.forEach(s => {
+        respuestasHTML += `
+          <div style="margin-bottom: 10px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; page-break-inside: avoid; font-size: 11px;">
+            <h4 style="margin: 0 0 4px 0; color: #0284c7; font-size: 12px;">${s.title}</h4>
+            <p style="margin: 0; color: #1e293b;"><strong>Status:</strong> <span style="color: #16a34a; font-weight: bold;">Validado ✓</span></p>
+          </div>
+        `;
+      });
+
+      printArea.innerHTML = `
+        <div style="font-family: Arial, sans-serif; color: #0f172a; padding: 10px;">
+          <div style="text-align: center; border-bottom: 2px solid #0284c7; padding-bottom: 10px; margin-bottom: 15px;">
+            <h1 style="margin: 0; font-size: 18px; color: #0284c7; text-transform: uppercase;">Laudo de Avaliação Prática em Hardware</h1>
+            <p style="margin: 3px 0 0 0; font-size: 11px; color: #64748b;">Curso Profissionalizante: Montador e Reparador de Computadores (20 Módulos)</p>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
+            <tr>
+              <td style="padding: 5px; border: 1px solid #cbd5e1; background: #f8fafc;"><strong>Aluno:</strong> ${name}</td>
+              <td style="padding: 5px; border: 1px solid #cbd5e1; background: #f8fafc;"><strong>Turma:</strong> ${turma}</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px; border: 1px solid #cbd5e1; background: #f8fafc;"><strong>Data de Execução:</strong> ${data}</td>
+              <td style="padding: 5px; border: 1px solid #cbd5e1; background: #f8fafc;"><strong>Tempo em Lab:</strong> ${totalTempo}</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px; border: 1px solid #cbd5e1; background: #f8fafc;"><strong>Aproveitamento:</strong> 20 / 20 Etapas Concluídas (100%)</td>
+              <td style="padding: 5px; border: 1px solid #cbd5e1; background: #f8fafc;"><strong>Avaliação:</strong> <span style="color: #16a34a; font-weight: bold;">QUALIFICADO EM BANCADA</span></td>
+            </tr>
+          </table>
+
+          <h3 style="font-size: 13px; border-bottom: 1px solid #0284c7; padding-bottom: 4px; color: #0284c7; margin-bottom: 10px;">Resumo dos Módulos Validados</h3>
+          ${respuestasHTML}
+
+          <div style="margin-top: 30px; border-top: 1px solid #94a3b8; padding-top: 15px; display: flex; justify-content: space-between; font-size: 10px;">
+            <div style="text-align: center; width: 45%;">
+              <div style="border-bottom: 1px solid #000; margin-bottom: 4px; height: 25px;"></div>
+              Assinatura do Aluno
+            </div>
+            <div style="text-align: center; width: 45%;">
+              <div style="border-bottom: 1px solid #000; margin-bottom: 4px; height: 25px;"></div>
+              Assinatura / Visto do Professor
+            </div>
+          </div>
+        </div>
+      `;
+
+      const opt = {
+        margin:       8,
+        filename:     `Laudo_Hardware_${name.replace(/\s+/g, '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(printArea).save();
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade SENAI - Sistemas Operacionais</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Desativação total de seleção de texto (Proteção Anti-Cópia) */
+        * {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0056b3;
+            border-radius: 4px;
+        }
+
+        .senai-blue {
+            background-color: #0056b3;
+        }
+        .senai-dark-blue {
+            background-color: #003d82;
+        }
+        .senai-text {
+            color: #0056b3;
+        }
+
+        /* Efeitos nos cartões de opção */
+        .option-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-card:hover {
+            border-color: #0056b3;
+            background-color: #f0f7ff;
+            transform: translateY(-1px);
+        }
+        .option-card.selected {
+            border-color: #0056b3;
+            background-color: #e6f0fa;
+            box-shadow: 0 0 0 2px #0056b3;
+        }
+
+        /* STREAMING_CHUNK:Configuring print styles for PDF export... -->
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .print-border {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+            }
+            .page-break {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- HEADER / BRANDING -->
+    <header class="senai-blue text-white shadow-lg no-print">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white text-blue-900 font-extrabold text-2xl px-3 py-1 rounded shadow">
+                    SENAI
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold tracking-wide">Serviço Nacional de Aprendizagem Industrial</h1>
+                    <p class="text-xs text-blue-100">Informática Básica | Unidade Curricular: Sistemas Operacionais</p>
+                </div>
+            </div>
+            <div class="text-right text-xs text-blue-100 mt-2 sm:mt-0">
+                <p><i class="fas fa-user-tie mr-1"></i> Instrutor: Elielson Mourão</p>
+                <p><i class="fas fa-shield-alt mr-1"></i> Proteção Ativa (Cópia Desativada)</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto my-6 px-4 w-full flex-grow">
+
+        <!-- SCREEN 1: STUDENT INITIAL FORM -->
+        <div id="start-screen" class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-200">
+            <div class="text-center mb-6">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Avaliação Individual</span>
+                <h2 class="text-2xl font-bold text-gray-800 mt-3">Atividade de Sistemas Operacionais</h2>
+                <p class="text-gray-600 text-sm mt-1">Responda às 20 questões baseadas inteiramente no material didático. Leia com atenção antes de selecionar a resposta.</p>
+            </div>
+
+            <form id="student-form" class="space-y-4 max-w-lg mx-auto">
+                <div>
+                    <label for="student-name" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo do Aluno *</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="student-name" required placeholder="Digite seu nome completo" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="student-class" class="block text-sm font-medium text-gray-700 mb-1">Turma / Turno *</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <input type="text" id="student-class" required placeholder="Ex: Informática Básica - Vespertino" class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded text-xs text-blue-800 space-y-1">
+                    <p class="font-semibold"><i class="fas fa-info-circle mr-1"></i> Orientações para a Atividade:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>As funções de copiar e colar estão desativadas por segurança.</li>
+                        <li>Você pode navegar livremente entre as questões e alterar respostas antes de finalizar.</li>
+                        <li>Ao concluir, seu resultado final e correção detalhada estarão disponíveis para emissão em PDF.</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full senai-blue hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center space-x-2">
+                    <span>Iniciar Atividade</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- SCREEN 2: QUIZ INTERFACE -->
+        <div id="quiz-screen" class="hidden space-y-6">
+            
+            <!-- TOP BAR: INFO & PROGRESS -->
+            <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200 flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <span id="display-student" class="text-sm font-bold text-gray-800 block">Aluno: -</span>
+                    <span id="display-class" class="text-xs text-gray-500">Turma: -</span>
+                </div>
+
+                <div class="flex-1 max-w-xs mx-2 sm:mx-4">
+                    <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                        <span>Progresso</span>
+                        <span id="progress-text">0 de 20</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="senai-blue h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <button id="btn-finish" onclick="openFinishModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 px-3.5 rounded-lg shadow transition flex items-center space-x-1.5">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Finalizar Atividade</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- QUESTION GRID NAVIGATOR -->
+            <div class="bg-white rounded-xl shadow-md p-4 border border-gray-200">
+                <p class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Navegação rápida pelas 20 Questões:</p>
+                <div id="question-grid" class="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                    <!-- Numbers 1 to 20 dynamically inserted -->
+                </div>
+            </div>
+
+            <!-- QUESTION CARD -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200 min-h-[350px] flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <span id="question-number-badge" class="bg-blue-100 text-blue-800 text-xs font-extrabold px-3 py-1 rounded-full">
+                            Questão 01 de 20
+                        </span>
+                        <span class="text-xs text-gray-400 font-medium">Informática Básica - SENAI</span>
+                    </div>
+
+                    <h3 id="question-text" class="text-base sm:text-lg font-bold text-gray-800 mb-6 leading-relaxed">
+                        Carregando pergunta...
+                    </h3>
+
+                    <div id="options-container" class="space-y-3">
+                        <!-- Options dynamically inserted -->
+                    </div>
+                </div>
+
+                <!-- NAVIGATION BUTTONS -->
+                <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-100">
+                    <button id="btn-prev" onclick="changeQuestion(-1)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center space-x-2">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Anterior</span>
+                    </button>
+
+                    <button id="btn-next" onclick="changeQuestion(1)" class="senai-blue hover:bg-blue-800 text-white font-semibold px-5 py-2 rounded-lg text-sm transition flex items-center space-x-2">
+                        <span>Próxima</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: RESULTS & CORRECTION SCREEN -->
+        <div id="results-screen" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-200 text-center print-border">
+                <div id="result-icon" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4">
+                    <!-- Icon updated dynamically -->
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800">Resultado da Atividade</h2>
+                <p id="result-student-info" class="text-sm font-semibold text-gray-600 mt-1">Aluno: - | Turma: -</p>
+
+                <div class="my-6 p-4 bg-gray-50 rounded-xl inline-block max-w-md w-full border border-gray-200">
+                    <div class="text-4xl font-extrabold text-gray-800 mb-1" id="score-text">0 / 20</div>
+                    <div class="text-sm font-semibold text-gray-500" id="percentage-text">0% de Aproveitamento</div>
+                    <div id="status-badge" class="inline-block mt-3 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                        <!-- Status Badge -->
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3 no-print">
+                    <button onclick="window.print()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2.5 rounded-lg text-sm transition flex items-center space-x-2 shadow">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                        <span>Exportar em PDF / Imprimir</span>
+                    </button>
+                    <button onclick="openRestartModal()" class="senai-blue hover:bg-blue-800 text-white font-semibold px-4 py-2.5 rounded-lg text-sm transition flex items-center space-x-2 shadow">
+                        <i class="fas fa-redo"></i>
+                        <span>Refazer Atividade</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- DETAILED REVIEW SECTION -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200 print-border">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200 flex items-center space-x-2">
+                    <i class="fas fa-list-check senai-text"></i>
+                    <span>Revisão Detalhada das Questões e Gabarito Comentado</span>
+                </h3>
+                <div id="review-container" class="space-y-6">
+                    <!-- Detailed corrections inserted by JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CUSTOM MODAL DIALOGS (Replacing native confirm/alert) -->
+    <!-- CONFIRM FINISH MODAL -->
+    <div id="finish-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 no-print">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-200 transform transition-all">
+            <div class="flex items-center space-x-3 text-amber-600 mb-3">
+                <i class="fas fa-question-circle text-2xl"></i>
+                <h3 class="text-lg font-bold text-gray-800">Finalizar Atividade?</h3>
+            </div>
+            <p id="finish-modal-msg" class="text-sm text-gray-600 mb-6">
+                Tem certeza que deseja entregar sua avaliação agora?
+            </p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeFinishModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold rounded-lg transition">
+                    Cancelar
+                </button>
+                <button onclick="calculateResults()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow transition">
+                    Sim, Finalizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESTART MODAL -->
+    <div id="restart-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 no-print">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-200 transform transition-all">
+            <div class="flex items-center space-x-3 text-blue-600 mb-3">
+                <i class="fas fa-redo text-xl"></i>
+                <h3 class="text-lg font-bold text-gray-800">Refazer Atividade?</h3>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">
+                Isso limpará todas as suas respostas atuais e você poderá tentar novamente.
+            </p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeRestartModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold rounded-lg transition">
+                    Cancelar
+                </button>
+                <button onclick="restartQuiz()" class="px-4 py-2 senai-blue hover:bg-blue-800 text-white text-xs font-bold rounded-lg shadow transition">
+                    Sim, Refazer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-800 text-gray-400 text-xs py-4 text-center border-t border-gray-700 no-print">
+        <div class="max-w-5xl mx-auto px-4 space-y-1">
+            <p>© SENAI - Serviço Nacional de Aprendizagem Industrial</p>
+            <p>Unidades Macapá, Santana e Vale do Jari | Unidade Curricular: Sistemas Operacionais</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* -------------------------------------------------------------
+         * ANTI-COPY & PROTECTION SCRIPT
+         * ------------------------------------------------------------- */
+        // Desativa clique com o botão direito do mouse
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Desativa copiar, cortar, colar e seleção
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('cut', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+
+        // Desativa atalhos de teclado (Ctrl+C, Ctrl+V, F12, Ctrl+U, Ctrl+S, Inspect)
+        document.addEventListener('keydown', function(e) {
+            if (
+                (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'u' || e.key === 's' || e.key === 'a' || e.key === 'x')) ||
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c'))
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // -------------------------------------------------------------
+        // QUIZ DATA (20 Questions based strictly on SENAI PDF Material)
+        // -------------------------------------------------------------
+        const questionsData = [
+            {
+                id: 1,
+                question: "De acordo com a introdução do material (Página 1), como é definida a Informática?",
+                options: [
+                    "É a ciência que trata a informação automaticamente através de computadores e dispositivos eletrônicos.",
+                    "É a área voltada exclusivamente ao conserto e montagem física de monitores e placas.",
+                    "É o estudo focado apenas no desenvolvimento de redes sociais e jogos para celular.",
+                    "É o ramo da engenharia que fabrica cabos de fibra óptica e fontes de energia."
+                ],
+                correct: 0,
+                rationale: "No material (Página 1), a Informática é explicitamente definida como 'a ciência que trata a informação automaticamente através de computadores e dispositivos eletrônicos'."
+            },
+            {
+                id: 2,
+                question: "O funcionamento adequado de um computador depende da interação entre quais dois pilares fundamentais?",
+                options: [
+                    "Sistemas Operacionais e Antivírus",
+                    "Hardware (Componentes Físicos) e Software (Programas Lógicos)",
+                    "Navegadores de Internet e Redes sem Fio",
+                    "Processador e Monitor de Vídeo"
+                ],
+                correct: 1,
+                rationale: "Conforme abordado nas Páginas 1 e 2, o computador depende da constante interação entre Hardware (parte física) e Software (parte lógica)."
+            },
+            {
+                id: 3,
+                question: "Como o material conceitua o termo HARDWARE na infografia da Página 2?",
+                options: [
+                    "A parte física do computador, correspondente aos componentes que podemos tocar.",
+                    "Os comandos digitados pelo usuário na linha de código.",
+                    "Os arquivos de texto e planilhas armazenados em nuvem.",
+                    "A memória temporária utilizada para abrir navegadores de internet."
+                ],
+                correct: 0,
+                rationale: "Na infografia das Páginas 2 e 3, o Hardware é categorizado como 'A Parte Física' (componentes que podemos tocar)."
+            },
+            {
+                id: 4,
+                question: "Qual das alternativas contém APENAS exemplos de HARDWARE apresentados nas ilustrações do guia?",
+                options: [
+                    "Windows, Google Chrome e Microsoft Word",
+                    "Monitor, Placa-Mãe, Memória RAM, Processador e HD/SSD",
+                    "Antivírus, Sistema Operacional e Photoshop",
+                    "Lixeira, Pastas e Subpastas"
+                ],
+                correct: 1,
+                rationale: "Monitor, placa-mãe, memórias, CPU, HD e SSD são exibidos nas imagens das Páginas 2 e 3 como componentes físicos de Hardware."
+            },
+            {
+                id: 5,
+                question: "Como o material conceitua o termo SOFTWARE?",
+                options: [
+                    "A parte lógica do computador, composta pelos programas que executam tarefas.",
+                    "A carcaça plástica e o gabinete de metal que protegem as placas.",
+                    "Os cabos elétricos que conectam a fonte à tomada.",
+                    "Os periféricos externos de armazenamento como pen drives e CDs."
+                ],
+                correct: 0,
+                rationale: "Na Página 2, o Software é definido como 'A Parte Lógica', representando os programas que executam tarefas."
+            },
+            {
+                id: 6,
+                question: "O material divide os softwares em três categorias. Qual é a função do SOFTWARE DE SISTEMA?",
+                options: [
+                    "Gerenciar o próprio computador e seus recursos (Ex: Windows, Linux).",
+                    "Digitar documentos de texto e planilhas para o usuário (Ex: Word).",
+                    "Proteger a máquina exclusivamente contra invasões externas.",
+                    "Compactar arquivos grandes em pastas ZIP."
+                ],
+                correct: 0,
+                rationale: "Na Página 2, item 1: 'Software de Sistema: O sistema operacional que gerencia o computador (ex: Windows, Linux)'."
+            },
+            {
+                id: 7,
+                question: "O Microsoft Word e os navegadores de internet (ex: Chrome) enquadram-se em qual categoria de software?",
+                options: [
+                    "Software Utilitário",
+                    "Software Aplicativo",
+                    "Software de Sistema",
+                    "Hardware de Entrada"
+                ],
+                correct: 1,
+                rationale: "Na Página 2, item 2: 'Software Aplicativo: Programas para tarefas específicas do usuário (ex: Word, navegadores)'."
+            },
+            {
+                id: 8,
+                question: "Qual é a função da categoria de SOFTWARES UTILITÁRIOS de acordo com o texto da Página 2?",
+                options: [
+                    "Servir como o sistema principal que liga o computador.",
+                    "Oferecer ferramentas de manutenção e segurança do sistema (Ex: antivírus).",
+                    "Permitir o desenho de imagens profissionais em 3D.",
+                    "Prover acesso direto às redes sociais e chats na web."
+                ],
+                correct: 1,
+                rationale: "Na Página 2, item 3: 'Software Utilitário: Ferramentas de manutenção e segurança (ex: antivírus)'."
+            },
+            {
+                id: 9,
+                question: "Qual é o papel dos dispositivos de ENTRADA (Enviar) no computador?",
+                options: [
+                    "Apresentar dados processados na tela para o usuário.",
+                    "Enviar dados para o computador.",
+                    "Guardar dados permanentemente em discos rígidos.",
+                    "Executar cálculos matemáticos e lógicos na CPU."
+                ],
+                correct: 1,
+                rationale: "Na Página 3, a coluna de Entrada (Enviar) define: 'Dispositivos que enviam dados para o computador'."
+            },
+            {
+                id: 10,
+                question: "Qual das opções lista exemplos de dispositivos de ENTRADA apresentados na infografia técnica (Página 3)?",
+                options: [
+                    "Impressora e Caixa de Som",
+                    "Monitor e Projetor",
+                    "Teclado, Mouse, Scanner, Webcam e Microfone",
+                    "HD e Cartão de Memória"
+                ],
+                correct: 2,
+                rationale: "A infografia da Página 3 lista Teclado, Mouse, Scanner, Webcam e Microfone na categoria Entrada (Enviar)."
+            },
+            {
+                id: 11,
+                question: "Qual é a função dos dispositivos de SAÍDA (Apresentar) explicada no guia?",
+                options: [
+                    "Receber dados do computador e mostrá-los ao usuário (ex: monitor, impressora).",
+                    "Digitar textos e comandos para a memória do sistema.",
+                    "Realizar a varredura contra vírus em segundo plano.",
+                    "Comprimir imagens pesadas para envio por e-mail."
+                ],
+                correct: 0,
+                rationale: "Página 3: 'Saída (Apresentar): Dispositivos que recebem dados do computador e os mostram ao usuário (ex: monitor, impressora)'."
+            },
+            {
+                id: 12,
+                question: "No grupo de PROCESSAMENTO (Cérebro), qual é o papel desempenhado pela CPU e pela Memória RAM?",
+                options: [
+                    "A CPU executa cálculos e controla operações; a RAM armazena dados temporariamente durante o uso.",
+                    "A CPU guarda os arquivos permanentemente; a RAM envia o áudio para o fone de ouvido.",
+                    "A CPU transmite os dados via Wi-Fi; a RAM formata o disco rígido.",
+                    "A CPU apaga arquivos excluídos; a RAM cria as pastas e subpastas."
+                ],
+                correct: 0,
+                rationale: "Página 3: A CPU executa cálculos e controla operações, enquanto a Memória RAM armazena dados temporariamente durante o uso."
+            },
+            {
+                id: 13,
+                question: "Qual alternativa lista apenas componentes de ARMAZENAMENTO (Guardar) dados permanentemente?",
+                options: [
+                    "HD, SSD, Pen Drive e Cartão de Memória",
+                    "Teclado, Mouse e Webcam",
+                    "Monitor, Impressora e Headphones",
+                    "Windows, Linux e Google Chrome"
+                ],
+                correct: 0,
+                rationale: "Página 3: A categoria Armazenamento (Guardar) inclui HD, SSD, Pen Drive e Cartão de Memória."
+            },
+            {
+                id: 14,
+                question: "O material destaca que alguns dispositivos realizam DUAS funções (Entrada e Saída) ao mesmo tempo. Quais exemplos são citados no rodapé da Página 3?",
+                options: [
+                    "Telas Touch Screen e Pen Drives",
+                    "Microfones e Headphones",
+                    "Teclados e Scanners",
+                    "Monitores e Impressoras comuns"
+                ],
+                correct: 0,
+                rationale: "No rodapé da Página 3 é ressaltado: 'Alguns dispositivos realizam as duas funções (Entrada e Saída), como telas Touch Screen e Pen Drives'."
+            },
+            {
+                id: 15,
+                question: "Na escala crescente de dados (Página 4), o que é o BIT?",
+                options: [
+                    "A menor unidade de informação, podendo ser 0 ou 1.",
+                    "O conjunto de 8 caracteres alfanuméricos.",
+                    "A capacidade total de um HD rígido moderno.",
+                    "O tamanho médio de uma música digital em formato MP3."
+                ],
+                correct: 0,
+                rationale: "Página 4: 'O bit é a menor unidade (0 ou 1)'."
+            },
+            {
+                id: 16,
+                question: "O que representa 1 BYTE de acordo com a escala de dados visualizada na Página 4?",
+                options: [
+                    "O cluster de 8 bits, representando 1 caractere.",
+                    "O tamanho equivalente a 1 filme de alta definição.",
+                    "A menor unidade que armazena 1 HD inteiro.",
+                    "Um arquivo compactado em formato ZIP."
+                ],
+                correct: 0,
+                rationale: "Página 4: '1 Byte: O cluster de 8 bits (representa 1 caractere)'."
+            },
+            {
+                id: 17,
+                question: "Na infografia da Escala de Dados (Página 4), quais exemplos práticos são associados a 1 Gigabyte (GB) e 1 Terabyte (TB)?",
+                options: [
+                    "1 GB = Exemplo: 1 Filme / 1 TB = Exemplo: 1 HD inteiro",
+                    "1 GB = Exemplo: 1 Letra / 1 TB = Exemplo: 1 Música",
+                    "1 GB = Exemplo: 1 HD inteiro / 1 TB = Exemplo: 1 Filme",
+                    "1 GB = Exemplo: 1 Bit / 1 TB = Exemplo: 1 Byte"
+                ],
+                correct: 0,
+                rationale: "Na infografia da escala (Página 4), 1 Gigabyte (GB) é exemplificado com '1 Filme' e 1 Terabyte (TB) com '1 HD inteiro'."
+            },
+            {
+                id: 18,
+                question: "Como o material diferencia conceitualmente um ARQUIVO de uma PASTA (Página 5)?",
+                options: [
+                    "Um arquivo é qualquer documento armazenado (foto, música, vídeo); uma pasta serve para organizar os arquivos e pode conter subpastas.",
+                    "Arquivo armazena dados de antivírus; pasta guarda as memórias RAM instaladas.",
+                    "Arquivo é um componente físico de hardware; pasta é um programa de sistema.",
+                    "Não há diferença, ambos representam a mesma medida em Terabytes."
+                ],
+                correct: 0,
+                rationale: "Página 5: 'Um arquivo é qualquer documento armazenado (foto, música, vídeo). Uma pasta serve para organizar esses arquivos e pode conter outras pastas (subpastas)'."
+            },
+            {
+                id: 19,
+                question: "Qual é a função da LIXEIRA no sistema operacional conforme ilustrado na Página 5?",
+                options: [
+                    "Armazenar dados que foram excluídos temporariamente e podem ser restaurados.",
+                    "Deletar permanentemente e de imediato os arquivos sem chance de recuperação.",
+                    "Reduzir o tamanho dos arquivos grandes para envio por e-mail.",
+                    "Converter automaticamente arquivos de texto em planilhas."
+                ],
+                correct: 0,
+                rationale: "Página 5 (Lixeira): 'indicando dados que foram excluídos temporariamente e podem ser restaurados'."
+            },
+            {
+                id: 20,
+                question: "O que significa COMPACTAR arquivos e quais os dois formatos/extensões de exemplo citados no material (Página 6)?",
+                options: [
+                    "Significa reduzir o tamanho dos arquivos para economizar espaço e facilitar o envio pela internet (Formatos ZIP/RAR).",
+                    "Significa expandir o tamanho das imagens para alta definição (Formatos DOC/EXE).",
+                    "Significa renomear subpastas da lixeira (Formatos BIT/BYTE).",
+                    "Significa transformar softwares em peças de hardware (Formatos RAM/CPU)."
+                ],
+                correct: 0,
+                rationale: "Página 6: 'Compactar significa reduzir o tamanho dos arquivos, o que economiza espaço e facilita o envio pela internet (ZIP/RAR)'."
+            }
+        ];
+
+        // -------------------------------------------------------------
+        // APPLICATION STATE
+        // -------------------------------------------------------------
+        let currentQuestionIdx = 0;
+        let userAnswers = new Array(questionsData.length).fill(null);
+        let studentName = "";
+        let studentClass = "";
+
+        // DOM ELEMENTS
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const studentForm = document.getElementById('student-form');
+        const finishModal = document.getElementById('finish-modal');
+        const restartModal = document.getElementById('restart-modal');
+
+        // FORM SUBMISSION
+        studentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            studentName = document.getElementById('student-name').value.trim();
+            studentClass = document.getElementById('student-class').value.trim();
+
+            if (!studentName || !studentClass) return;
+
+            document.getElementById('display-student').innerText = `Aluno: ${studentName}`;
+            document.getElementById('display-class').innerText = `Turma: ${studentClass}`;
+
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            renderQuestionGrid();
+            loadQuestion(0);
+        });
+
+        // RENDER QUESTION NAVIGATOR GRID
+        function renderQuestionGrid() {
+            const gridContainer = document.getElementById('question-grid');
+            gridContainer.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.id = `grid-btn-${idx}`;
+                btn.className = `w-full py-1.5 text-xs font-bold rounded border transition text-center ${
+                    idx === currentQuestionIdx 
+                        ? 'border-blue-600 bg-blue-100 text-blue-900 ring-2 ring-blue-500' 
+                        : userAnswers[idx] !== null 
+                            ? 'bg-blue-600 text-white border-blue-600' 
+                            : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
+                }`;
+                btn.innerText = (idx + 1).toString().padStart(2, '0');
+                btn.onclick = () => loadQuestion(idx);
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        // LOAD SPECIFIC QUESTION
+        function loadQuestion(idx) {
+            currentQuestionIdx = idx;
+            const q = questionsData[idx];
+
+            // Update Badge & Title
+            document.getElementById('question-number-badge').innerText = `Questão ${(idx + 1).toString().padStart(2, '0')} de ${questionsData.length}`;
+            document.getElementById('question-text').innerText = `${q.id}. ${q.question}`;
+
+            // Render Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((optText, optIdx) => {
+                const isSelected = userAnswers[idx] === optIdx;
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `option-card p-4 rounded-xl border-2 border-gray-200 cursor-pointer transition flex items-start space-x-3 ${
+                    isSelected ? 'selected' : ''
+                }`;
+                optionDiv.onclick = () => selectOption(optIdx);
+
+                const letters = ['A', 'B', 'C', 'D'];
+                optionDiv.innerHTML = `
+                    <div class="flex-shrink-0 w-7 h-7 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold text-xs ${
+                        isSelected ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600'
+                    }">
+                        ${letters[optIdx]}
+                    </div>
+                    <div class="text-sm font-medium text-gray-700 pt-0.5 leading-relaxed">
+                        ${optText}
+                    </div>
+                `;
+                container.appendChild(optionDiv);
+            });
+
+            // Update Progress & Nav Buttons
+            updateProgressBar();
+            updateNavButtons();
+            renderQuestionGrid();
+        }
+
+        // SELECT OPTION
+        function selectOption(optIdx) {
+            userAnswers[currentQuestionIdx] = optIdx;
+            loadQuestion(currentQuestionIdx);
+        }
+
+        // NAVIGATION
+        function changeQuestion(step) {
+            const newIdx = currentQuestionIdx + step;
+            if (newIdx >= 0 && newIdx < questionsData.length) {
+                loadQuestion(newIdx);
+            }
+        }
+
+        function updateNavButtons() {
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+
+            btnPrev.disabled = (currentQuestionIdx === 0);
+            btnPrev.classList.toggle('opacity-50', currentQuestionIdx === 0);
+            btnPrev.classList.toggle('cursor-not-allowed', currentQuestionIdx === 0);
+
+            if (currentQuestionIdx === questionsData.length - 1) {
+                btnNext.innerHTML = `<span>Revisar</span> <i class="fas fa-search"></i>`;
+            } else {
+                btnNext.innerHTML = `<span>Próxima</span> <i class="fas fa-chevron-right"></i>`;
+            }
+        }
+
+        function updateProgressBar() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const percentage = Math.round((answeredCount / questionsData.length) * 100);
+            
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+            document.getElementById('progress-text').innerText = `${answeredCount} de ${questionsData.length} respondidas`;
+        }
+
+        // MODAL CONTROLS
+        function openFinishModal() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            const msgEl = document.getElementById('finish-modal-msg');
+            
+            if (unanswered > 0) {
+                msgEl.innerText = `Atenção: Você ainda tem ${unanswered} questão(ões) sem resposta. Deseja finalizar mesmo assim?`;
+            } else {
+                msgEl.innerText = `Você respondeu a todas as 20 questões. Deseja finalizar e ver seu resultado com gabarito?`;
+            }
+            finishModal.classList.remove('hidden');
+        }
+
+        function closeFinishModal() {
+            finishModal.classList.add('hidden');
+        }
+
+        function openRestartModal() {
+            restartModal.classList.remove('hidden');
+        }
+
+        function closeRestartModal() {
+            restartModal.classList.add('hidden');
+        }
+
+        // CALCULATE & SHOW RESULTS
+        function calculateResults() {
+            closeFinishModal();
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+
+            let score = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === questionsData[idx].correct) {
+                    score++;
+                }
+            });
+
+            const percentage = Math.round((score / questionsData.length) * 100);
+
+            document.getElementById('result-student-info').innerText = `Aluno: ${studentName} | Turma: ${studentClass}`;
+            document.getElementById('score-text').innerText = `${score} / ${questionsData.length}`;
+            document.getElementById('percentage-text').innerText = `${percentage}% de Aproveitamento`;
+
+            const iconDiv = document.getElementById('result-icon');
+            const badgeDiv = document.getElementById('status-badge');
+
+            if (percentage >= 70) {
+                iconDiv.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-emerald-100 text-emerald-600";
+                iconDiv.innerHTML = `<i class="fas fa-trophy"></i>`;
+                badgeDiv.className = "inline-block mt-3 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-emerald-100 text-emerald-800";
+                badgeDiv.innerText = "Aprovado / Excelente Desempenho";
+            } else if (percentage >= 50) {
+                iconDiv.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-amber-100 text-amber-600";
+                iconDiv.innerHTML = `<i class="fas fa-medal"></i>`;
+                badgeDiv.className = "inline-block mt-3 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-800";
+                badgeDiv.innerText = "Aprovado / Desempenho Regular";
+            } else {
+                iconDiv.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-red-100 text-red-600";
+                iconDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i>`;
+                badgeDiv.className = "inline-block mt-3 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-red-100 text-red-800";
+                badgeDiv.innerText = "Necessita de Revisão do Material";
+            }
+
+            renderReviewSection();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // RENDER DETAILED REVIEW SECTION
+        function renderReviewSection() {
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+                const letters = ['A', 'B', 'C', 'D'];
+
+                const qBox = document.createElement('div');
+                qBox.className = `p-4 rounded-xl border page-break ${
+                    isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-red-50/50 border-red-200'
+                }`;
+
+                let statusHTML = isCorrect
+                    ? `<span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full"><i class="fas fa-check mr-1"></i> Correta</span>`
+                    : `<span class="text-xs font-bold text-red-700 bg-red-100 px-2.5 py-1 rounded-full"><i class="fas fa-times mr-1"></i> Incorreta / Não Respondida</span>`;
+
+                let optionsHTML = q.options.map((opt, optIdx) => {
+                    let optionStyle = "text-gray-600 bg-white border-gray-200";
+                    let icon = "";
+
+                    if (optIdx === q.correct) {
+                        optionStyle = "text-emerald-900 bg-emerald-100 border-emerald-400 font-semibold";
+                        icon = `<i class="fas fa-check text-emerald-600 ml-auto"></i>`;
+                    }
+                    if (userAns === optIdx && !isCorrect) {
+                        optionStyle = "text-red-900 bg-red-100 border-red-400 line-through";
+                        icon = `<i class="fas fa-times text-red-600 ml-auto"></i>`;
+                    }
+
+                    return `
+                        <div class="p-2.5 rounded-lg border text-xs flex items-center ${optionStyle}">
+                            <span class="font-bold mr-2">${letters[optIdx]})</span>
+                            <span>${opt}</span>
+                            ${icon}
+                        </div>
+                    `;
+                }).join('');
+
+                qBox.innerHTML = `
+                    <div class="flex justify-between items-start mb-2 gap-2">
+                        <h4 class="text-sm font-bold text-gray-800">${q.id}. ${q.question}</h4>
+                        ${statusHTML}
+                    </div>
+                    <div class="space-y-1.5 my-3">
+                        ${optionsHTML}
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-gray-200/60 text-xs text-gray-600 bg-white/80 p-2.5 rounded-lg">
+                        <strong class="text-gray-800"><i class="fas fa-lightbulb text-amber-500 mr-1"></i> Explicação do Material:</strong> ${q.rationale}
+                    </div>
+                `;
+
+                reviewContainer.appendChild(qBox);
+            });
+        }
+
+        // RESTART QUIZ
+        function restartQuiz() {
+            closeRestartModal();
+            userAnswers = new Array(questionsData.length).fill(null);
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadQuestion(0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

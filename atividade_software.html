@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade de Fixação - Conceitos de Software de Microcomputadores</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- html2pdf Library para download direto em PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        senai: {
+                            blue: '#005CA9',
+                            darkblue: '#003A6C',
+                            red: '#E30613',
+                            light: '#F0F4F8',
+                            gray: '#64748B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Interactive Elements */
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+        }
+
+        .card-question {
+            transition: all 0.25s ease-in-out;
+        }
+
+        .card-question:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Print & PDF Export Styles */
+        @media print, .is-generating-pdf {
+            .no-print {
+                display: none !important;
+            }
+            .sticky-header, .sticky-bar {
+                position: static !important;
+                top: auto !important;
+                box-shadow: none !important;
+            }
+            body, body * {
+                user-select: auto !important;
+                -webkit-user-select: auto !important;
+            }
+            body {
+                background-color: white !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .card-question {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen pb-16">
+
+    <!-- Area Exportada para PDF -->
+    <div id="pdf-export-area">
+        <!-- Header Institucional SENAI -->
+        <header class="bg-senai-blue text-white shadow-md border-b-4 border-senai-red sticky top-0 z-50 sticky-header">
+            <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white text-senai-blue font-black px-3 py-1.5 rounded-md text-2xl tracking-wider shadow">
+                        SENAI
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold leading-tight">Serviço Nacional de Aprendizagem Industrial</h1>
+                        <p class="text-xs text-blue-100">Curso: Operador de Computador | Unidade Curricular: Conceitos de Software</p>
+                    </div>
+                </div>
+                <div class="text-right text-xs md:text-sm bg-senai-darkblue/50 px-4 py-2 rounded-lg border border-blue-400/30">
+                    <p><span class="font-semibold">Instrutor:</span> Elielson Mourão</p>
+                    <p><span class="font-semibold">Atividade:</span> Avaliação Prática Interativa (35 Questões)</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="max-w-5xl mx-auto px-4 mt-6">
+
+            <!-- Form de Identificação do Aluno -->
+            <section id="student-info-card" class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 mb-6">
+                <div class="flex items-center gap-2 mb-4 text-senai-blue border-b pb-3">
+                    <i class="fa-solid fa-user-graduate text-2xl"></i>
+                    <h2 class="text-xl font-bold">Identificação do Estudante</h2>
+                </div>
+                <p class="text-sm text-slate-600 mb-4">Por favor, preencha seus dados antes de iniciar as questões. Estes dados constarão na sua folha de desempenho final.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="student-name" class="block text-sm font-semibold text-slate-700 mb-1">Nome Completo *</label>
+                        <input type="text" id="student-name" placeholder="Digite seu nome completo..." 
+                               oncopy="return false;" onpaste="return false;" oncut="return false;"
+                               class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-senai-blue focus:border-senai-blue outline-none transition">
+                    </div>
+                    <div>
+                        <label for="student-course" class="block text-sm font-semibold text-slate-700 mb-1">Curso / Turma *</label>
+                        <input type="text" id="student-course" value="Operador de Computador" 
+                               oncopy="return false;" onpaste="return false;" oncut="return false;"
+                               class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-senai-blue focus:border-senai-blue outline-none transition">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sticky Progress Bar & Actions Bar -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-8 sticky top-20 z-40 flex flex-col md:flex-row items-center justify-between gap-4 sticky-bar no-print">
+                <div class="w-full md:w-2/3">
+                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                        <span>Progresso da Atividade</span>
+                        <span id="progress-text">0 de 35 Respondidas (0%)</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                        <div id="progress-bar" class="bg-senai-blue h-3 rounded-full transition-all duration-300 w-0"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                    <button onclick="scrollToTop()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition flex items-center gap-1.5" title="Voltar ao Topo">
+                        <i class="fa-solid fa-arrow-up"></i> Topo
+                    </button>
+                    <button onclick="downloadPDF(event)" class="px-4 py-2.5 bg-senai-blue hover:bg-senai-darkblue text-white rounded-lg font-bold text-sm shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+                    </button>
+                    <button onclick="finishQuiz()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold text-sm shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> Finalizar & Enviar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Container das 35 Questões -->
+            <div id="questions-container" class="space-y-6">
+                <!-- As 35 questões serão geradas via JavaScript -->
+            </div>
+
+            <!-- Modal / Card de Resultado Final -->
+            <div id="result-modal" class="hidden bg-white rounded-2xl p-8 shadow-2xl border border-slate-200 my-8">
+                <div class="text-center pb-6 border-b">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 text-senai-blue rounded-full mb-4">
+                        <i id="result-icon" class="fa-solid fa-trophy text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-slate-800">Resultado da Atividade</h2>
+                    <p class="text-slate-600 text-sm mt-1">Conceitos de Software de Microcomputadores - SENAI</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-center">
+                    <div class="p-4 bg-slate-50 rounded-xl border">
+                        <span class="block text-xs uppercase font-bold text-slate-500">Estudante</span>
+                        <span id="res-student-name" class="text-lg font-bold text-slate-800">-</span>
+                        <span id="res-student-course" class="block text-xs text-slate-500">-</span>
+                    </div>
+                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <span class="block text-xs uppercase font-bold text-blue-600">Pontuação Total</span>
+                        <span id="res-score" class="text-3xl font-black text-senai-blue">0 / 35</span>
+                        <span id="res-percentage" class="block text-xs font-semibold text-blue-700">(0%)</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border">
+                        <span class="block text-xs uppercase font-bold text-slate-500">Status de Aproveitamento</span>
+                        <span id="res-status" class="text-lg font-bold text-green-600">Aprovado</span>
+                    </div>
+                </div>
+
+                <div id="res-feedback-details" class="p-4 bg-slate-50 rounded-xl mb-6 text-sm text-slate-700">
+                    <!-- Detalhes do feedback serão injetados via JS -->
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 no-print">
+                    <button onclick="downloadPDF(event)" class="px-6 py-3 bg-senai-blue hover:bg-senai-darkblue text-white font-bold rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-pdf text-lg"></i> Baixar PDF da Atividade
+                    </button>
+                    <button onclick="window.print()" class="px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> Imprimir
+                    </button>
+                    <button onclick="restartQuiz()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i> Refazer Atividade
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal de Mensagem / Alerta Personalizado -->
+    <div id="custom-alert" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-xl p-6 max-w-sm w-full shadow-2xl text-center">
+            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2" id="alert-title">Atenção</h3>
+            <p class="text-sm text-slate-600 mb-5" id="alert-msg">Por favor, preencha seu nome e curso antes de continuar.</p>
+            <button onclick="closeAlert()" class="w-full py-2.5 bg-senai-blue text-white rounded-lg font-semibold hover:bg-senai-darkblue transition">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        // Dados das 35 questões
+        const questionsData = [
+            // SEÇÃO 1: MÚLTIPLA ESCOLHA (1 a 8)
+            {
+                id: 1,
+                type: 'multiple-choice',
+                category: 'Introdução',
+                title: 'Questão 1: Definição de Software',
+                question: 'O que o software representa em um sistema de computador, conforme a introdução do material?',
+                options: [
+                    'A parte física do computador, ou seja, tudo aquilo que pode ser tocado com as mãos.',
+                    'A parte lógica do computador, composta por códigos e instruções que fazem a máquina funcionar.',
+                    'Apenas os componentes externos como mouse, teclado e monitor de vídeo.',
+                    'Os cabos de energia e placas eletrônicas responsáveis pelo processamento elétrico.'
+                ],
+                correct: 1,
+                explanation: 'O software representa a parte lógica do computador (tudo aquilo que não pode ser tocado fisicamente), formado por códigos e instruções.'
+            },
+            {
+                id: 2,
+                type: 'multiple-choice',
+                category: 'Sistemas Operacionais',
+                title: 'Questão 2: Função do Sistema Operacional',
+                question: 'Qual das alternativas indica a principal função do Sistema Operacional (SO)?',
+                options: [
+                    'Atuar exclusivamente como um programa de edição de imagens e textos.',
+                    'Controlar o funcionamento da máquina e permitir a comunicação entre o usuário e o hardware.',
+                    'Substituir o disco rígido e aumentar fisicamente a memória RAM.',
+                    'Servir apenas para proteger o computador contra sujeira e poeira.'
+                ],
+                correct: 1,
+                explanation: 'O sistema operacional é o principal software. Ele controla a máquina, gerencia recursos (RAM, processador, arquivos) e comunica o usuário com o hardware.'
+            },
+            {
+                id: 3,
+                type: 'multiple-choice',
+                category: 'Sistemas Proprietários',
+                title: 'Questão 3: Sistema macOS',
+                question: 'Qual é uma característica marcante do sistema operacional macOS mencionado no texto?',
+                options: [
+                    'Desenvolvido pela Microsoft e muito fácil de alterar o código-fonte.',
+                    'Desenvolvido pela Apple, conhecido pela estabilidade, bom desempenho gráfico e integração com dispositivos como iPhone.',
+                    'É um software completamente gratuito e de código aberto.',
+                    'Utilizado apenas em supercomputadores industriais e servidores Linux.'
+                ],
+                correct: 1,
+                explanation: 'O macOS é desenvolvido pela Apple para a linha Mac, reconhecido por estabilidade, desempenho gráfico e integração com a linha Apple.'
+            },
+            {
+                id: 4,
+                type: 'multiple-choice',
+                category: 'Sistemas Livres',
+                title: 'Questão 4: Distribuição Linux para Iniciantes',
+                question: 'Segundo a seção de Distribuições Linux, qual é uma das distribuições mais populares entre iniciantes devido à facilidade de uso?',
+                options: [
+                    'Arch Linux',
+                    'Debian',
+                    'Ubuntu',
+                    'Fedora'
+                ],
+                correct: 2,
+                explanation: 'O Ubuntu é citado explicitamente como uma das distribuições mais populares entre iniciantes devido à facilidade de uso.'
+            },
+            {
+                id: 5,
+                type: 'multiple-choice',
+                category: 'Tipos de Software',
+                title: 'Questão 5: Classificação de Softwares Aplicativos',
+                question: 'Programas desenvolvidos para auxiliar o usuário em tarefas específicas, como navegadores, editores de texto e planilhas eletrônicas, são classificados como:',
+                options: [
+                    'Softwares de Sistema',
+                    'Softwares Aplicativos',
+                    'Softwares de Programação',
+                    'Drivers de Dispositivo'
+                ],
+                correct: 1,
+                explanation: 'Softwares Aplicativos são criados para auxiliar o usuário em tarefas específicas do dia a dia (navegadores, planilhas, jogos, etc.).'
+            },
+            {
+                id: 6,
+                type: 'multiple-choice',
+                category: 'Licenciamento',
+                title: 'Questão 6: Riscos da Falta de Licença',
+                question: 'O que o uso de softwares sem a devida licença pode configurar e quais são as consequências?',
+                options: [
+                    'Configura uso livre autorizado, trazendo apenas melhorias no desempenho.',
+                    'Configura pirataria, podendo trazer sérios riscos jurídicos e de segurança.',
+                    'Apenas bloqueia o teclado do computador sem gerar consequências legais.',
+                    'Transforma o software automaticamente em um código-fonte aberto.'
+                ],
+                correct: 1,
+                explanation: 'Utilizar software sem licença pode configurar pirataria, trazendo riscos jurídicos e de segurança.'
+            },
+            {
+                id: 7,
+                type: 'multiple-choice',
+                category: 'Ferramentas do Navegador',
+                title: 'Questão 7: Plugins e Complementos',
+                question: 'Bloqueadores de anúncios, tradutores automáticos e gerenciadores de senhas são exemplos de:',
+                options: [
+                    'Sistemas operacionais livres',
+                    'Complementos e extensões do navegador',
+                    'Softwares de diagnóstico de hardware',
+                    'Compiladores e IDEs'
+                ],
+                correct: 1,
+                explanation: 'Complementos/Plugins do navegador são recursos adicionais instalados para trazer novas funcionalidades e personalização.'
+            },
+            {
+                id: 8,
+                type: 'multiple-choice',
+                category: 'Ergonomia',
+                title: 'Questão 8: Posição Correta do Monitor',
+                question: 'De acordo com as boas práticas de ergonomia no uso do computador, como deve ser posicionado o monitor?',
+                options: [
+                    'Abaixo da linha da mesa, para que o pescoço fique curvado para baixo.',
+                    'Na altura dos olhos, mantendo a coluna reta.',
+                    'Muito acima da cabeça, exigindo inclinação do pescoço para trás.',
+                    'Totalmente inclinado para a esquerda do usuário.'
+                ],
+                correct: 1,
+                explanation: 'A postura ergonômica recomenda manter a coluna reta e posicionar o monitor na altura dos olhos.'
+            },
+
+            // SEÇÃO 2: VERDADEIRO OU FALSO (9 a 14)
+            {
+                id: 9,
+                type: 'tf',
+                category: 'Hardware vs Software',
+                title: 'Questão 9: Verdadeiro ou Falso - Conceito de Hardware',
+                question: 'O hardware corresponde à parte lógica do computador, composta por programas e sistemas digitais que não podem ser tocados.',
+                correct: false,
+                explanation: 'Falso! O hardware corresponde às peças FÍSICAS do computador. A parte LÓGICA é o software.'
+            },
+            {
+                id: 10,
+                type: 'tf',
+                category: 'Sistemas Livres',
+                title: 'Questão 10: Verdadeiro ou Falso - Código-fonte no Linux',
+                question: 'Os softwares livres, como o Linux, permitem que o usuário tenha acesso ao código-fonte para estudá-lo, modificá-lo e redistribuí-lo.',
+                correct: true,
+                explanation: 'Verdadeiro! O modelo de software livre garante o acesso ao código-fonte e o desenvolvimento colaborativo.'
+            },
+            {
+                id: 11,
+                type: 'tf',
+                category: 'Programação',
+                title: 'Questão 11: Verdadeiro ou Falso - Ferramentas de Programação',
+                question: 'Ferramentas como Visual Studio Code, Eclipse, compiladores e IDEs são exemplos de Softwares de Programação.',
+                correct: true,
+                explanation: 'Verdadeiro! São softwares de programação utilizados por desenvolvedores para criar novos sistemas e aplicativos.'
+            },
+            {
+                id: 12,
+                type: 'tf',
+                category: 'Diagnóstico',
+                title: 'Questão 12: Verdadeiro ou Falso - Teste de Memória RAM',
+                question: 'O teste de memória RAM e a verificação do disco rígido são considerados diagnósticos de software, pois não envolvem peças físicas.',
+                correct: false,
+                explanation: 'Falso! Teste de memória RAM, verificação de HD e monitoramento de temperatura são diagnósticos de HARDWARE (peças físicas).'
+            },
+            {
+                id: 13,
+                type: 'tf',
+                category: 'Busca na Web',
+                title: 'Questão 13: Verdadeiro ou Falso - Filtros de Busca',
+                question: 'Os filtros de busca na internet ajudam a pesquisar conteúdos específicos por data, idioma, tipo de arquivo e relevância.',
+                correct: true,
+                explanation: 'Verdadeiro! Conforme a seção de busca do material, os filtros permitem refinamento por esses exatos critérios.'
+            },
+            {
+                id: 14,
+                type: 'tf',
+                category: 'Ergonomia',
+                title: 'Questão 14: Verdadeiro ou Falso - Pausas de Trabalho',
+                question: 'A ergonomia recomenda evitar qualquer tipo de pausa e permanecer o maior tempo possível sentado na mesma posição sem descanso.',
+                correct: false,
+                explanation: 'Falso! Boas práticas de ergonomia exigem fazer pausas periódicas durante o uso e evitar longos períodos sentados.'
+            },
+
+            // SEÇÃO 3: ASSOCIAÇÃO DE COLUNAS / MATCHING (15 a 18)
+            {
+                id: 15,
+                type: 'matching',
+                category: 'Licenciamento',
+                title: 'Questão 15: Ligue a Licença ao Exemplo Correto',
+                instruction: 'Selecione no menu de cada item a correspondência adequada:',
+                pairs: [
+                    { item: 'Software Proprietário', target: 'Microsoft Windows / Photoshop' },
+                    { item: 'Software Livre', target: 'Linux / LibreOffice / GIMP' },
+                    { item: 'Software de Sistema', target: 'Drivers e Antivírus' },
+                    { item: 'Software de Programação', target: 'Visual Studio Code / Eclipse' }
+                ]
+            },
+            {
+                id: 16,
+                type: 'matching',
+                category: 'Diagnóstico',
+                title: 'Questão 16: Associe o Tipo de Diagnóstico à sua Função',
+                instruction: 'Relacione o tipo de verificação ao seu foco de análise:',
+                pairs: [
+                    { item: 'Monitoramento de Temperatura', target: 'Diagnóstico de Hardware' },
+                    { item: 'Limpeza de Arquivos Temporários', target: 'Diagnóstico de Software' },
+                    { item: 'Verificação do Processador', target: 'Diagnóstico de Hardware' },
+                    { item: 'Verificação de Erros do Sistema Operacional', target: 'Diagnóstico de Software' }
+                ]
+            },
+            {
+                id: 17,
+                type: 'matching',
+                category: 'Organização do Trabalho',
+                title: 'Questão 17: Relacione os Princípios da Organização',
+                instruction: 'Conecte o princípio de organização à sua respectiva descrição:',
+                pairs: [
+                    { item: 'Organização do Tempo', target: 'Planejar horários utilizando agendas e calendários' },
+                    { item: 'Organização de Compromissos', target: 'Registrar reuniões, tarefas e prazos para evitar esquecimentos' },
+                    { item: 'Organização de Atividades', target: 'Definir prioridades para executar tarefas com eficiência' },
+                    { item: 'Organização do Local de Trabalho', target: 'Manter o ambiente limpo, organizado e arquivos ordenados' }
+                ]
+            },
+            {
+                id: 18,
+                type: 'matching',
+                category: 'Sistemas Operacionais',
+                title: 'Questão 18: Associe os Sistemas Operacionais às suas Aplicações',
+                instruction: 'Selecione o ambiente principal de destaque citado na apostila:',
+                pairs: [
+                    { item: 'Microsoft Windows', target: 'Popular em empresas, escolas e residências (fácil aprendizado)' },
+                    { item: 'Apple macOS', target: 'Muito utilizado por designers e editores de vídeo' },
+                    { item: 'Linux', target: 'Larga utilização em servidores e supercomputadores' },
+                    { item: 'Android / iOS', target: 'Sistemas operacionais voltados para dispositivos móveis' }
+                ]
+            },
+
+            // SEÇÃO 4: PREENCHER LACUNAS (19 a 22)
+            {
+                id: 19,
+                type: 'fill-gaps',
+                category: 'Ergonomia',
+                title: 'Questão 19: Complete os Objetivos da Ergonomia',
+                text: 'A ergonomia é o conjunto de práticas que proporcionam [GAP1], [GAP2] e [GAP3] durante o uso do computador.',
+                gaps: [
+                    { id: 'GAP1', correct: 'conforto', options: ['conforto', 'lentidão', 'custo'] },
+                    { id: 'GAP2', correct: 'segurança', options: ['segurança', 'pirataria', 'complexidade'] },
+                    { id: 'GAP3', correct: 'saúde', options: ['saúde', 'desgaste', 'ruído'] }
+                ]
+            },
+            {
+                id: 20,
+                type: 'fill-gaps',
+                category: 'Atualizações',
+                title: 'Questão 20: Objetivos da Atualização de Software',
+                text: 'As atualizações de versão de software servem para corrigir [GAP1], melhorar a [GAP2] e adicionar novos [GAP3].',
+                gaps: [
+                    { id: 'GAP1', correct: 'falhas', options: ['falhas', 'preços', 'monitores'] },
+                    { id: 'GAP2', correct: 'segurança', options: ['segurança', 'postura', 'distribuição'] },
+                    { id: 'GAP3', correct: 'recursos', options: ['recursos', 'cabos', 'vírus'] }
+                ]
+            },
+            {
+                id: 21,
+                type: 'fill-gaps',
+                category: 'Postura Ergonomica',
+                title: 'Questão 21: Postura Físico-Corporal',
+                text: 'Para usar o computador corretamente, deve-se manter a coluna [GAP1], apoiar os pés no [GAP2] e utilizar uma cadeira [GAP3].',
+                gaps: [
+                    { id: 'GAP1', correct: 'reta', options: ['reta', 'curvada', 'inclinada'] },
+                    { id: 'GAP2', correct: 'chão', options: ['chão', 'teclado', 'alto'] },
+                    { id: 'GAP3', correct: 'adequada', options: ['adequada', 'quebrada', 'dura'] }
+                ]
+            },
+            {
+                id: 22,
+                type: 'fill-gaps',
+                category: 'Conceito Global',
+                title: 'Questão 22: Ecossistema de Informática',
+                text: 'Sem um [GAP1] operacional, o computador não conseguiria administrar recursos cruciais como o [GAP2] e a memória [GAP3].',
+                gaps: [
+                    { id: 'GAP1', correct: 'sistema', options: ['sistema', 'plugin', 'antivírus'] },
+                    { id: 'GAP2', correct: 'processador', options: ['processador', 'ergonomia', 'navegador'] },
+                    { id: 'GAP3', correct: 'RAM', options: ['RAM', 'Física', 'Manual'] }
+                ]
+            },
+
+            // SEÇÃO 5: PALAVRAS EMBARALHADAS / ANAGRAMAS (23 a 26) - EMBARALHADAS REAIS
+            {
+                id: 23,
+                type: 'unscramble',
+                category: 'Distribuições Linux',
+                title: 'Questão 23: Palavra Embaralhada - Distribuição Linux',
+                scrambled: 'T U B N U U',
+                hint: 'Dica: Uma das distribuições Linux mais populares para iniciantes.',
+                correct: 'UBUNTU'
+            },
+            {
+                id: 24,
+                type: 'unscramble',
+                category: 'Extensões do Navegador',
+                title: 'Questão 24: Palavra Embaralhada - Recursos do Navegador',
+                scrambled: 'G N I L P U S',
+                hint: 'Dica: Extensões que adicionam novas funcionalidades a programas e navegadores.',
+                correct: 'PLUGINS'
+            },
+            {
+                id: 25,
+                type: 'unscramble',
+                category: 'Sistemas Operacionais',
+                title: 'Questão 25: Palavra Embaralhada - Sistema da Microsoft',
+                scrambled: 'S D O W N I W',
+                hint: 'Dica: Sistema operacional proprietário mais popular no mundo.',
+                correct: 'WINDOWS'
+            },
+            {
+                id: 26,
+                type: 'unscramble',
+                category: 'Atributos de TI',
+                title: 'Questão 26: Palavra Embaralhada - Parte Físico-Eletrônica',
+                scrambled: 'R W E A H R D A',
+                hint: 'Dica: Corresponde às peças físicas e componentes palpáveis do computador.',
+                correct: 'HARDWARE'
+            },
+
+            // SEÇÃO 6: QUEBRA-CABEÇA E CENÁRIOS PRÁTICOS (27 a 30)
+            {
+                id: 27,
+                type: 'puzzle',
+                category: 'Quebra-Cabeça de Termos',
+                title: 'Questão 27: Encaixe de Conceitos e Significados',
+                instruction: 'Selecione o complemento exato que fecha a definição apresentada:',
+                puzzlePieces: [
+                    { start: 'O Gerenciador de Tarefas do Windows serve para...', correctEnd: 'identificar falhas e monitorar programas em execução (Diagnóstico de Software).' },
+                    { start: 'A falta de ergonomia no trabalho causa...', correctEnd: 'dores no corpo, fadiga física e possíveis problemas de saúde.' },
+                    { start: 'Os softwares de programação servem para...', correctEnd: 'desenvolver novos sistemas, aplicativos e softwares através de código.' }
+                ],
+                allEnds: [
+                    'identificar falhas e monitorar programas em execução (Diagnóstico de Software).',
+                    'dores no corpo, fadiga física e possíveis problemas de saúde.',
+                    'desenvolver novos sistemas, aplicativos e softwares através de código.',
+                    'substituir fisicamente o cooler e a pasta térmica da CPU.'
+                ]
+            },
+            {
+                id: 28,
+                type: 'scenario',
+                category: 'Estudo de Caso Prático',
+                title: 'Questão 28: Cenário de Diagnóstico de Computador',
+                scenarioText: 'Um aluno do SENAI notou que seu computador de aula está travando constantemente ao abrir o navegador e apresentando mensagens de erro do sistema operacional. Ele deseja resolver o problema sem abrir o gabinete do computador.',
+                question: 'Qual é a conduta e o tipo de ferramenta correta a ser utilizada nessa situação?',
+                options: [
+                    'Realizar um diagnóstico de hardware limpando os pentes de memória com borracha.',
+                    'Utilizar softwares de diagnóstico de software, como verificação de erros, limpeza de temporários e antivírus.',
+                    'Trocar o monitor de vídeo por um modelo ergonômico.',
+                    'Instalar um novo compilador C++ para consertar a placa-mãe.'
+                ],
+                correct: 1,
+                explanation: 'Como o problema está relacionado a falhas do sistema operacional e navegador sem abrir a máquina, trata-se de um diagnóstico de SOFTWARE.'
+            },
+            {
+                id: 29,
+                type: 'scenario',
+                category: 'Estudo de Caso Prático',
+                title: 'Questão 29: Escolha de Software e Licenciamento',
+                scenarioText: 'Uma pequena empresa precisa de uma suíte de escritório (editor de texto e planilha) e de um editor de imagens, mas não tem orçamento para adquirir licenças pagas do Microsoft Office e Adobe Photoshop.',
+                question: 'Com base na apostila do SENAI, qual solução de Software Livre atende perfeitamente legalmente a essa empresa?',
+                options: [
+                    'Baixar versões piratas dos softwares proprietários na internet.',
+                    'Utilizar as alternativas livres LibreOffice e GIMP.',
+                    'Comprar licenças do Windows e do macOS simultaneamente.',
+                    'Instalar apenas drivers de dispositivos sem nenhum aplicativo.'
+                ],
+                correct: 1,
+                explanation: 'O LibreOffice (suíte de escritório) e o GIMP (editor de imagens) são os exemplos oficiais de Softwares Livres citados na apostila.'
+            },
+            {
+                id: 30,
+                type: 'scenario',
+                category: 'Análise Crítica de Postura',
+                title: 'Questão 30: Identificação de Erro Ergonomico',
+                scenarioText: 'Marcos trabalha 8 horas por dia no computador. Ele costuma apoiar o monitor muito abaixo do nível do peito, fica curvado para frente, apoia os pés na cadeira e nunca faz intervalos durante o expediente.',
+                question: 'Qual das atitudes de Marcos está em CONFORMIDADE com o material de ergonomia?',
+                options: [
+                    'Manter o monitor abaixo do peito.',
+                    'Manter a coluna curvada para a frente.',
+                    'Nenhuma das atitudes! Ele deve alinhar a coluna, colocar o monitor na altura dos olhos e fazer pausas.',
+                    'Ficar 8 horas sem qualquer tipo de pausa para aumentar o rendimento.'
+                ],
+                correct: 2,
+                explanation: 'Todas as condutas de Marcos violam as boas práticas. Ele precisa reajustar a altura do monitor, a postura da coluna, o apoio dos pés e programar pausas.'
+            },
+
+            // SEÇÃO 7: QUESTÕES DISCURSIVAS (31 a 35)
+            {
+                id: 31,
+                type: 'discursive',
+                category: 'Tipos de Software',
+                title: 'Questão 31: Discursiva - Diferença entre Software de Sistema e Aplicativo',
+                question: 'Com base no material do SENAI, explique com suas palavras a diferença entre Software de Sistema e Software Aplicativo. Em sua resposta, cite ao menos um exemplo de cada tipo extraído da apostila.',
+                keywords: ['sistema', 'aplicativo', 'hardware', 'funcionamento'],
+                modelAnswer: 'Softwares de Sistema são responsáveis pelo funcionamento do computador e pelo gerenciamento do hardware (ex.: Windows, Linux, Drivers e Antivírus). Já os Softwares Aplicativos são criados para auxiliar o usuário na execução de tarefas específicas do dia a dia (ex.: navegadores, editores de texto e planilhas eletrônicas).'
+            },
+            {
+                id: 32,
+                type: 'discursive',
+                category: 'Licenciamento',
+                title: 'Questão 32: Discursiva - Riscos da Pirataria e Vantagens do Software Livre',
+                question: 'Descreva quais são os riscos e consequências do uso de softwares sem licença (pirataria) e explique por que a adoção de Softwares Livres (como LibreOffice e GIMP) é uma alternativa vantajosa segundo o texto.',
+                keywords: ['pirataria', 'licença', 'livre', 'código', 'segurança'],
+                modelAnswer: 'O uso de software sem licença configura pirataria, o que pode acarretar graves riscos jurídicos e vulnerabilidades de segurança (vírus e invasões). Os Softwares Livres são vantajosos pois garantem acesso ao código-fonte, liberdade de estudo, modificação e redistribuição sem custos de licença, promovendo a cooperação.'
+            },
+            {
+                id: 33,
+                type: 'discursive',
+                category: 'Diagnóstico',
+                title: 'Questão 33: Discursiva - Diagnóstico de Hardware vs Software',
+                question: 'Diferencie Diagnóstico de Hardware de Diagnóstico de Software. Apresente pelo menos dois exemplos de ferramentas ou procedimentos para cada uma dessas categorias citados na apostila.',
+                keywords: ['hardware', 'software', 'memória', 'antivírus', 'temperatura', 'temporários'],
+                modelAnswer: 'O Diagnóstico de Hardware analisa peças e componentes físicos (ex.: teste de memória RAM, verificação de HD, monitoramento de temperatura e testes de processador). O Diagnóstico de Software identifica falhas no sistema e programas (ex.: antivírus, limpeza de arquivos temporários, verificação de erros do sistema e gerenciador de tarefas).'
+            },
+            {
+                id: 34,
+                type: 'discursive',
+                category: 'Ergonomia',
+                title: 'Questão 34: Discursiva - Postura Ergonômica e Saúde',
+                question: 'Apresente as principais recomendações da apostila de Ergonomia em relação à postura física ao utilizar o computador. Explique como essas práticas impactam a saúde e a produtividade do operador.',
+                keywords: ['coluna', 'olhos', 'monitor', 'pés', 'pausas', 'cadeira', 'saúde'],
+                modelAnswer: 'As recomendações são: manter a coluna reta, posicionar o monitor na altura dos olhos, apoiar os pés no chão, utilizar cadeira adequada, fazer pausas durante o uso e evitar longos períodos sentado. Elas proporcionam conforto, segurança e saúde, evitando dores e fadiga, além de aumentar a produtividade.'
+            },
+            {
+                id: 35,
+                type: 'discursive',
+                category: 'Organização no Trabalho',
+                title: 'Questão 35: Discursiva - Os 4 Princípios da Organização',
+                question: 'Sintetize os 4 princípios da Organização do Trabalho apresentados na apostila (Tempo, Compromissos, Atividades e Local de Trabalho), ressaltando a importância de cada um para a rotina profissional.',
+                keywords: ['tempo', 'compromissos', 'atividades', 'local', 'agendas', 'prioridades', 'limpo'],
+                modelAnswer: '1) Organização do Tempo: planejamento de horários via agendas/calendários; 2) Organização de Compromissos: registro de reuniões e prazos para evitar esquecimentos; 3) Organização de Atividades: definição de prioridades para maior eficiência; 4) Organização do Local de Trabalho: manutenção de um ambiente limpo, organizado e com arquivos ordenados.'
+            }
+        ];
+
+        // Respostas salvas do usuário
+        let userAnswers = {};
+
+        // Inicialização da Página e Proteções Anti-Cópia
+        window.addEventListener('DOMContentLoaded', () => {
+            initAntiCopyProtection();
+            renderQuestions();
+            updateProgress();
+        });
+
+        // Configuração de Segurança contra Cópia / Colagem / Teclas de Atalho
+        function initAntiCopyProtection() {
+            document.addEventListener('contextmenu', e => {
+                e.preventDefault();
+                showAntiCopyAlert('O menu de contexto (clique direito) foi desativado durante a realização desta atividade.');
+            });
+
+            document.addEventListener('copy', e => { e.preventDefault(); showAntiCopyAlert('A função Copiar foi desativada.'); });
+            document.addEventListener('cut', e => { e.preventDefault(); showAntiCopyAlert('A função Recortar foi desativada.'); });
+            document.addEventListener('paste', e => { e.preventDefault(); showAntiCopyAlert('A função Colar foi desativada. As respostas discursivas devem ser digitadas pelo aluno.'); });
+
+            document.addEventListener('keydown', e => {
+                const key = e.key.toLowerCase();
+                if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'u', 'a', 'p', 's'].includes(key)) {
+                    e.preventDefault();
+                    showAntiCopyAlert(`Atalho de teclado (Ctrl + ${key.toUpperCase()}) bloqueado nesta página.`);
+                }
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(key))) {
+                    e.preventDefault();
+                    showAntiCopyAlert('Ferramentas de desenvolvedor desativadas nesta atividade.');
+                }
+            });
+        }
+
+        function showAntiCopyAlert(msg) {
+            showAlert('Recurso Protegido', msg || 'Operação não permitida! Para garantir a integridade da avaliação, cópia e colagem estão bloqueadas.');
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'card-question bg-white rounded-xl p-6 shadow-sm border border-slate-200 relative';
+                card.id = `q-card-${q.id}`;
+
+                let contentHtml = `
+                    <div class="flex items-center justify-between mb-3 border-b pb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-senai-blue bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                            ${q.category}
+                        </span>
+                        <span class="text-xs font-semibold text-slate-400">Questão ${idx + 1} de 35</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mb-2">${q.title}</h3>
+                `;
+
+                if (q.type === 'multiple-choice' || q.type === 'scenario') {
+                    if (q.scenarioText) {
+                        contentHtml += `
+                            <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-sm text-slate-700 italic mb-3">
+                                <i class="fa-solid fa-file-text text-senai-blue mr-1"></i> ${q.scenarioText}
+                            </div>
+                        `;
+                    }
+                    contentHtml += `<p class="text-sm text-slate-700 mb-4 font-medium">${q.question}</p>`;
+                    contentHtml += `<div class="space-y-2">`;
+                    q.options.forEach((opt, optIdx) => {
+                        contentHtml += `
+                            <label class="flex items-start gap-3 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition text-sm text-slate-700">
+                                <input type="radio" name="q_${q.id}" value="${optIdx}" onchange="saveMCAnswer(${q.id}, ${optIdx})" class="mt-0.5 text-senai-blue focus:ring-senai-blue">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+                    });
+                    contentHtml += `</div>`;
+                } 
+                else if (q.type === 'tf') {
+                    contentHtml += `<p class="text-sm text-slate-700 mb-4 font-medium">${q.question}</p>`;
+                    contentHtml += `
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" onclick="saveTFAnswer(${q.id}, true, this)" class="tf-btn-${q.id} py-3 px-4 rounded-lg border-2 border-slate-200 hover:border-green-500 hover:bg-green-50 font-bold text-slate-700 transition flex items-center justify-center gap-2 text-sm">
+                                <i class="fa-solid fa-check text-green-600"></i> VERDADEIRO
+                            </button>
+                            <button type="button" onclick="saveTFAnswer(${q.id}, false, this)" class="tf-btn-${q.id} py-3 px-4 rounded-lg border-2 border-slate-200 hover:border-red-500 hover:bg-red-50 font-bold text-slate-700 transition flex items-center justify-center gap-2 text-sm">
+                                <i class="fa-solid fa-xmark text-red-600"></i> FALSO
+                            </button>
+                        </div>
+                    `;
+                } 
+                else if (q.type === 'matching') {
+                    contentHtml += `<p class="text-sm text-slate-600 mb-3">${q.instruction}</p>`;
+                    contentHtml += `<div class="space-y-3">`;
+                    
+                    const targets = q.pairs.map(p => p.target);
+                    
+                    q.pairs.forEach((p) => {
+                        contentHtml += `
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-slate-50 rounded-lg border gap-2">
+                                <span class="text-sm font-semibold text-slate-800">${p.item}</span>
+                                <select onchange="saveMatchingAnswer(${q.id}, '${p.item.replace(/'/g, "\\'")}', this.value)" class="w-full sm:w-auto px-3 py-1.5 text-xs bg-white rounded border border-slate-300 focus:ring-2 focus:ring-senai-blue outline-none">
+                                    <option value="">-- Selecione a Associação --</option>
+                                    ${targets.map(t => `<option value="${t}">${t}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
+                    });
+                    contentHtml += `</div>`;
+                } 
+                else if (q.type === 'fill-gaps') {
+                    contentHtml += `<p class="text-xs text-slate-500 mb-2">Selecione as palavras corretas nas caixas destacadas:</p>`;
+                    
+                    let formattedText = q.text;
+                    q.gaps.forEach(gap => {
+                        let selectHtml = `
+                            <select onchange="saveGapAnswer(${q.id}, '${gap.id}', this.value)" class="inline-block mx-1 px-2 py-1 text-xs font-bold text-senai-blue bg-blue-50 rounded border border-blue-300 outline-none">
+                                <option value="">[...]</option>
+                                ${gap.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+                            </select>
+                        `;
+                        formattedText = formattedText.replace(`[${gap.id}]`, selectHtml);
+                    });
+
+                    contentHtml += `<div class="p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm leading-relaxed text-slate-800">${formattedText}</div>`;
+                }
+                else if (q.type === 'unscramble') {
+                    contentHtml += `
+                        <p class="text-xs text-slate-500 mb-1">${q.hint}</p>
+                        <div class="p-3 bg-blue-50 border border-blue-200 text-center rounded-lg mb-3 tracking-widest font-mono text-xl font-black text-senai-blue">
+                            ${q.scrambled}
+                        </div>
+                        <input type="text" placeholder="Digite a palavra correta em MAIÚSCULAS..." 
+                               oncopy="return false;" onpaste="return false;" oncut="return false;"
+                               oninput="saveUnscrambleAnswer(${q.id}, this.value)"
+                               class="w-full px-4 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-senai-blue outline-none uppercase font-semibold">
+                    `;
+                }
+                else if (q.type === 'puzzle') {
+                    contentHtml += `<p class="text-xs text-slate-500 mb-3">${q.instruction}</p>`;
+                    contentHtml += `<div class="space-y-3">`;
+                    q.puzzlePieces.forEach((piece, pIdx) => {
+                        contentHtml += `
+                            <div class="p-3 bg-slate-50 rounded-lg border space-y-2">
+                                <div class="text-xs font-bold text-slate-700"><i class="fa-solid fa-puzzle-piece text-senai-blue"></i> ${piece.start}</div>
+                                <select onchange="savePuzzleAnswer(${q.id}, ${pIdx}, this.value)" class="w-full px-3 py-2 text-xs bg-white rounded border border-slate-300 outline-none text-slate-700">
+                                    <option value="">-- Escolha o Encaixe Correto --</option>
+                                    ${q.allEnds.map(end => `<option value="${end}">${end}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
+                    });
+                    contentHtml += `</div>`;
+                }
+                else if (q.type === 'discursive') {
+                    contentHtml += `
+                        <p class="text-sm text-slate-800 font-medium mb-3">${q.question}</p>
+                        <div class="relative">
+                            <textarea id="discursive-input-${q.id}" rows="4" 
+                                      placeholder="Escreva sua resposta detalhada com suas próprias palavras..." 
+                                      oncopy="return false;" onpaste="return false;" oncut="return false;"
+                                      oninput="saveDiscursiveAnswer(${q.id}, this.value)"
+                                      class="w-full p-3 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-senai-blue focus:border-senai-blue outline-none transition resize-y"></textarea>
+                            <span class="text-xs text-slate-400 block text-right mt-1"><i class="fa-solid fa-keyboard mr-1"></i> Digitação obrigatória (colagem bloqueada)</span>
+                        </div>
+                    `;
+                }
+
+                contentHtml += `<div id="feedback-${q.id}" class="mt-4 hidden p-3 rounded-lg text-xs leading-relaxed font-medium"></div>`;
+
+                card.innerHTML = contentHtml;
+                container.appendChild(card);
+            });
+        }
+
+        function saveDiscursiveAnswer(qId, text) {
+            const cleanText = text.trim();
+            if (cleanText.length < 15) {
+                delete userAnswers[qId];
+            } else {
+                userAnswers[qId] = cleanText;
+            }
+            updateProgress();
+        }
+
+        function saveMCAnswer(qId, selectedIdx) {
+            userAnswers[qId] = selectedIdx;
+            updateProgress();
+        }
+
+        function saveTFAnswer(qId, val, btnElem) {
+            userAnswers[qId] = val;
+            
+            const buttons = document.querySelectorAll(`.tf-btn-${qId}`);
+            buttons.forEach(b => {
+                b.classList.remove('bg-green-600', 'bg-red-600', 'text-white', 'border-green-600', 'border-red-600');
+                b.classList.add('border-slate-200', 'text-slate-700');
+            });
+
+            if (val === true) {
+                btnElem.classList.remove('border-slate-200', 'text-slate-700');
+                btnElem.classList.add('bg-green-600', 'text-white', 'border-green-600');
+            } else {
+                btnElem.classList.remove('border-slate-200', 'text-slate-700');
+                btnElem.classList.add('bg-red-600', 'text-white', 'border-red-600');
+            }
+
+            updateProgress();
+        }
+
+        function saveMatchingAnswer(qId, itemKey, targetValue) {
+            if (!userAnswers[qId]) userAnswers[qId] = {};
+            if (targetValue === "") {
+                delete userAnswers[qId][itemKey];
+            } else {
+                userAnswers[qId][itemKey] = targetValue;
+            }
+            updateProgress();
+        }
+
+        function saveGapAnswer(qId, gapId, value) {
+            if (!userAnswers[qId]) userAnswers[qId] = {};
+            if (value === "") {
+                delete userAnswers[qId][gapId];
+            } else {
+                userAnswers[qId][gapId] = value;
+            }
+            updateProgress();
+        }
+
+        function saveUnscrambleAnswer(qId, text) {
+            const cleanText = text.trim().toUpperCase();
+            if (cleanText === "") {
+                delete userAnswers[qId];
+            } else {
+                userAnswers[qId] = cleanText;
+            }
+            updateProgress();
+        }
+
+        function savePuzzleAnswer(qId, pieceIdx, value) {
+            if (!userAnswers[qId]) userAnswers[qId] = {};
+            if (value === "") {
+                delete userAnswers[qId][pieceIdx];
+            } else {
+                userAnswers[qId][pieceIdx] = value;
+            }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let answeredCount = 0;
+            
+            questionsData.forEach(q => {
+                const ans = userAnswers[q.id];
+                if (ans !== undefined && ans !== null) {
+                    if (q.type === 'matching') {
+                        if (Object.keys(ans).length === q.pairs.length) answeredCount++;
+                    } else if (q.type === 'fill-gaps') {
+                        if (Object.keys(ans).length === q.gaps.length) answeredCount++;
+                    } else if (q.type === 'puzzle') {
+                        if (Object.keys(ans).length === q.puzzlePieces.length) answeredCount++;
+                    } else {
+                        answeredCount++;
+                    }
+                }
+            });
+
+            const percent = Math.round((answeredCount / 35) * 100);
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `${answeredCount} de 35 Respondidas (${percent}%)`;
+        }
+
+        function finishQuiz() {
+            const name = document.getElementById('student-name').value.trim();
+            const course = document.getElementById('student-course').value.trim();
+
+            if (!name || !course) {
+                showAlert('Atenção', 'Por favor, informe seu Nome Completo e Curso na caixa no topo da página para validar a atividade.');
+                return;
+            }
+
+            let score = 0;
+
+            questionsData.forEach(q => {
+                const ans = userAnswers[q.id];
+                let isCorrect = false;
+
+                if (q.type === 'multiple-choice' || q.type === 'scenario') {
+                    if (ans === q.correct) {
+                        score++;
+                        isCorrect = true;
+                    }
+                    showFeedback(q.id, isCorrect);
+                } 
+                else if (q.type === 'tf') {
+                    if (ans === q.correct) {
+                        score++;
+                        isCorrect = true;
+                    }
+                    showFeedback(q.id, isCorrect);
+                } 
+                else if (q.type === 'matching') {
+                    let totalPairs = q.pairs.length;
+                    let correctPairs = 0;
+                    if (ans) {
+                        q.pairs.forEach(p => {
+                            if (ans[p.item] === p.target) correctPairs++;
+                        });
+                    }
+                    if (correctPairs === totalPairs) {
+                        score++;
+                        isCorrect = true;
+                    }
+                    showFeedback(q.id, isCorrect);
+                } 
+                else if (q.type === 'fill-gaps') {
+                    let totalGaps = q.gaps.length;
+                    let correctGaps = 0;
+                    if (ans) {
+                        q.gaps.forEach(g => {
+                            if (ans[g.id] === g.correct) correctGaps++;
+                        });
+                    }
+                    if (correctGaps === totalGaps) {
+                        score++;
+                        isCorrect = true;
+                    }
+                    showFeedback(q.id, isCorrect);
+                } 
+                else if (q.type === 'unscramble') {
+                    if (ans === q.correct) {
+                        score++;
+                        isCorrect = true;
+                    }
+                    showFeedback(q.id, isCorrect);
+                } 
+                else if (q.type === 'puzzle') {
+                    let totalPieces = q.puzzlePieces.length;
+                    let correctPieces = 0;
+                    if (ans) {
+                        q.puzzlePieces.forEach((p, pIdx) => {
+                            if (ans[pIdx] === p.correctEnd) correctPieces++;
+                        });
+                    }
+                    if (correctPieces === totalPieces) {
+                        score++;
+                        isCorrect = true;
+                    }
+                    showFeedback(q.id, isCorrect);
+                }
+                else if (q.type === 'discursive') {
+                    if (ans && typeof ans === 'string' && ans.length >= 20) {
+                        const lowerAns = ans.toLowerCase();
+                        const matchedKeys = q.keywords.filter(k => lowerAns.includes(k));
+                        if (matchedKeys.length >= Math.ceil(q.keywords.length / 2)) {
+                            score++;
+                            isCorrect = true;
+                        }
+                    }
+                    showDiscursiveFeedback(q.id, isCorrect, ans || "Resposta não preenchida");
+                }
+            });
+
+            const pct = Math.round((score / 35) * 100);
+            document.getElementById('res-student-name').innerText = name;
+            document.getElementById('res-student-course').innerText = course;
+            document.getElementById('res-score').innerText = `${score} / 35`;
+            document.getElementById('res-percentage').innerText = `(${pct}% de aproveitamento)`;
+
+            const statusElem = document.getElementById('res-status');
+            const iconElem = document.getElementById('result-icon');
+
+            if (pct >= 70) {
+                statusElem.innerText = 'Aprovado / Excelente';
+                statusElem.className = 'text-lg font-bold text-green-600';
+                iconElem.className = 'fa-solid fa-trophy text-4xl text-yellow-500';
+            } else if (pct >= 50) {
+                statusElem.innerText = 'Em Evolução / Regular';
+                statusElem.className = 'text-lg font-bold text-amber-600';
+                iconElem.className = 'fa-solid fa-medal text-4xl text-amber-500';
+            } else {
+                statusElem.innerText = 'Necessita de Revisão';
+                statusElem.className = 'text-lg font-bold text-red-600';
+                iconElem.className = 'fa-solid fa-book-open text-4xl text-red-500';
+            }
+
+            document.getElementById('res-feedback-details').innerHTML = `
+                <p class="font-bold mb-1">Resumo Pedagógico:</p>
+                <p>Você respondeu <strong>35 questões</strong> elaboradas estritamente com base na apostila <em>Conceitos de Software de Microcomputadores</em> do SENAI. Suas respostas foram salvas e registradas com sucesso para avaliação do instrutor.</p>
+            `;
+
+            document.getElementById('result-modal').classList.remove('hidden');
+            document.getElementById('result-modal').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showFeedback(qId, isCorrect) {
+            const fb = document.getElementById(`feedback-${qId}`);
+            fb.classList.remove('hidden', 'bg-green-50', 'text-green-800', 'border-green-200', 'bg-red-50', 'text-red-800', 'border-red-200', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
+            
+            if (isCorrect) {
+                fb.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-green-600 mr-1"></i> <strong>Resposta Registrada!</strong> Item avaliado e computado.`;
+            } else {
+                fb.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-200');
+                fb.innerHTML = `<i class="fa-solid fa-circle-info text-amber-600 mr-1"></i> <strong>Resposta Registrada.</strong> Item incorreto ou não preenchido integralmente.`;
+            }
+        }
+
+        function showDiscursiveFeedback(qId, isCorrect, studentAnswer) {
+            const fb = document.getElementById(`feedback-${qId}`);
+            fb.classList.remove('hidden', 'bg-green-50', 'text-green-800', 'border-green-200', 'bg-red-50', 'text-red-800', 'border-red-200', 'bg-slate-50', 'text-slate-800', 'border-slate-200');
+
+            fb.classList.add('bg-slate-50', 'text-slate-800', 'border', 'border-slate-200');
+
+            fb.innerHTML = `
+                <div class="space-y-1.5">
+                    <p><strong><i class="fa-solid fa-comments text-senai-blue mr-1"></i> Sua Resposta Registrada:</strong> "${studentAnswer}"</p>
+                </div>
+            `;
+        }
+
+        // Função de Download em PDF corrigida (elimina páginas em branco)
+        function downloadPDF(evt) {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const studentName = nameInput || 'Estudante_SENAI';
+
+            if (!nameInput) {
+                showAlert('Atenção', 'Por favor, digite seu Nome Completo no campo de Identificação antes de gerar e baixar o PDF.');
+                return;
+            }
+
+            // Rola para o topo para evitar deslocamentos do html2canvas
+            window.scrollTo(0, 0);
+
+            const btn = evt ? evt.currentTarget : null;
+            let originalText = '';
+
+            if (btn) {
+                originalText = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Gerando PDF...`;
+                btn.disabled = true;
+            }
+
+            // Ativa classe CSS que desativa posicionamento sticky/fixo durante a renderização
+            document.body.classList.add('is-generating-pdf');
+
+            const element = document.getElementById('pdf-export-area') || document.body;
+
+            const opt = {
+                margin:       [0.3, 0.3, 0.3, 0.3],
+                filename:     `Atividade_Software_SENAI_${studentName.replace(/[^a-zA-Z0-9_]/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 1.5, 
+                    useCORS: true,
+                    logging: false,
+                    scrollY: 0,
+                    scrollX: 0
+                },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
+
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    document.body.classList.remove('is-generating-pdf');
+                    if (btn) {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                }).catch(err => {
+                    console.error("Erro na geração do PDF:", err);
+                    document.body.classList.remove('is-generating-pdf');
+                    if (btn) {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                    showAlert('Aviso', 'Iniciando modo de impressão alternativo.');
+                    window.print();
+                });
+            }, 250);
+        }
+
+        function restartQuiz() {
+            userAnswers = {};
+            document.getElementById('result-modal').classList.add('hidden');
+            renderQuestions();
+            updateProgress();
+            scrollToTop();
+        }
+
+        function showAlert(title, msg) {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-msg').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

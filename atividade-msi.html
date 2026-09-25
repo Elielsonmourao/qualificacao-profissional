@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atividade Avaliativa - Montador e Reparador de Computadores</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- html2pdf.js CDN para geração de PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    /* Proteção contra seleção de texto nas perguntas */
+    .no-select {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* Permitir digitação e seleção nos campos de entrada */
+    input, textarea, select {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: white;
+        color: black;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen py-8 px-4 no-select" oncontextmenu="return false;">
+
+  <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-slate-200 p-6 md:p-10" id="activity-content">
+    
+    <!-- CABEÇALHO DA ATIVIDADE -->
+    <header class="border-b-2 border-slate-300 pb-6 mb-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-blue-900 uppercase tracking-wide">Avaliação Prática e Teórica</h1>
+          <p class="text-slate-600 text-sm font-medium">Curso de Montador e Reparador de Computadores</p>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 text-blue-800 text-xs px-3 py-2 rounded-lg font-semibold text-center">
+          Total: 30 Questões<br>(15 Interativas + 15 Discursivas)
+        </div>
+      </div>
+
+      <!-- CAMPOS DE IDENTIFICAÇÃO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <div>
+          <label for="student-name" class="block text-xs font-bold text-slate-700 uppercase mb-1">Nome Completo do Aluno *</label>
+          <input type="text" id="student-name" placeholder="Digite seu nome completo" class="w-full p-2.5 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-medium">
+        </div>
+        <div>
+          <label for="student-course" class="block text-xs font-bold text-slate-700 uppercase mb-1">Nome do Curso / Turma *</label>
+          <input type="text" id="student-course" placeholder="Ex: Montador e Reparador - Turma 02" class="w-full p-2.5 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-medium">
+        </div>
+      </div>
+    </header>
+
+    <!-- INSTRUÇÕES -->
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-8 rounded-r-md text-amber-900 text-sm">
+      <p class="font-bold mb-1">Instruções aos alunos:</p>
+      <ul class="list-disc list-inside space-y-1 text-xs md:text-sm">
+        <li>Responda com atenção todas as 30 questões apresentadas abaixo.</li>
+        <li>Nas questões interativas, preencha, selecione ou associe as opções corretamente.</li>
+        <li>Nas questões discursivas, elabore respostas completas e técnicas.</li>
+        <li>Após concluir todas as respostas, clique no botão <strong>"Gerar PDF da Atividade"</strong> ao final da página para salvar e enviar seu arquivo ao professor.</li>
+      </ul>
+    </div>
+
+    <form id="quiz-form" onsubmit="return false;">
+      
+      <!-- PARTE 1: QUESTÕES INTERATIVAS E DIVERSIFICADAS (1 A 15) -->
+      <section class="mb-12">
+        <h2 class="text-xl font-bold text-blue-900 bg-blue-100 p-3 rounded-md mb-6 border-l-4 border-blue-600">
+          PARTE 1: Questões Objetivas e Interativas (1 a 15)
+        </h2>
+
+        <div class="space-y-8">
+
+          <!-- Q1: Completar Lacunas -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q1.</span> Complete a frase selecionando os termos adequados da arquitetura da Placa-Mãe:</p>
+            <div class="text-sm leading-relaxed text-slate-800 bg-white p-4 rounded border border-slate-200">
+              O soquete do processador é a estrutura onde o CPU é instalado. O 
+              <select name="q1_1" class="border border-slate-300 rounded px-2 py-1 bg-slate-50 font-medium text-blue-800">
+                <option value="">-- selecione --</option>
+                <option value="Chipset">Chipset</option>
+                <option value="Soquete">Soquete</option>
+                <option value="BIOS">BIOS</option>
+              </select> 
+              controla a comunicação entre o processador e os periféricos, enquanto os slots 
+              <select name="q1_2" class="border border-slate-300 rounded px-2 py-1 bg-slate-50 font-medium text-blue-800">
+                <option value="">-- selecione --</option>
+                <option value="PCIe">PCIe</option>
+                <option value="SATA">SATA</option>
+                <option value="DIMM">DIMM</option>
+              </select> 
+              são destinados ao encaixe dos módulos de memória RAM.
+            </div>
+          </div>
+
+          <!-- Q2: Múltipla Escolha -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q2.</span> Qual é a função primária da aplicação da pasta térmica entre o processador e o dissipador de calor?</p>
+            <div class="space-y-2 text-sm">
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q2" value="A" class="text-blue-600">
+                <span>A) Colar permanentemente o cooler ao processador para evitar vibrações.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q2" value="B" class="text-blue-600">
+                <span>B) Preencher as microimperfeições microscópicas das superfícies e otimizar a condução térmica.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q2" value="C" class="text-blue-600">
+                <span>C) Aumentar a condução elétrica entre o soquete e os pinos do processador.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q2" value="D" class="text-blue-600">
+                <span>D) Lubrificar as ventoinhas do cooler do processador.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q3: Associe as colunas (Conectores) -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q3.</span> Associe o conector de alimentação da fonte à sua respectiva aplicação na placa-mãe/componente:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-3 bg-white p-3 rounded border border-slate-200">
+                <div class="flex items-center justify-between">
+                  <span>1. ATX 24 Pinos:</span>
+                  <select name="q3_1" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Opção A</option>
+                    <option value="B">Opção B</option>
+                    <option value="C">Opção C</option>
+                    <option value="D">Opção D</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>2. EPS / ATX 12V (4 ou 8 pinos):</span>
+                  <select name="q3_2" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Opção A</option>
+                    <option value="B">Opção B</option>
+                    <option value="C">Opção C</option>
+                    <option value="D">Opção D</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>3. PCIe (6+2 pinos):</span>
+                  <select name="q3_3" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Opção A</option>
+                    <option value="B">Opção B</option>
+                    <option value="C">Opção C</option>
+                    <option value="D">Opção D</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>4. Conector SATA de energia:</span>
+                  <select name="q3_4" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Opção A</option>
+                    <option value="B">Opção B</option>
+                    <option value="C">Opção C</option>
+                    <option value="D">Opção D</option>
+                  </select>
+                </div>
+              </div>
+              <div class="bg-blue-50 p-3 rounded border border-blue-200 text-xs space-y-2">
+                <p><strong>A)</strong> Alimentação exclusiva para Placa de Vídeo dedicada.</p>
+                <p><strong>B)</strong> Alimentação principal da Placa-Mãe.</p>
+                <p><strong>C)</strong> Alimentação específica do Processador (CPU).</p>
+                <p><strong>D)</strong> Alimentação para HDs, SSDs SATA e Drives Ópticos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q4: Verdadeiro ou Falso (ESD) -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q4.</span> Marque V (Verdadeiro) ou F (Falso) para as afirmações sobre Descarga Eletrostática (ESD):</p>
+            <div class="space-y-2 text-sm bg-white p-3 rounded border border-slate-200">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <span class="pr-2">a) Tocar em partes metálicas aterradas do gabinete antes de manusear peças reduz o risco de ESD.</span>
+                <select name="q4_1" class="border border-slate-300 rounded p-1">
+                  <option value="">-</option>
+                  <option value="V">V</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <span class="pr-2">b) Tapetes e carpetes sintéticos são ideais para a bancada de manutenção pois evitam estática.</span>
+                <select name="q4_2" class="border border-slate-300 rounded p-1">
+                  <option value="">-</option>
+                  <option value="V">V</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="pr-2">c) Componentes como memórias e placas devem ser segurados pelas bordas do PCB, evitando tocar nos contatos dourados.</span>
+                <select name="q4_3" class="border border-slate-300 rounded p-1">
+                  <option value="">-</option>
+                  <option value="V">V</option>
+                  <option value="F">F</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q5: Ordenação de Passos -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q5.</span> Ordene numericamente (1 a 4) a sequência lógica recomendada para a montagem inicial do computador:</p>
+            <div class="space-y-2 text-sm bg-white p-3 rounded border border-slate-200">
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="4" name="q5_step1" placeholder="#" class="w-12 p-1 border border-slate-300 rounded text-center font-bold">
+                <span>Fixar a placa-mãe nos espaçadores de metal dentro do gabinete.</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="4" name="q5_step2" placeholder="#" class="w-12 p-1 border border-slate-300 rounded text-center font-bold">
+                <span>Instalar Processador, Cooler e Memória RAM na placa-mãe fora do gabinete (Bancada).</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="4" name="q5_step3" placeholder="#" class="w-12 p-1 border border-slate-300 rounded text-center font-bold">
+                <span>Conectar os cabos de alimentação da fonte e os cabos do painel frontal.</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="4" name="q5_step4" placeholder="#" class="w-12 p-1 border border-slate-300 rounded text-center font-bold">
+                <span>Instalar o espelho traseiro I/O no gabinete e a fonte de alimentação.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q6: Completar sobre Memória RAM -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q6.</span> Preencha com os termos corretos referente ao Dual Channel de Memória RAM:</p>
+            <div class="text-sm leading-relaxed text-slate-800 bg-white p-4 rounded border border-slate-200">
+              Para ativar a tecnologia Dual Channel, o usuário deve instalar dois módulos de memória idênticos nos slots de canais correspondentes (ex: Slots 2 e 4). Isso dobra a largura de barramento de dados de 
+              <select name="q6_1" class="border border-slate-300 rounded px-2 py-1 bg-slate-50 font-medium">
+                <option value="">-- selecione --</option>
+                <option value="32">32 bits</option>
+                <option value="64">64 bits</option>
+                <option value="128">128 bits</option>
+              </select> 
+              para 
+              <select name="q6_2" class="border border-slate-300 rounded px-2 py-1 bg-slate-50 font-medium">
+                <option value="">-- selecione --</option>
+                <option value="64">64 bits</option>
+                <option value="128">128 bits</option>
+                <option value="256">256 bits</option>
+              </select>, aumentando a taxa de transferência do sistema.
+            </div>
+          </div>
+
+          <!-- Q7: Múltipla Escolha (Fonte de Alimentação) -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q7.</span> Um computador liga, os coolers giram por 2 segundos e em seguida o sistema desliga completamente. Qual componente apresenta maior probabilidade de defeito ou desarme por proteção de curto?</p>
+            <div class="space-y-2 text-sm">
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q7" value="A" class="text-blue-600">
+                <span>A) Monitor ou cabo HDMI danificado.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q7" value="B" class="text-blue-600">
+                <span>B) Fonte de alimentação (PSU) ou curto-circuito na linha de 12V do VRM.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q7" value="C" class="text-blue-600">
+                <span>C) Falta de formatação do SSD com o sistema operacional.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q7" value="D" class="text-blue-600">
+                <span>D) Bateria da CMOS (CR2032) descarregada.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q8: Associação de Dispositivos de Armazenamento -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q8.</span> Relacione a tecnologia de armazenamento à sua respectiva característica física/desempenho:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="space-y-3 bg-white p-3 rounded border border-slate-200">
+                <div class="flex items-center justify-between">
+                  <span>1. HDD Mecânico:</span>
+                  <select name="q8_1" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Característica A</option>
+                    <option value="B">Característica B</option>
+                    <option value="C">Característica C</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>2. SSD SATA 2.5":</span>
+                  <select name="q8_2" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Característica A</option>
+                    <option value="B">Característica B</option>
+                    <option value="C">Característica C</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>3. SSD NVMe M.2:</span>
+                  <select name="q8_3" class="border border-slate-300 rounded p-1 bg-slate-50">
+                    <option value="">-- Selecione --</option>
+                    <option value="A">Característica A</option>
+                    <option value="B">Característica B</option>
+                    <option value="C">Característica C</option>
+                  </select>
+                </div>
+              </div>
+              <div class="bg-blue-50 p-3 rounded border border-blue-200 text-xs space-y-2">
+                <p><strong>A)</strong> Conectado diretamente ao barramento PCIe com altíssimas taxas de leitura (acima de 3000 MB/s).</p>
+                <p><strong>B)</strong> Utiliza pratos magnéticos e agulha de leitura, sujeito a falhas por impactos físicos.</p>
+                <p><strong>C)</strong> Memória Flash com interface SATA III limitada a aproximadamente 550 MB/s.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q9: Múltipla Escolha (BIOS Beep Codes) -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q9.</span> Durante o teste do POST, um computador emite 1 bip longo seguido de 2 bips curtos e não exibe imagem no monitor. Esse padrão de bip geralmente indica falha em qual componente?</p>
+            <div class="space-y-2 text-sm">
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q9" value="A" class="text-blue-600">
+                <span>A) Placa de Vídeo (Vídeo / GPU).</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q9" value="B" class="text-blue-600">
+                <span>B) Teclado PS/2 ou USB desconectado.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q9" value="C" class="text-blue-600">
+                <span>C) Superaquecimento da fonte de alimentação.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q9" value="D" class="text-blue-600">
+                <span>D) Falha de leitura no Disco Rígido.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q10: Conectores de Painel Frontal -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q10.</span> Associe as siglas do painel frontal (Front Panel) da placa-mãe às suas respectivas funções:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm bg-white p-3 rounded border border-slate-200">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono">POWER SW:</span>
+                  <select name="q10_1" class="border border-slate-300 rounded p-1 text-xs">
+                    <option value="">-- Selecione --</option>
+                    <option value="1">Botão Ligar/Desligar</option>
+                    <option value="2">Botão de Reinicialização</option>
+                    <option value="3">LED Indicador de atividade de Armazenamento</option>
+                    <option value="4">LED Indicador de Computador Ligado</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="font-mono">RESET SW:</span>
+                  <select name="q10_2" class="border border-slate-300 rounded p-1 text-xs">
+                    <option value="">-- Selecione --</option>
+                    <option value="1">Botão Ligar/Desligar</option>
+                    <option value="2">Botão de Reinicialização</option>
+                    <option value="3">LED Indicador de atividade de Armazenamento</option>
+                    <option value="4">LED Indicador de Computador Ligado</option>
+                  </select>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono">HDD LED:</span>
+                  <select name="q10_3" class="border border-slate-300 rounded p-1 text-xs">
+                    <option value="">-- Selecione --</option>
+                    <option value="1">Botão Ligar/Desligar</option>
+                    <option value="2">Botão de Reinicialização</option>
+                    <option value="3">LED Indicador de atividade de Armazenamento</option>
+                    <option value="4">LED Indicador de Computador Ligado</option>
+                  </select>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="font-mono">POWER LED:</span>
+                  <select name="q10_4" class="border border-slate-300 rounded p-1 text-xs">
+                    <option value="">-- Selecione --</option>
+                    <option value="1">Botão Ligar/Desligar</option>
+                    <option value="2">Botão de Reinicialização</option>
+                    <option value="3">LED Indicador de atividade de Armazenamento</option>
+                    <option value="4">LED Indicador de Computador Ligado</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q11: Produtos Químicos de Limpeza -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q11.</span> Qual é o solvente adequado recomendado para a limpeza da pasta térmica antiga sobre o die do processador e contato de circuitos eletrônicos?</p>
+            <div class="space-y-2 text-sm">
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q11" value="A" class="text-blue-600">
+                <span>A) Álcool Etílico 70% comercial comum.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q11" value="B" class="text-blue-600">
+                <span>B) Álcool Isopropílico (99.8% de pureza).</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q11" value="C" class="text-blue-600">
+                <span>C) Água destilada com detergente neutro.</span>
+              </label>
+              <label class="flex items-center space-x-3 p-2 bg-white rounded border border-slate-200 cursor-pointer hover:bg-slate-100">
+                <input type="radio" name="q11" value="D" class="text-blue-600">
+                <span>D) Solvente Querosene ou Thinner.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q12: Formato de Placa-Mãe -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q12.</span> Selecione o fator de forma de placa-mãe com menor dimensão física entre os listados abaixo:</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <label class="p-3 bg-white border border-slate-200 rounded text-center cursor-pointer hover:bg-blue-50">
+                <input type="radio" name="q12" value="ATX" class="mb-1"><br>Standard ATX
+              </label>
+              <label class="p-3 bg-white border border-slate-200 rounded text-center cursor-pointer hover:bg-blue-50">
+                <input type="radio" name="q12" value="mATX" class="mb-1"><br>Micro-ATX
+              </label>
+              <label class="p-3 bg-white border border-slate-200 rounded text-center cursor-pointer hover:bg-blue-50">
+                <input type="radio" name="q12" value="MiniITX" class="mb-1"><br>Mini-ITX
+              </label>
+              <label class="p-3 bg-white border border-slate-200 rounded text-center cursor-pointer hover:bg-blue-50">
+                <input type="radio" name="q12" value="EATX" class="mb-1"><br>Extended-ATX
+              </label>
+            </div>
+          </div>
+
+          <!-- Q13: Voltagens dos Fios da Fonte -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q13.</span> Associe as cores padrão dos fios do conector ATX às suas respectivas tensões contínuas (DC):</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm bg-white p-3 rounded border border-slate-200">
+              <div class="flex items-center justify-between">
+                <span>Fio Amarelo:</span>
+                <select name="q13_1" class="border border-slate-300 rounded p-1 bg-slate-50">
+                  <option value="">-- Tensão --</option>
+                  <option value="+12V">+12 Volts</option>
+                  <option value="+5V">+5 Volts</option>
+                  <option value="+3.3V">+3.3 Volts</option>
+                  <option value="GND">GND / Terra (0V)</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Fio Vermelho:</span>
+                <select name="q13_2" class="border border-slate-300 rounded p-1 bg-slate-50">
+                  <option value="">-- Tensão --</option>
+                  <option value="+12V">+12 Volts</option>
+                  <option value="+5V">+5 Volts</option>
+                  <option value="+3.3V">+3.3 Volts</option>
+                  <option value="GND">GND / Terra (0V)</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Fio Laranja:</span>
+                <select name="q13_3" class="border border-slate-300 rounded p-1 bg-slate-50">
+                  <option value="">-- Tensão --</option>
+                  <option value="+12V">+12 Volts</option>
+                  <option value="+5V">+5 Volts</option>
+                  <option value="+3.3V">+3.3 Volts</option>
+                  <option value="GND">GND / Terra (0V)</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>Fio Preto:</span>
+                <select name="q13_4" class="border border-slate-300 rounded p-1 bg-slate-50">
+                  <option value="">-- Tensão --</option>
+                  <option value="+12V">+12 Volts</option>
+                  <option value="+5V">+5 Volts</option>
+                  <option value="+3.3V">+3.3 Volts</option>
+                  <option value="GND">GND / Terra (0V)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q14: Verdadeiro / Falso Configurações UEFI -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q14.</span> Marque V (Verdadeiro) ou F (Falso) para os conceitos do firmware BIOS/UEFI:</p>
+            <div class="space-y-2 text-sm bg-white p-3 rounded border border-slate-200">
+              <div class="flex items-center justify-between border-b pb-2">
+                <span>a) O Secure Boot impede que sistemas operacionais não assinados ou malwares carreguem no boot.</span>
+                <select name="q14_1" class="border border-slate-300 rounded p-1"><option value="">-</option><option value="V">V</option><option value="F">F</option></select>
+              </div>
+              <div class="flex items-center justify-between border-b pb-2">
+                <span>b) O modo AHCI é o padrão legado antigo que deve ser usado para substituir o NVMe.</span>
+                <select name="q14_2" class="border border-slate-300 rounded p-1"><option value="">-</option><option value="V">V</option><option value="F">F</option></select>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>c) O perfil XMP / DOCP permite configurar a memória RAM para operar em sua frequência nominal máxima informada pelo fabricante.</span>
+                <select name="q14_3" class="border border-slate-300 rounded p-1"><option value="">-</option><option value="V">V</option><option value="F">F</option></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Q15: Sequência de Diagnóstico de Ausência de Vídeo -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <p class="font-semibold text-slate-900 mb-3"><span class="text-blue-600 font-bold">Q15.</span> Enumere os passos recomendados ao diagnosticar um micro que liga (coolers giram), mas não dá imagem:</p>
+            <div class="space-y-2 text-sm bg-white p-3 rounded border border-slate-200">
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="3" name="q15_1" class="w-12 p-1 border border-slate-300 rounded text-center font-bold" placeholder="#">
+                <span>Testar o cabo de vídeo (HDMI/DisplayPort) e o monitor em outro dispositivo.</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="3" name="q15_2" class="w-12 p-1 border border-slate-300 rounded text-center font-bold" placeholder="#">
+                <span>Limpar os contatos dourados da memória RAM com borracha escolar branca/limpa contato e testar um pente por vez.</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <input type="number" min="1" max="3" name="q15_3" class="w-12 p-1 border border-slate-300 rounded text-center font-bold" placeholder="#">
+                <span>Efetuar o procedimento de Reset de BIOS (Clear CMOS) para restaurar as configurações padrão de fábrica.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- QUEBRA DE PÁGINA PARA PDF -->
+      <div class="page-break"></div>
+
+      <!-- PARTE 2: QUESTÕES DISCURSIVAS (16 A 30) -->
+      <section class="mb-12">
+        <h2 class="text-xl font-bold text-blue-900 bg-blue-100 p-3 rounded-md mb-6 border-l-4 border-blue-600">
+          PARTE 2: Questões Discursivas (16 a 30)
+        </h2>
+        <p class="text-xs text-slate-500 mb-6 font-medium">Responda cada uma das perguntas abaixo de forma fundamentada e técnica nas caixas de texto correspondentes.</p>
+
+        <div class="space-y-8">
+
+          <!-- Q16 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q16" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q16.</span> Explique detalhadamente o papel do rotina POST (Power-On Self-Test) na inicialização do sistema e o que o técnico deve fazer quando o computador trava antes ou durante essa etapa.</label>
+            <textarea id="q16" name="q16" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q17 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q17" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q17.</span> Descreva as diferenças técnicas entre as arquiteturas de sistema operacional de 32 bits (x86) e 64 bits (x64), abordando o limite de desempenhos e endereçamento de memória RAM.</label>
+            <textarea id="q17" name="q17" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q18 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q18" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q18.</span> Diferencie os sistemas de arrefecimento por Air Cooler (Aar) e Water Cooler (Líquido). Quais cuidados de manutenção preventiva são específicos do Water Cooler?</label>
+            <textarea id="q18" name="q18" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q19 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q19" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q19.</span> O que caracteriza o fenômeno de "Gargalo" (Bottleneck) no hardware de um computador? Ilustre com um exemplo prático entre CPU e GPU.</label>
+            <textarea id="q19" name="q19" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q20 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q20" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q20.</span> Por que um SSD NVMe M.2 atinge velocidades de leitura e escrita substancialmente maiores do que um SSD SATA de 2.5 polegadas?</label>
+            <textarea id="q20" name="q20" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q21 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q21" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q21.</span> Explique os perigos da Descarga Eletrostática (ESD) nos componentes modernos e cite pelo menos três ferramentas ou boas práticas utilizadas em bancadas profissionais para combatê-la.</label>
+            <textarea id="q21" name="q21" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q22 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q22" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q22.</span> Quais são os principais sintomas apresentados por um sistema com defeito ou instabilidade nos módulos de memória RAM? Como realizar o diagnóstico definitivo?</label>
+            <textarea id="q22" name="q22" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q23 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q23" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q23.</span> O que indica o selo de certificação 80 Plus em uma fonte de alimentação e qual a diferença prática entre uma fonte sem selo e uma fonte 80 Plus Bronze / Gold?</label>
+            <textarea id="q23" name="q23" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q24 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q24" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q24.</span> Descreva o procedimento físico para realizar o Clear CMOS na placa-mãe (remoção da bateria / jumper CLR_CMOS) e em quais situações esse procedimento é essencial.</label>
+            <textarea id="q24" name="q24" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q25 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q25" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q25.</span> Explique as diferenças estruturais e operacionais entre o padrão Legacy (BIOS) e a interface UEFI, detalhando também os esquemas de partição MBR e GPT.</label>
+            <textarea id="q25" name="q25" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q26 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q26" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q26.</span> Um cliente relata que seu computador desliga sozinho abruptamente após cerca de 15 minutos executando softwares ou jogos pesados. Qual a hipótese primária e como investigá-la?</label>
+            <textarea id="q26" name="q26" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q27 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q27" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q27.</span> Qual é a função dos circuitos VRM (Módulo Regulador de Tensão) localizados ao redor do soquete do processador na placa-mãe? Por que dissipadores no VRM são importantes?</label>
+            <textarea id="q27" name="q27" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q28 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q28" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q28.</span> Quais são os erros mais comuns cometidos por técnicos iniciantes no momento de aplicar pasta térmica no processador e quais as consequências dessas falhas?</label>
+            <textarea id="q28" name="q28" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q29 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q29" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q29.</span> Descreva passo a passo como realizar a substituição física de uma placa de vídeo dedicada (GPU) e a atualização limpa dos seus respectivos drivers no sistema operacional.</label>
+            <textarea id="q29" name="q29" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+          <!-- Q30 -->
+          <div class="p-5 border border-slate-200 rounded-lg bg-slate-50/50 shadow-sm">
+            <label for="q30" class="block font-semibold text-slate-900 mb-2"><span class="text-blue-600 font-bold">Q30.</span> Monte um checklist sucinto de manutenção preventiva completa para um computador de escritório que está há 2 anos sem limpeza física interna e sem otimização de sistema.</label>
+            <textarea id="q30" name="q30" rows="4" placeholder="Escreva sua resposta técnica aqui..." class="w-full p-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm text-slate-900 font-normal leading-relaxed"></textarea>
+          </div>
+
+        </div>
+      </section>
+
+    </form>
+
+    <!-- ÁREA DE AÇÃO FINAL DA PÁGINA (BOTÃO GERAR PDF) -->
+    <div id="action-buttons" class="no-print flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t-2 border-slate-300 mt-8">
+      <p class="text-xs text-slate-500">Certifique-se de preencher o seu Nome e Curso no topo antes de gerar o PDF.</p>
+      <button type="button" onclick="generatePDF()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 text-base">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Gerar PDF da Atividade
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SCRIPTS DE BLOQUEIO E EXPORTAÇÃO PDF -->
+  <script>
+    // 1. Bloqueio de Copiar, Colar, Recortar e Menu de Contexto
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      alert('O menu de contexto (clique direito) está desabilitado nesta atividade.');
+    });
+
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+      alert('A função de COPIAR está bloqueada nesta atividade.');
+    });
+
+    document.addEventListener('paste', function(e) {
+      e.preventDefault();
+      alert('A função de COLAR está bloqueada nesta atividade.');
+    });
+
+    document.addEventListener('cut', function(e) {
+      e.preventDefault();
+    });
+
+    // Bloqueio de Atalhos de Teclado (Ctrl+C, Ctrl+V, Ctrl+U, F12, Ctrl+Shift+I)
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C' || e.key === 'v' || e.key === 'V' || e.key === 'u' || e.key === 'U' || e.key === 'a' || e.key === 'A')) {
+        if (e.key !== 'a' && e.key !== 'A') { // permite apenas se necessário
+          e.preventDefault();
+        }
+      }
+      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j'))) {
+        e.preventDefault();
+      }
+    });
+
+    // 2. Função de Geração do PDF
+    function generatePDF() {
+      const nameInput = document.getElementById('student-name');
+      const courseInput = document.getElementById('student-course');
+
+      if (!nameInput.value.trim() || !courseInput.value.trim()) {
+        alert('Por favor, preencha os campos "Nome Completo do Aluno" e "Nome do Curso" no topo da página antes de exportar o PDF!');
+        nameInput.focus();
+        return;
+      }
+
+      // Oculta área de botões durante a captura
+      const actionArea = document.getElementById('action-buttons');
+      actionArea.style.display = 'none';
+
+      const element = document.getElementById('activity-content');
+      const cleanFileName = nameInput.value.trim().replace(/[^a-zA-Z0-9]/g, '_');
+
+      const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     `Atividade_${cleanFileName}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Gerar PDF usando html2pdf.js com fallback para Impressão caso falhe
+      html2pdf().set(opt).from(element).save().then(() => {
+        actionArea.style.display = 'flex';
+      }).catch(err => {
+        console.error('Erro ao gerar PDF com html2pdf:', err);
+        actionArea.style.display = 'flex';
+        // Fallback para diálogo de impressão/salvar como PDF nativo do navegador
+        window.print();
+      });
+    }
+  </script>
+</body>
+</html>
+```eof
+
+### Resumo das Funcionalidades Geradas:
+
+1. **Estrutura Totalmente Interativa:**
+   - **Cabeçalho:** O aluno insere obrigatoriamente seu *Nome Completo* e *Curso*.
+   - **15 Questões Interativas:** Combina seleção de lacunas, opções de múltipla escolha, associação de colunas (conectores, armazenamento e fios da fonte), tabelas de Verdadeiro/Falso e sequenciamento de passos.
+   - **15 Questões Discursivas:** Áreas de texto expandidas para o aluno redigir respostas técnicas aprofundadas.
+2. **Segurança e Bloqueio de Cópia:**
+   - Bloqueio de seleção de texto nas perguntas com CSS.
+   - Script para desabilitar botão direito, copiar (Ctrl+C), colar (Ctrl+V), inspeção de código (F12) e atalhos.
+3. **Exportação Sem Gabarito:**
+   - Botão para exportação em PDF via script (`html2pdf.js`) que grava todas as opções e textos preenchidos pelo aluno.
+   - Não há exibição de respostas corretas ou gabarito em momento algum.

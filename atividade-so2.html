@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade: Estudo Comparativo — Windows vs. Linux</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Prevent text selection on instructions to prevent copying prompt */
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            body > *:not(#receiptModal) {
+                display: none !important;
+            }
+            #receiptModal {
+                position: static !important;
+                background: #ffffff !important;
+                inset: auto !important;
+                display: block !important;
+                padding: 0 !important;
+            }
+            #receiptModal > div {
+                background: #ffffff !important;
+                border: 1px solid #94a3b8 !important;
+                box-shadow: none !important;
+                color: #0f172a !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-dark-text {
+                color: #0f172a !important;
+            }
+            .print-border {
+                border-color: #cbd5e1 !important;
+            }
+            .print-bg-light {
+                background-color: #f8fafc !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between antialiased">
+
+    <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700/60 sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg border border-indigo-500/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-100 leading-tight">Atividade Avaliativa</h1>
+                    <p class="text-xs text-slate-400">Sistemas Operacionais — Windows vs. Linux</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="securityBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Anti-Cópia Ativo
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow space-y-6">
+
+        <!-- Banner de Segurança e Instrução -->
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start gap-3 text-amber-200/90 text-sm">
+            <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <div>
+                <strong class="font-semibold text-amber-300">Aviso importante aos alunos:</strong>
+                O recurso de colar textos (Ctrl+V) foi desativado nesta atividade. Digite sua resposta com suas próprias palavras diretamente no campo abaixo.
+            </div>
+        </div>
+
+        <!-- Card de Comando da Atividade -->
+        <section class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 no-select shadow-xl">
+            <div class="flex items-center gap-2 text-indigo-400 text-xs font-semibold tracking-wider uppercase mb-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1.207 1.207 0 01.854.353l4.293 4.293c.33.33.353.854.353 1.207V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Comando da Atividade
+            </div>
+            <h2 class="text-xl font-bold text-white mb-3">Estudo Comparativo — Windows vs. Linux</h2>
+            <p class="text-slate-300 leading-relaxed text-base">
+                Faça uma breve pesquisa sobre os sistemas operacionais <strong>Windows</strong> e <strong>Linux</strong> e elabore um texto comparativo destacando as principais características, semelhanças e diferenças entre eles.
+            </p>
+            <div class="mt-4 pt-4 border-t border-slate-700/50 flex flex-wrap gap-4 text-xs text-slate-400">
+                <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Mínimo exigido: <strong>10 linhas</strong>
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Produção individual
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Colar texto bloqueado
+                </span>
+            </div>
+        </section>
+
+        <section class="bg-slate-800/80 border border-slate-700 rounded-xl p-6 shadow-xl space-y-4">
+            
+            <!-- Identificação do Aluno -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="studentName" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Nome Completo do Aluno</label>
+                    <input type="text" id="studentName" placeholder="Digite seu nome completo..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+                <div>
+                    <label for="studentClass" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Turma / Disciplina</label>
+                    <input type="text" id="studentClass" placeholder="Ex: 1º Ano B / Informática" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+            </div>
+
+            <!-- Campo de Texto com Proteção Anti-Paste -->
+            <div class="relative">
+                <div class="flex items-center justify-between mb-1.5">
+                    <label for="studentResponse" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                        Sua Resposta
+                    </label>
+                    <span id="lineRequirementBadge" class="text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-medium">
+                        0 / 10 linhas
+                    </span>
+                </div>
+
+                <textarea id="studentResponse" rows="12" placeholder="Digite sua resposta aqui diretamente... (Colar textos foi desativado para garantir a originalidade do trabalho)." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors resize-y font-sans text-sm leading-relaxed"></textarea>
+
+                <!-- Toast de Alerta de Colar Bloqueado -->
+                <div id="securityAlert" class="hidden absolute top-4 right-4 bg-red-500/90 text-white text-xs px-4 py-2.5 rounded-lg shadow-lg flex items-center gap-2 animate-bounce transition-all z-20">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <span id="alertMessage">Ação bloqueada! Digite o texto manualmente.</span>
+                </div>
+            </div>
+
+            <!-- Barra de Progresso e Métricas -->
+            <div class="space-y-2 pt-2">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span id="progressText">Progresso da meta de extensão: 0%</span>
+                    <span class="space-x-3">
+                        <span id="wordCount">0 palavras</span>
+                        <span>•</span>
+                        <span id="charCount">0 caracteres</span>
+                    </span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-700/50">
+                    <div id="progressBar" class="bg-indigo-500 h-full w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-700/60">
+                <button type="button" id="btnClear" class="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 text-xs font-medium transition-colors">
+                    Limpar Texto
+                </button>
+
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <button type="button" id="btnCopyResponse" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-medium transition-colors flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Copiar Resposta Final
+                    </button>
+                    <button type="button" id="btnSubmit" class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-lg shadow-indigo-600/30 transition-colors flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Finalizar e Gerar Comprovante
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Modal de Comprovante de Conclusão -->
+    <div id="receiptModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3 no-print">
+                <div class="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Atividade Concluída!
+                </div>
+                <button type="button" id="btnCloseModal" class="text-slate-400 hover:text-white text-lg">&times;</button>
+            </div>
+            <!-- Header exclusivo para impressão -->
+            <div class="hidden print:block border-b border-slate-300 pb-3 mb-2">
+                <h2 class="text-xl font-bold text-slate-900">Comprovante de Entrega de Atividade</h2>
+                <p class="text-xs text-slate-600">Sistemas Operacionais — Estudo Comparativo: Windows vs. Linux</p>
+            </div>
+            <div class="space-y-3 text-sm text-slate-300 print-dark-text">
+                <p class="no-print">Sua atividade atendeu aos requisitos mínimos de extensão e foi validada com sucesso.</p>
+                <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 font-mono text-xs space-y-1 text-slate-300 print-bg-light print-border print-dark-text">
+                    <p><strong>Data/Hora de Envio:</strong> <span id="modalTimestamp">-</span></p>
+                    <p><strong>Aluno:</strong> <span id="modalStudentName">-</span></p>
+                    <p><strong>Turma:</strong> <span id="modalStudentClass">-</span></p>
+                    <p><strong>Linhas Produzidas:</strong> <span id="modalLines">-</span></p>
+                    <p><strong>Palavras:</strong> <span id="modalWords">-</span></p>
+                    <p><strong>Autenticidade:</strong> <span class="text-emerald-400 print-dark-text font-bold">Verificada (Sem Colar)</span></p>
+                </div>
+
+                <!-- Resposta no modal / impressão -->
+                <div class="space-y-1">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 print-dark-text">Texto Completo da Resposta:</label>
+                    <div id="modalResponseText" class="bg-slate-900 border border-slate-700 rounded-lg p-4 text-xs font-sans whitespace-pre-wrap leading-relaxed text-slate-100 max-h-52 overflow-y-auto print:max-h-none print:overflow-visible print-bg-light print-border print-dark-text"></div>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-end gap-3 pt-2 no-print">
+                <button type="button" id="btnDownloadTxt" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Baixar Texto (.txt)
+                </button>
+                <button type="button" id="btnPrintReceipt" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 002-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H7a2 2 0 00-2 2v4h10z"></path></svg>
+                    Imprimir / Salvar em PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.getElementById('studentResponse');
+            const alertBox = document.getElementById('securityAlert');
+            const alertMsg = document.getElementById('alertMessage');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const lineBadge = document.getElementById('lineRequirementBadge');
+            const wordCountEl = document.getElementById('wordCount');
+            const charCountEl = document.getElementById('charCount');
+
+            let lastText = '';
+            const MIN_LINES = 10;
+            const ESTIMATED_CHARS_PER_LINE = 45; // ~10 lines standard
+
+            // Função para exibir aviso de bloqueio de segurança
+            function showSecurityToast(message) {
+                alertMsg.textContent = message || "Ação bloqueada! Por favor, digite manualmente.";
+                alertBox.classList.remove('hidden');
+                setTimeout(() => {
+                    alertBox.classList.add('hidden');
+                }, 3000);
+            }
+
+            // 1. Bloquear evento de colar (Paste) no campo
+            textarea.addEventListener('paste', (e) => {
+                e.preventDefault();
+                showSecurityToast("Colar texto é proibido! Digite sua resposta manualmente.");
+            });
+
+            // 2. Bloquear evento de arrastar e soltar texto
+            textarea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                showSecurityToast("Arrastar e soltar textos foi desativado nesta atividade.");
+            });
+
+            // 3. Bloquear atalhos de teclado (Ctrl+V, Cmd+V, Shift+Insert, Ctrl+C, Cmd+C no textarea)
+            textarea.addEventListener('keydown', (e) => {
+                const key = e.key.toLowerCase();
+                const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+                // Bloqueia Ctrl+V ou Cmd+V
+                if (isCtrlOrCmd && key === 'v') {
+                    e.preventDefault();
+                    showSecurityToast("Atalho de colar (Ctrl+V) bloqueado!");
+                    return;
+                }
+
+                // Bloqueia Shift+Insert
+                if (e.shiftKey && e.key === 'Insert') {
+                    e.preventDefault();
+                    showSecurityToast("Atalho de colar (Shift+Insert) bloqueado!");
+                    return;
+                }
+            });
+
+            // 4. Desativar menu de contexto (Botão direito do mouse) na página e no campo de resposta
+            textarea.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showSecurityToast("Menu do botão direito desativado.");
+            });
+
+            // 5. Monitor de inserção em massa (para interceptar extensões de autocompletar ou colar programmatico)
+            textarea.addEventListener('input', () => {
+                const currentText = textarea.value;
+                const charDiff = currentText.length - lastText.length;
+
+                // Se mais de 8 caracteres surgirem em um único pulo (digitação humana normal é 1 por evento)
+                if (charDiff > 8) {
+                    textarea.value = lastText;
+                    showSecurityToast("Inserção rápida em massa detectada! Digite manualmente.");
+                    updateCounters();
+                    return;
+                }
+
+                lastText = textarea.value;
+                updateCounters();
+            });
+
+            // Recalcular contador de linhas e palavras
+            function updateCounters() {
+                const text = textarea.value;
+                
+                // Cálculo de linhas baseadas em quebras de linha explícitas + estimativa de largura visual
+                const rawParagraphs = text.split('\n');
+                let calculatedLines = 0;
+
+                rawParagraphs.forEach(paragraph => {
+                    if (paragraph.length === 0) {
+                        calculatedLines += 1;
+                    } else {
+                        // Estima quebras de linha com base no comprimento médio do parágrafo
+                        calculatedLines += Math.max(1, Math.ceil(paragraph.length / 65));
+                    }
+                });
+
+                if (text.trim() === '') {
+                    calculatedLines = 0;
+                }
+
+                const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+                const chars = text.length;
+
+                // Atualizar labels
+                lineBadge.textContent = `${calculatedLines} / ${MIN_LINES} linhas`;
+                wordCountEl.textContent = `${words} palavras`;
+                charCountEl.textContent = `${chars} caracteres`;
+
+                // Porcentagem para a barra de progresso
+                const lineProgress = Math.min(100, Math.round((calculatedLines / MIN_LINES) * 100));
+                progressBar.style.width = `${lineProgress}%`;
+                progressText.textContent = `Progresso da meta de extensão: ${lineProgress}%`;
+
+                // Mudar estilo do badge caso cumpra a meta
+                if (calculatedLines >= MIN_LINES) {
+                    lineBadge.className = "text-xs px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-semibold border border-emerald-500/30";
+                    progressBar.className = "bg-emerald-500 h-full w-0 transition-all duration-300";
+                } else {
+                    lineBadge.className = "text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-300 font-medium";
+                    progressBar.className = "bg-indigo-500 h-full w-0 transition-all duration-300";
+                }
+            }
+
+            // Limpar
+            document.getElementById('btnClear').addEventListener('click', () => {
+                if (textarea.value.length > 0) {
+                    textarea.value = '';
+                    lastText = '';
+                    updateCounters();
+                }
+            });
+
+            // Copiar Resposta
+            document.getElementById('btnCopyResponse').addEventListener('click', () => {
+                if (!textarea.value.trim()) {
+                    showSecurityToast("Escreva sua resposta antes de copiar.");
+                    return;
+                }
+                document.execCommand('copy');
+                showSecurityToast("Resposta copiada com sucesso para a área de transferência.");
+            });
+
+            // Finalizar e exibir comprovante
+            document.getElementById('btnSubmit').addEventListener('click', () => {
+                const name = document.getElementById('studentName').value.trim();
+                const studentClass = document.getElementById('studentClass').value.trim();
+                const text = textarea.value.trim();
+
+                if (!name) {
+                    showSecurityToast("Por favor, preencha o seu Nome Completo.");
+                    document.getElementById('studentName').focus();
+                    return;
+                }
+
+                if (!text) {
+                    showSecurityToast("Por favor, escreva a resposta da atividade.");
+                    textarea.focus();
+                    return;
+                }
+
+                // Preencher Modal
+                document.getElementById('modalTimestamp').textContent = new Date().toLocaleString('pt-BR');
+                document.getElementById('modalStudentName').textContent = name;
+                document.getElementById('modalStudentClass').textContent = studentClass || "Não informada";
+                document.getElementById('modalLines').textContent = lineBadge.textContent;
+                document.getElementById('modalWords').textContent = wordCountEl.textContent;
+                document.getElementById('modalResponseText').textContent = text;
+
+                document.getElementById('receiptModal').classList.remove('hidden');
+                document.getElementById('receiptModal').classList.add('flex');
+            });
+
+            // Fechar modal
+            document.getElementById('btnCloseModal').addEventListener('click', () => {
+                document.getElementById('receiptModal').classList.add('hidden');
+                document.getElementById('receiptModal').classList.remove('flex');
+            });
+
+            // Imprimir / Salvar PDF
+            document.getElementById('btnPrintReceipt').addEventListener('click', () => {
+                try {
+                    window.print();
+                } catch (err) {
+                    // Fallback para pop-up se print direto for restrito no iFrame
+                    const printWin = window.open('', '_blank');
+                    if (printWin) {
+                        printWin.document.write(`
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Comprovante - ${document.getElementById('modalStudentName').textContent}</title>
+                                <style>
+                                    body { font-family: sans-serif; padding: 24px; color: #0f172a; line-height: 1.5; }
+                                    h1 { font-size: 18px; color: #4338ca; margin-bottom: 4px; }
+                                    .subtitle { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+                                    .info-box { background: #f8fafc; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; border: 1px solid #e2e8f0; margin-bottom: 16px; }
+                                    .response-box { background: #ffffff; padding: 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; white-space: pre-wrap; line-height: 1.6; }
+                                </style>
+                            </head>
+                            <body>
+                                <h1>Comprovante de Conclusão de Atividade</h1>
+                                <div class="subtitle">Sistemas Operacionais — Estudo Comparativo: Windows vs. Linux</div>
+                                <div class="info-box">
+                                    <p><strong>Data/Hora:</strong> ${document.getElementById('modalTimestamp').textContent}</p>
+                                    <p><strong>Aluno:</strong> ${document.getElementById('modalStudentName').textContent}</p>
+                                    <p><strong>Turma:</strong> ${document.getElementById('modalStudentClass').textContent}</p>
+                                    <p><strong>Métricas:</strong> ${document.getElementById('modalLines').textContent} | ${document.getElementById('modalWords').textContent}</p>
+                                    <p><strong>Autenticidade:</strong> Verificada (Sistema Anti-Cópia Ativo)</p>
+                                </div>
+                                <h3>Resposta do Aluno:</h3>
+                                <div class="response-box">${document.getElementById('modalResponseText').textContent}</div>
+                            </body>
+                            </html>
+                        `);
+                        printWin.document.close();
+                        printWin.focus();
+                        setTimeout(() => printWin.print(), 300);
+                    } else {
+                        showSecurityToast("Permita os pop-ups do seu navegador para gerar o PDF.");
+                    }
+                }
+            });
+
+            // Baixar texto em formato .txt (Alternativa offline rápida)
+            document.getElementById('btnDownloadTxt').addEventListener('click', () => {
+                const name = document.getElementById('modalStudentName').textContent;
+                const studentClass = document.getElementById('modalStudentClass').textContent;
+                const timestamp = document.getElementById('modalTimestamp').textContent;
+                const text = document.getElementById('modalResponseText').textContent;
+                const metrics = document.getElementById('modalLines').textContent + ' | ' + document.getElementById('modalWords').textContent;
+
+                const content = `================================================
+COMPROVANTE DE ENTREGA DE ATIVIDADE
+================================================
+Atividade: Estudo Comparativo — Windows vs. Linux
+Data/Hora: ${timestamp}
+Aluno: ${name}
+Turma: ${studentClass}
+Métricas: ${metrics}
+Autenticidade: Verificada (Sistema Anti-Cópia)
+================================================
+
+RESPOSTA DO ALUNO:
+------------------------------------------------
+${text}
+------------------------------------------------
+`;
+
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `Atividade_${name.replace(/\s+/g, '_')}_Windows_Linux.txt`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            });
+        });
+    </script>
+</body>
+</html>

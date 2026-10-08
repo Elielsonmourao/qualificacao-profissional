@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Prática: Organização de Arquivos e Compactação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tree-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 18px;
+            bottom: 0;
+            width: 2px;
+            background-color: rgba(203, 213, 225, 0.4);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; }
+            .card-shadow { box-shadow: none !important; border: 1px solid #ddd !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-blue-600 text-white rounded-xl shadow-md">
+                    <i class="fa-solid fa-folder-tree text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-slate-900 dark:text-white">Informática Básica</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Atividade Prática Guiada</p>
+                </div>
+            </div>
+
+            <!-- Action controls -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <button id="toggleDarkModeBtn" onclick="toggleDarkMode()" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition" title="Alternar Modo Escuro/Claro">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline"></i>
+                </button>
+                <button onclick="window.print()" class="flex items-center space-x-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium transition">
+                    <i class="fa-solid fa-print"></i>
+                    <span class="hidden sm:inline">Imprimir / Salvar PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Hero / Identification Banner -->
+        <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-slate-800 text-white rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                <i class="fa-solid fa-folder-closed text-[240px]"></i>
+            </div>
+            <div class="relative z-10 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-semibold uppercase tracking-wider text-blue-200 border border-white/10">
+                    <i class="fa-solid fa-graduation-cap"></i> Atividade Avaliativa Prática
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Organização de Arquivos & Compactação (ZIP)</h1>
+                <p class="text-blue-100 max-w-3xl text-sm sm:text-base leading-relaxed">
+                    Aprenda a navegar no Explorador de Arquivos, criar estruturas de pastas, simular arquivos de dados extensos e aplicar a compactação de dados para organização e segurança.
+                </p>
+
+                <!-- Student Identification Card (Inputs) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/20">
+                    <div>
+                        <label class="block text-xs text-blue-200 font-medium mb-1">Nome do Aluno(a):</label>
+                        <input type="text" id="studentName" placeholder="Digite seu nome completo..." class="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200/60 focus:outline-none focus:bg-white/20 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-blue-200 font-medium mb-1">Turma / Período:</label>
+                        <input type="text" id="studentClass" placeholder="Ex: Info 101 / Noite" class="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-blue-200/60 focus:outline-none focus:bg-white/20 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-blue-200 font-medium mb-1">Data:</label>
+                        <input type="date" id="studentDate" class="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:bg-white/20 text-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar Card -->
+        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm no-print">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                        <i class="fa-solid fa-tasks"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-800 dark:text-white text-sm sm:text-base">Seu Progresso na Atividade</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400" id="progressStatusText">0 de 5 etapas concluídas</p>
+                    </div>
+                </div>
+                <span id="progressPercentage" class="text-xl font-extrabold text-blue-600 dark:text-blue-400">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-full w-0 transition-all duration-500 rounded-full"></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left / Main Column: Step by Step Guide (8 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-list-ol text-blue-600"></i>
+                        <span>Passo a Passo das Tarefas</span>
+                    </h2>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">Marque as caixas conforme concluir</span>
+                </div>
+
+                <!-- Step 1 Card -->
+                <div class="step-card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition hover:border-blue-300 dark:hover:border-blue-700">
+                    <div class="flex items-start gap-4">
+                        <label class="mt-1 cursor-pointer">
+                            <input type="checkbox" class="step-checkbox w-6 h-6 text-blue-600 rounded-md border-slate-300 dark:border-slate-600 focus:ring-blue-500 dark:bg-slate-700" onchange="updateProgress()">
+                        </label>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md">Passo 1</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-keyboard mr-1"></i>Atalho: Win + E</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Abrir o Explorador de Arquivos</h3>
+                            <ol class="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-1">
+                                <li>Pressione as teclas <kbd class="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded text-xs font-mono">Win + E</kbd> no teclado ou clique no ícone de pasta amarela na barra de tarefas.</li>
+                                <li>No painel lateral esquerdo, navegue e clique na pasta <strong class="text-slate-900 dark:text-white">Documentos</strong>.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 Card -->
+                <div class="step-card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition hover:border-blue-300 dark:hover:border-blue-700">
+                    <div class="flex items-start gap-4">
+                        <label class="mt-1 cursor-pointer">
+                            <input type="checkbox" class="step-checkbox w-6 h-6 text-blue-600 rounded-md border-slate-300 dark:border-slate-600 focus:ring-blue-500 dark:bg-slate-700" onchange="updateProgress()">
+                        </label>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md">Passo 2</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-folder-plus mr-1"></i>Pasta Principal</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Criar a Pasta da Atividade</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">
+                                Dentro da pasta <strong>Documentos</strong>, crie uma nova pasta com o nome exato indicado abaixo:
+                            </p>
+                            <div class="flex items-center gap-2 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
+                                <i class="fa-solid fa-folder text-amber-500 text-xl"></i>
+                                <code class="font-mono font-bold text-blue-600 dark:text-blue-400 flex-1">ATIVIDADE AVALIATIVA</code>
+                                <button onclick="copyText('ATIVIDADE AVALIATIVA', this)" class="px-2 py-1 text-xs bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 rounded transition">
+                                    <i class="fa-regular fa-copy mr-1"></i> Copiar Nome
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 Card -->
+                <div class="step-card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition hover:border-blue-300 dark:hover:border-blue-700">
+                    <div class="flex items-start gap-4">
+                        <label class="mt-1 cursor-pointer">
+                            <input type="checkbox" class="step-checkbox w-6 h-6 text-blue-600 rounded-md border-slate-300 dark:border-slate-600 focus:ring-blue-500 dark:bg-slate-700" onchange="updateProgress()">
+                        </label>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md">Passo 3</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-sitemap mr-1"></i>Subpastas</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Criar as Subpastas de Organização</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">
+                                Entre na pasta <strong>ATIVIDADE AVALIATIVA</strong> (dois cliques) e crie 2 novas subpastas:
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-folder text-red-500"></i>
+                                        <span class="font-mono text-sm font-bold text-red-700 dark:text-red-400">vírus</span>
+                                    </div>
+                                    <button onclick="copyText('vírus', this)" class="text-xs text-red-600 dark:text-red-300 hover:underline">Copiar</button>
+                                </div>
+                                <div class="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 rounded-xl flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-folder text-emerald-500"></i>
+                                        <span class="font-mono text-sm font-bold text-emerald-700 dark:text-emerald-400">arquivos confiáveis</span>
+                                    </div>
+                                    <button onclick="copyText('arquivos confiáveis', this)" class="text-xs text-emerald-600 dark:text-emerald-300 hover:underline">Copiar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 Card -->
+                <div class="step-card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition hover:border-blue-300 dark:hover:border-blue-700">
+                    <div class="flex items-start gap-4">
+                        <label class="mt-1 cursor-pointer">
+                            <input type="checkbox" class="step-checkbox w-6 h-6 text-blue-600 rounded-md border-slate-300 dark:border-slate-600 focus:ring-blue-500 dark:bg-slate-700" onchange="updateProgress()">
+                        </label>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md">Passo 4</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-file-lines mr-1"></i>Simulação de Tamanho</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Simular Arquivos e Aumentar o Tamanho</h3>
+                            <ul class="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-2">
+                                <li>Entre na pasta <strong class="text-red-500">vírus</strong>.</li>
+                                <li>Crie pelo menos <strong>3 arquivos de texto</strong> (Botão direito > <i>Novo</i> > <i>Documento de Texto</i>) nomeando como <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs">virus1.txt</code>, <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs">virus2.txt</code>, etc.</li>
+                                <li><strong>Importante:</strong> Abra cada arquivo e digite vários textos, parágrafos ou cole frases longas.</li>
+                            </ul>
+                            <div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
+                                <i class="fa-solid fa-lightbulb text-amber-500 text-base mt-0.5"></i>
+                                <span><strong>Por que digitar conteúdos longos?</strong> Quanto mais texto você digita no arquivo, maior fica o seu tamanho em disco (KB). Isso simula o comportamento de arquivos com dados volumosos no sistema!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 Card -->
+                <div class="step-card bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition hover:border-blue-300 dark:hover:border-blue-700">
+                    <div class="flex items-start gap-4">
+                        <label class="mt-1 cursor-pointer">
+                            <input type="checkbox" class="step-checkbox w-6 h-6 text-blue-600 rounded-md border-slate-300 dark:border-slate-600 focus:ring-blue-500 dark:bg-slate-700" onchange="updateProgress()">
+                        </label>
+                        <div class="flex-1 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-md">Passo 5</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-file-zipper mr-1"></i>Compactação</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900 dark:text-white">Compactar e Isolando a Pasta "vírus"</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">
+                                Volte para a pasta <strong>ATIVIDADE AVALIATIVA</strong> e compacte a pasta vírus:
+                            </p>
+                            <div class="space-y-2 text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <div class="flex items-start gap-2">
+                                    <i class="fa-brands fa-windows text-blue-500 mt-1"></i>
+                                    <div><strong>No Windows 11:</strong> Clique com botão direito na pasta <span class="font-mono text-red-500">vírus</span> > <i>Compactar para arquivo ZIP</i>.</div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <i class="fa-brands fa-windows text-blue-500 mt-1"></i>
+                                    <div><strong>No Windows 10:</strong> Clique com botão direito > <i>Enviar para</i> > <i>Pasta compactada (zipada)</i>.</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                Será gerado o arquivo <code class="font-mono text-indigo-600 dark:text-indigo-400 font-bold">vírus.zip</code>. Essa ação representa o "bloqueio/isolamento" do pacote de dados!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Interactive Folder Tree Visualizer & Zip Simulator (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Interactive Folder Tree Visualizer Widget -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm sticky top-24">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-700">
+                        <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sitemap text-indigo-500"></i>
+                            <span>Modelo de Estrutura Esperada</span>
+                        </h3>
+                        <span class="text-xs px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 rounded font-mono">Visualizador</span>
+                    </div>
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                        Sua estrutura no Explorador de Arquivos deve ficar idêntica a este diagrama:
+                    </p>
+
+                    <!-- Interactive Folder Tree Diagram -->
+                    <div class="font-mono text-xs sm:text-sm bg-slate-900 text-slate-100 p-4 rounded-xl space-y-2 overflow-x-auto border border-slate-800">
+                        <!-- Root: Documentos -->
+                        <div class="flex items-center gap-2 text-slate-300">
+                            <i class="fa-solid fa-folder-open text-amber-400"></i>
+                            <span class="font-bold">Documentos</span>
+                        </div>
+
+                        <!-- Level 1: ATIVIDADE AVALIATIVA -->
+                        <div class="pl-4 border-l border-slate-700 ml-2 space-y-2 py-1">
+                            <div class="flex items-center gap-2 text-amber-300">
+                                <i class="fa-solid fa-folder text-amber-400"></i>
+                                <span class="font-bold underline decoration-blue-500 underline-offset-4">ATIVIDADE AVALIATIVA</span>
+                            </div>
+
+                            <!-- Level 2: Subfolders -->
+                            <div class="pl-4 border-l border-slate-700 ml-2 space-y-2">
+                                <!-- Safe folder -->
+                                <div class="flex items-center gap-2 text-emerald-400">
+                                    <i class="fa-solid fa-folder"></i>
+                                    <span>arquivos confiáveis</span>
+                                </div>
+
+                                <!-- Virus folder & text files -->
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 text-red-400">
+                                        <i class="fa-solid fa-folder-open"></i>
+                                        <span>vírus</span>
+                                    </div>
+                                    <!-- Virus files inside -->
+                                    <div class="pl-4 border-l border-slate-700 ml-2 space-y-1 text-slate-400 text-xs">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-file-lines text-slate-400"></i>
+                                            <span>virus1.txt <span class="text-[10px] text-amber-400/80">(com texto)</span></span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-file-lines text-slate-400"></i>
+                                            <span>virus2.txt <span class="text-[10px] text-amber-400/80">(com texto)</span></span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-file-lines text-slate-400"></i>
+                                            <span>virus3.txt <span class="text-[10px] text-amber-400/80">(com texto)</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Zip file result -->
+                                <div class="flex items-center gap-2 text-blue-400 pt-1">
+                                    <i class="fa-solid fa-file-zipper text-blue-400"></i>
+                                    <span class="font-bold">vírus.zip</span>
+                                    <span class="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded">Pacote Bloqueado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Practical Lab: File Size & Compression Simulator -->
+                    <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-flask text-purple-500"></i>
+                                <span>Simulador: Digitar vs Tamanho</span>
+                            </h4>
+                            <span class="text-[10px] bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-bold px-2 py-0.5 rounded-full">Experimento</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            Digite ou simule digitação no campo abaixo para ver o tamanho do arquivo (KB) crescer em tempo real e testar a compactação ZIP!
+                        </p>
+
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <label class="font-medium text-slate-700 dark:text-slate-300">Simulador de `virus1.txt`:</label>
+                                <button onclick="generateRandomText()" class="text-blue-600 dark:text-blue-400 hover:underline text-xs">
+                                    <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Gerar Texto Longo
+                                </button>
+                            </div>
+                            <textarea id="simulatedText" rows="3" oninput="calculateFileSize()" placeholder="Digite aqui frases para aumentar o tamanho do arquivo..." class="w-full p-2.5 text-xs font-mono bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-slate-200"></textarea>
+                        </div>
+
+                        <!-- Live Stats -->
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                            <div class="p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
+                                <span class="block text-slate-400 text-[10px] uppercase font-bold">Caracteres</span>
+                                <span id="charCount" class="font-mono font-bold text-slate-800 dark:text-slate-200 text-sm">0</span>
+                            </div>
+                            <div class="p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl">
+                                <span class="block text-slate-400 text-[10px] uppercase font-bold">Tamanho Estimado</span>
+                                <span id="fileSizeKB" class="font-mono font-bold text-purple-600 dark:text-purple-400 text-sm">0.00 KB</span>
+                            </div>
+                        </div>
+
+                        <!-- Compact Simulation Button -->
+                        <button onclick="simulateZipCompression()" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium text-xs shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-zipper"></i>
+                            <span>Simular Compactação em ZIP</span>
+                        </button>
+
+                        <div id="zipResultBox" class="hidden p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs space-y-1">
+                            <div class="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-emerald-500"></i>
+                                <span>Simulação de Compactação ZIP!</span>
+                            </div>
+                            <p class="text-emerald-700 dark:text-emerald-400 text-[11px]" id="zipStatsText">
+                                Tamanho original compactado de X KB para Y KB. Arquivos isolados dentro do pacote ZIP!
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Evaluation Checklist for Delivery -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-emerald-500"></i>
+                    <span>Checklist de Autoavaliação do Aluno</span>
+                </h3>
+                <span class="text-xs text-slate-400">Verifique antes de entregar</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+                <div class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center gap-3">
+                    <i class="fa-regular fa-square-check text-blue-500 text-lg"></i>
+                    <span>A pasta <strong>ATIVIDADE AVALIATIVA</strong> está dentro de <strong>Documentos</strong>.</span>
+                </div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center gap-3">
+                    <i class="fa-regular fa-square-check text-blue-500 text-lg"></i>
+                    <span>As pastas <strong>vírus</strong> e <strong>arquivos confiáveis</strong> foram criadas corretamente.</span>
+                </div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center gap-3">
+                    <i class="fa-regular fa-square-check text-blue-500 text-lg"></i>
+                    <span>Os arquivos de texto possuem frases/textos para simular tamanho ocupado.</span>
+                </div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center gap-3">
+                    <i class="fa-regular fa-square-check text-blue-500 text-lg"></i>
+                    <span>A pasta vírus foi compactada gerando o arquivo <strong>.zip</strong>.</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast Container -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm transition-all duration-300 opacity-0 pointer-events-none translate-y-4">
+        <i class="fa-solid fa-circle-info text-blue-400"></i>
+        <span id="toastMessage">Mensagem de notificação</span>
+    </div>
+
+    <script>
+        // Set today's default date in date input
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('studentDate');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
+        });
+
+        // Dark mode toggle logic
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // Progress bar status tracker
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.step-checkbox');
+            const total = checkboxes.length;
+            let checkedCount = 0;
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+
+            const percent = Math.round((checkedCount / total) * 100);
+            
+            // DOM updates
+            const progressBar = document.getElementById('progressBar');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const progressStatusText = document.getElementById('progressStatusText');
+
+            if (progressBar) progressBar.style.width = percent + '%';
+            if (progressPercentage) progressPercentage.textContent = percent + '%';
+            if (progressStatusText) progressStatusText.textContent = `${checkedCount} de ${total} etapas concluídas`;
+
+            if (percent === 100) {
+                showToast('🎉 Parabéns! Você concluiu todos os passos da atividade!');
+            }
+        }
+
+        // Clipboard copy helper
+        function copyText(text, btnElement) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(`Copiado: "${text}"`);
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            showToast(`Copiado: "${text}"`);
+        }
+
+        // Toast Notification System
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            if (!toast || !toastMessage) return;
+
+            toastMessage.textContent = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+            }, 3000);
+        }
+
+        // Calculate file size in KB
+        function calculateFileSize() {
+            const text = document.getElementById('simulatedText').value;
+            const charCount = text.length;
+            // Standard UTF-8 ~ 1 byte per ASCII char
+            const bytes = charCount;
+            const kb = (bytes / 1024).toFixed(2);
+
+            document.getElementById('charCount').textContent = charCount.toLocaleString();
+            document.getElementById('fileSizeKB').textContent = `${kb} KB`;
+        }
+
+        // Random generator for dummy text
+        function generateRandomText() {
+            const sampleParagraphs = [
+                "ESTE ARQUIVO CONTÉM DADOS SIMULADOS PARA A AUMENTAR O TAMANHO EM DISCO. ",
+                "Sistemas operacionais armazenam arquivos em blocos de memória e arquivos com mais conteúdo ocupam mais espaço. ",
+                "Os vírus e malwares reais às vezes tentam se ocultar ou preencher o disco rígido criando arquivos volumosos. ",
+                "A compactação em formato ZIP analisa repetições de texto e reduz consideravelmente o tamanho do pacote! "
+            ];
+
+            let content = "";
+            for (let i = 0; i < 30; i++) {
+                content += sampleParagraphs[Math.floor(Math.random() * sampleParagraphs.length)] + "\n";
+            }
+
+            const area = document.getElementById('simulatedText');
+            area.value += content;
+            calculateFileSize();
+            showToast('Texto longo adicionado ao arquivo!');
+        }
+
+        // Simulate Zip compression algorithm visualizer
+        function simulateZipCompression() {
+            const text = document.getElementById('simulatedText').value;
+            if (!text || text.length === 0) {
+                showToast('Digite ou gere algum texto no simulador primeiro!');
+                return;
+            }
+
+            const originalBytes = text.length;
+            const originalKB = (originalBytes / 1024).toFixed(2);
+            // Simulated 60% compression ratio for repetitive text
+            const compressedKB = (originalKB * 0.4).toFixed(2);
+
+            const resultBox = document.getElementById('zipResultBox');
+            const statsText = document.getElementById('zipStatsText');
+
+            if (resultBox && statsText) {
+                statsText.textContent = `O arquivo original de ${originalKB} KB foi compactado para aproximadamente ${compressedKB} KB (Economia de ~60%). O conteúdo agora está isolado em vírus.zip!`;
+                resultBox.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

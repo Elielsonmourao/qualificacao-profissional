@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Prática: Montagem de Computadores</title>
+    <!-- Tailwind CSS para um design moderno e limpo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Cabeçalho -->
+        <header class="text-center mb-8 bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700">
+            <h1 class="text-3xl font-extrabold text-cyan-400 mb-2">Simulador Avançado de Montagem de Hardware</h1>
+            <p class="text-slate-300">Analise as especificações técnicas, preste atenção nas nomenclaturas das gerações de processadores e monte o PC ideal para cada perfil.</p>
+        </header>
+
+        <!-- Perfis de Usuários -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Perfil 1: Doméstico -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between shadow-md">
+                <div>
+                    <span class="text-xs font-semibold uppercase px-2.5 py-1 bg-blue-900 text-blue-300 rounded-full">Básico</span>
+                    <h2 class="text-xl font-bold mt-3 text-cyan-200">1. Usuário Doméstico</h2>
+                    <p class="text-sm text-slate-400 mt-1 mb-4">Uso para navegação web, redes sociais, vídeos em streaming e pacote Office leve.</p>
+                </div>
+                <div class="space-y-3 bg-slate-900/50 p-3 rounded-lg border border-slate-700/50">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Processador:</label>
+                        <select id="cpu-domestico" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha o Processador --</option>
+                            <option value="fraco">Intel Celeron G5905 (Entrada Antiga)</option>
+                            <option value="fraco">Intel Pentium Gold G6400 (Entrada)</option>
+                            <option value="ideal">Intel Core i3-10100 (Intermediário básico)</option>
+                            <option value="ideal">Intel Core i3-12100 (Intermediário moderno)</option>
+                            <option value="medio">Intel Core i5-10400 (Intermediário)</option>
+                            <option value="medio">Intel Core i5-12400 (Desempenho moderado)</option>
+                            <option value="forte">Intel Core i7-11700 (Alto desempenho)</option>
+                            <option value="forte">Intel Core i7-13700K (Muito forte)</option>
+                            <option value="topo">Intel Core i9-12900K (Extremo)</option>
+                            <option value="topo">Intel Core i9-14900KS (Topo absoluto)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Memória RAM:</label>
+                        <select id="ram-domestico" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha a RAM --</option>
+                            <option value="baixo">4 GB DDR3 1600MHz</option>
+                            <option value="baixo">8 GB DDR3 1600MHz</option>
+                            <option value="baixo">4 GB DDR4 2666MHz</option>
+                            <option value="ideal">8 GB DDR4 3200MHz</option>
+                            <option value="ideal">8 GB DDR5 4800MHz</option>
+                            <option value="alto">16 GB DDR4 3200MHz</option>
+                            <option value="alto">16 GB DDR5 5600MHz</option>
+                            <option value="exagero">32 GB DDR4 3200MHz</option>
+                            <option value="exagero">32 GB DDR5 6000MHz</option>
+                            <option value="exagero">64 GB DDR5 6400MHz</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Armazenamento:</label>
+                        <select id="armazenamento-domestico" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha o Armazenamento --</option>
+                            <option value="hdd-antigo">HD 320GB SATA II (Muito antigo e lento)</option>
+                            <option value="hdd-antigo">HD 500GB SATA III (Lento)</option>
+                            <option value="hdd-antigo">HD 1TB SATA III (Espaçoso, mas lento)</option>
+                            <option value="ideal">SSD 240GB SATA III (Rápido e suficiente)</option>
+                            <option value="ideal">SSD 480GB SATA III (Bom espaço e velocidade)</option>
+                            <option value="gamer">SSD NVMe M.2 500GB (Alta velocidade)</option>
+                            <option value="gamer">SSD NVMe M.2 1TB (Excelente)</option>
+                            <option value="gamer">SSD NVMe M.2 2TB (Muito espaço e velocidade)</option>
+                            <option value="gamer">SSD NVMe M.2 4TB (Profissional)</option>
+                            <option value="hdd-antigo">Disco Rigído Externo 1TB</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perfil 2: Professor -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between shadow-md">
+                <div>
+                    <span class="text-xs font-semibold uppercase px-2.5 py-1 bg-amber-900 text-amber-300 rounded-full">Intermediário</span>
+                    <h2 class="text-xl font-bold mt-3 text-cyan-200">2. Professor</h2>
+                    <p class="text-sm text-slate-400 mt-1 mb-4">Uso de múltiplas abas de pesquisa, planilhas pesadas, apresentações, reuniões online e edição leve de documentos.</p>
+                </div>
+                <div class="space-y-3 bg-slate-900/50 p-3 rounded-lg border border-slate-700/50">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Processador:</label>
+                        <select id="cpu-professor" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha o Processador --</option>
+                            <option value="fraco">Intel Celeron G5905 (Entrada Antiga)</option>
+                            <option value="fraco">Intel Pentium Gold G6400 (Entrada)</option>
+                            <option value="fraco">Intel Core i3-10100 (Intermediário básico)</option>
+                            <option value="ideal">Intel Core i5-10400 (Bom custo-benefício)</option>
+                            <option value="ideal">Intel Core i5-12400 (Ideal para multitarefas)</option>
+                            <option value="ideal">Intel Core i5-14400 (Moderno e eficiente)</option>
+                            <option value="forte">Intel Core i7-11700 (Alto desempenho)</option>
+                            <option value="forte">Intel Core i7-13700K (Muito forte)</option>
+                            <option value="topo">Intel Core i9-12900K (Extremo)</option>
+                            <option value="topo">Intel Core i9-14900KS (Topo absoluto)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Memória RAM:</label>
+                        <select id="ram-professor" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha a RAM --</option>
+                            <option value="baixo">4 GB DDR3 1600MHz</option>
+                            <option value="baixo">8 GB DDR3 1600MHz</option>
+                            <option value="baixo-8">8 GB DDR4 3200MHz</option>
+                            <option value="baixo-8">8 GB DDR5 4800MHz</option>
+                            <option value="ideal">16 GB DDR4 3200MHz (Ideal)</option>
+                            <option value="ideal">16 GB DDR5 5600MHz (Ideal)</option>
+                            <option value="exagero">32 GB DDR4 3200MHz</option>
+                            <option value="exagero">32 GB DDR5 6000MHz</option>
+                            <option value="exagero">64 GB DDR4 3200MHz</option>
+                            <option value="exagero">64 GB DDR5 6400MHz</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Armazenamento:</label>
+                        <select id="armazenamento-professor" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha o Armazenamento --</option>
+                            <option value="hdd-antigo">HD 500GB SATA III (Lento)</option>
+                            <option value="hdd-antigo">HD 1TB SATA III (Lento)</option>
+                            <option value="simples">SSD 240GB SATA III (Um pouco apertado)</option>
+                            <option value="ideal">SSD 480GB / 512GB SATA III (Rápido e espaçoso)</option>
+                            <option value="ideal">SSD NVMe M.2 500GB (Ótima velocidade)</option>
+                            <option value="gamer">SSD NVMe M.2 1TB (Excelente)</option>
+                            <option value="gamer">SSD NVMe M.2 2TB (Muito espaçoso)</option>
+                            <option value="gamer">SSD NVMe M.2 4TB (Profissional)</option>
+                            <option value="hdd-antigo">HD Externo 2TB USB</option>
+                            <option value="simples">SSD 120GB SATA III (Muito pequeno)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perfil 3: Gamer Top -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 flex flex-col justify-between shadow-md">
+                <div>
+                    <span class="text-xs font-semibold uppercase px-2.5 py-1 bg-purple-900 text-purple-300 rounded-full">Avançado / Top</span>
+                    <h2 class="text-xl font-bold mt-3 text-cyan-200">3. Gamer / Hardcore</h2>
+                    <p class="text-sm text-slate-400 mt-1 mb-4">Jogos pesados de última geração, renderização 3D, streaming simultâneo e alta performance.</p>
+                </div>
+                <div class="space-y-3 bg-slate-900/50 p-3 rounded-lg border border-slate-700/50">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Processador:</label>
+                        <select id="cpu-gamer" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha o Processador --</option>
+                            <option value="fraco">Intel Celeron G5905 (Incompatível)</option>
+                            <option value="fraco">Intel Pentium Gold G6400 (Fraco)</option>
+                            <option value="medio">Intel Core i3-12100 (Básico)</option>
+                            <option value="medio">Intel Core i5-12400 (Entrada gamer)</option>
+                            <option value="forte">Intel Core i5-13600K (Excelente para jogos)</option>
+                            <option value="forte">Intel Core i7-12700K (Alto desempenho)</option>
+                            <option value="ideal">Intel Core i7-13700K (Ideal para entusiastas)</option>
+                            <option value="ideal">Intel Core i7-14700K (Muito potente)</option>
+                            <option value="topo">Intel Core i9-13900K (Topo de linha)</option>
+                            <option value="topo">Intel Core i9-14900KS (Máximo desempenho)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Memória RAM:</label>
+                        <select id="ram-gamer" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha a RAM --</option>
+                            <option value="baixo">4 GB DDR4 2666MHz (Insuficiente)</option>
+                            <option value="baixo">8 GB DDR4 3200MHz (Pouco para jogos atuais)</option>
+                            <option value="medio">16 GB DDR4 3200MHz (Mínimo recomendado)</option>
+                            <option value="medio">16 GB DDR5 5200MHz (Bom desempenho)</option>
+                            <option value="ideal">32 GB DDR4 3200MHz (Ideal)</option>
+                            <option value="ideal">32 GB DDR5 5600MHz (Excelente)</option>
+                            <option value="ideal">32 GB DDR5 6000MHz (Alta performance)</option>
+                            <option value="exagero">64 GB DDR4 3200MHz (Muito forte)</option>
+                            <option value="exagero">64 GB DDR5 6400MHz (Extremo)</option>
+                            <option value="exagero">128 GB DDR5 6000MHz (Estação de trabalho)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Armazenamento:</label>
+                        <select id="armazenamento-gamer" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-400">
+                            <option value="">-- Escolha o Armazenamento --</option>
+                            <option value="hdd-antigo">HD 500GB SATA III (Incompatível com jogos modernos)</option>
+                            <option value="hdd-antigo">HD 1TB SATA III (Incompatível)</option>
+                            <option value="simples">SSD 240GB SATA III (Muito pouco espaço)</option>
+                            <option value="simples">SSD 480GB SATA III (Pouco espaço)</option>
+                            <option value="ideal">SSD NVMe M.2 1TB (Mínimo recomendado para jogos)</option>
+                            <option value="ideal">SSD NVMe M.2 2TB (Excelente para biblioteca grande)</option>
+                            <option value="gamer">SSD NVMe M.2 2TB Gen4 de Alta Velocidade (7000 MB/s)</option>
+                            <option value="gamer">SSD NVMe M.2 4TB Gen4 (Máxima capacidade e velocidade)</option>
+                            <option value="hdd-antigo">HD 2TB Externo USB</option>
+                            <option value="simples">SSD 500GB SATA III</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Botão de Validação -->
+        <div class="text-center mb-6">
+            <button onclick="validarMontagem()" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-8 py-3 rounded-xl shadow-lg transition-all duration-200 cursor-pointer">
+                Verificar Respostas
+            </button>
+        </div>
+
+        <!-- Caixa de Resultado -->
+        <div id="resultado" class="hidden bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+            <h3 class="text-xl font-bold mb-3 text-cyan-300">Feedback da Montagem:</h3>
+            <div id="feedback-conteudo" class="space-y-2 text-sm text-slate-300"></div>
+        </div>
+    </div>
+
+    <!-- Script de Validação Interativa -->
+    <script>
+        function validarMontagem() {
+            const cpuDom = document.getElementById('cpu-domestico').value;
+            const ramDom = document.getElementById('ram-domestico').value;
+            const armDom = document.getElementById('armazenamento-domestico').value;
+
+            const cpuProf = document.getElementById('cpu-professor').value;
+            const ramProf = document.getElementById('ram-professor').value;
+            const armProf = document.getElementById('armazenamento-professor').value;
+
+            const cpuGam = document.getElementById('cpu-gamer').value;
+            const ramGam = document.getElementById('ram-gamer').value;
+            const armGam = document.getElementById('armazenamento-gamer').value;
+
+            if(!cpuDom || !ramDom || !armDom || !cpuProf || !ramProf || !armProf || !cpuGam || !ramGam || !armGam) {
+                alert("Por favor, preencha todas as escolhas para os três perfis antes de verificar!");
+                return;
+            }
+
+            let feedbackHtml = "";
+
+            // Validação Doméstico
+            feedbackHtml += "<div class='p-3 rounded bg-slate-900/40 border border-slate-700'>";
+            feedbackHtml += "<p class='font-bold text-cyan-200'>👤 Usuário Doméstico:</p>";
+            if((cpuDom === 'fraco' || cpuDom === 'ideal') && (ramDom.includes('8') || ramDom.includes('4')) && (armDom.includes('SSD') || armDom.includes('NVMe'))) {
+                feedbackHtml += "<p class='text-emerald-400'>✅ Excelente escolha! Peças econômicas e perfeitamente equilibradas para o dia a dia.</p>";
+            } else if(armDom.includes('HD')) {
+                feedbackHtml += "<p class='text-amber-400'>⚠️ Configuração funcional, mas o uso de HD mecânico deixará o sistema muito lento. O ideal seria um SSD.</p>";
+            } else {
+                feedbackHtml += "<p class='text-rose-400'>❌ Esta configuração está exagerada para um uso doméstico básico (desperdício de orçamento com peças muito caras).</p>";
+            }
+            feedbackHtml += "</div>";
+
+            // Validação Professor
+            feedbackHtml += "<div class='p-3 rounded bg-slate-900/40 border border-slate-700'>";
+            feedbackHtml += "<p class='font-bold text-cyan-200'>📚 Professor:</p>";
+            if((cpuProf === 'ideal' || cpuProf === 'medio' || cpuProf === 'forte') && (ramProf.includes('16') || ramProf.includes('32') || ramProf.includes('64')) && (armProf.includes('SSD') || armProf.includes('NVMe'))) {
+                feedbackHtml += "<p class='text-emerald-400'>✅ Perfeito! Configuração muito equilibrada para multitarefas, navegação intensa e produtividade.</p>";
+            } else if(ramProf.includes('8')) {
+                feedbackHtml += "<p class='text-amber-400'>⚠️ 8GB de RAM funciona, mas com muitas abas de pesquisa e planilhas abertas juntas o sistema pode engasgar.</p>";
+            } else {
+                feedbackHtml += "<p class='text-rose-400'>❌ A configuração escolhida ou está fraca demais para multitarefas ou utiliza componentes inadequados (como HD lento).</p>";
+            }
+            feedbackHtml += "</div>";
+
+            // Validação Gamer
+            feedbackHtml += "<div class='p-3 rounded bg-slate-900/40 border border-slate-700'>";
+            feedbackHtml += "<p class='font-bold text-cyan-200'>🎮 Gamer / Hardcore:</p>";
+            if((cpuGam === 'forte' || cpuGam === 'ideal' || cpuGam === 'topo') && (ramGam.includes('32') || ramGam.includes('64') || ramGam.includes('128') || ramGam.includes('16')) && (armGam.includes('NVMe') && !armGam.includes('HD'))) {
+                if(ramGam.includes('16')) {
+                    feedbackHtml += "<p class='text-amber-400'>⚠️ 16GB de RAM atende aos jogos atuais, mas títulos pesados se beneficiam bastante de 32GB ou mais.</p>";
+                } else {
+                    feedbackHtml += "<p class='text-emerald-400'>✅ Sensacional! Hardware de alto desempenho capaz de rodar jogos pesados e multitarefas extremas com folga.</p>";
+                }
+            } else {
+                feedbackHtml += "<p class='text-rose-400'>❌ Incompatível! Um PC Gamer exige componentes de alto desempenho (Processador forte de gerações recentes, bom volume de RAM e SSD NVMe rápido).</p>";
+            }
+            feedbackHtml += "</div>";
+
+            document.getElementById('feedback-conteudo').innerHTML = feedbackHtml;
+            document.getElementById('resultado').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atividade Prática de Excel Básico — Operador de Computador</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fontes Inter e Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            excel: {
+              50: '#eefaf3',
+              100: '#d5f2e1',
+              200: '#aee5c6',
+              300: '#79d0a4',
+              400: '#42b57e',
+              500: '#217346',
+              600: '#107C41',
+              700: '#0d6334',
+              800: '#0b4f2b',
+              900: '#094124',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #111827 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl {
+        box-shadow: none !important;
+      }
+      .card-print {
+        border: 1px solid #cbd5e1 !important;
+        break-inside: avoid;
+      }
+    }
+
+    .excel-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+    .excel-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .excel-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .excel-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .cell-target-highlight {
+      box-shadow: inset 0 0 0 2px #107C41 !important;
+      background-color: #eefaf3 !important;
+    }
+  </style>
+</head>
+<body id="appRoot" data-student-answers="" class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Cabeçalho Superior Estilo Microsoft Excel -->
+  <header class="bg-excel-600 text-white shadow-md sticky top-0 z-30 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 flex-shrink-0">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="3" />
+            <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span
+              id="courseBadgeTrigger"
+              ondblclick="openTeacherAuthModal()"
+              title="Curso de Operador de Computador"
+              class="text-xs font-semibold uppercase tracking-wider bg-excel-900/60 text-excel-100 px-2.5 py-0.5 rounded-full select-none cursor-default"
+            >
+              Operador de Computador
+            </span>
+            <span class="text-xs text-excel-100">Avaliação Prática • Planilhas Eletrônicas</span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight mt-0.5">
+            Atividade Prática de Excel Básico (15 Questões)
+          </h1>
+        </div>
+      </div>
+
+      <!-- Botão Guia Rápido -->
+      <div class="flex items-center gap-2 self-start sm:self-center">
+        <button
+          id="btnToggleGuide"
+          type="button"
+          onclick="toggleQuickGuide()"
+          class="inline-flex items-center gap-2 bg-white text-excel-800 hover:bg-excel-50 font-semibold text-sm px-4 py-2 rounded-xl shadow-sm transition cursor-pointer"
+        >
+          <svg class="w-4 h-4 text-excel-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <span id="btnGuideLabel">Guia Rápido de Sintaxe</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gaveta Retrátil do Guia Rápido de Sintaxe -->
+  <section id="quickGuideDrawer" class="hidden bg-emerald-950 text-emerald-50 border-b border-emerald-800 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm sm:text-base font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Guia Rápido de Sintaxe — Toda fórmula no Excel começa com o sinal de igual ( = )
+        </h2>
+        <button type="button" onclick="toggleQuickGuide()" class="text-xs text-emerald-300 hover:text-white underline cursor-pointer">
+          Fechar guia
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div class="bg-emerald-900/60 border border-emerald-800 rounded-xl p-4">
+          <h3 class="font-bold text-white mb-2.5 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            Operadores Matemáticos Básicos
+          </h3>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-emerald-950/70 p-2.5 rounded-lg border border-emerald-800/80">
+              <div class="text-xs text-emerald-300">Adição (Somar células)</div>
+              <div class="font-mono font-bold text-white mt-0.5">=A2+B2</div>
+            </div>
+            <div class="bg-emerald-950/70 p-2.5 rounded-lg border border-emerald-800/80">
+              <div class="text-xs text-emerald-300">Subtração (Diminuir)</div>
+              <div class="font-mono font-bold text-white mt-0.5">=A2-B2</div>
+            </div>
+            <div class="bg-emerald-950/70 p-2.5 rounded-lg border border-emerald-800/80">
+              <div class="text-xs text-emerald-300">Multiplicação (Asterisco)</div>
+              <div class="font-mono font-bold text-white mt-0.5">=A2*B2</div>
+            </div>
+            <div class="bg-emerald-950/70 p-2.5 rounded-lg border border-emerald-800/80">
+              <div class="text-xs text-emerald-300">Divisão (Barra inclinada)</div>
+              <div class="font-mono font-bold text-white mt-0.5">=A2/4</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/60 border border-emerald-800 rounded-xl p-4">
+          <h3 class="font-bold text-white mb-2.5 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            Funções Essenciais (Intervalo <code class="text-amber-300">Inicial:Final</code>)
+          </h3>
+          <ul class="space-y-1.5 text-xs sm:text-sm">
+            <li class="bg-emerald-950/70 px-3 py-1.5 rounded-lg">
+              <strong class="font-mono text-amber-300">=SOMA(B2:B9)</strong> — Soma todos os valores do intervalo.
+            </li>
+            <li class="bg-emerald-950/70 px-3 py-1.5 rounded-lg">
+              <strong class="font-mono text-amber-300">=MÉDIA(B2:B9)</strong> — Calcula a média aritmética.
+            </li>
+            <li class="bg-emerald-950/70 px-3 py-1.5 rounded-lg">
+              <strong class="font-mono text-amber-300">=MÁXIMO(B2:B9)</strong> — Retorna o maior valor do intervalo.
+            </li>
+            <li class="bg-emerald-950/70 px-3 py-1.5 rounded-lg">
+              <strong class="font-mono text-amber-300">=MÍNIMO(B2:B9)</strong> — Retorna o menor valor do intervalo.
+            </li>
+            <li class="bg-emerald-950/70 px-3 py-1.5 rounded-lg">
+              <strong class="font-mono text-amber-300">=CONT.NÚM(B2:B9)</strong> — Conta quantas células contêm números.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAINEL RESTRITO DO PROFESSOR (Oculto por padrão para alunos) -->
+  <section id="teacherControlBar" class="hidden bg-slate-900 text-white border-b-4 border-amber-500 shadow-lg no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-amber-500/20 text-amber-400 p-2.5 rounded-xl border border-amber-500/40">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Modo Professor Ativo</span>
+          <h2 class="text-sm sm:text-base font-bold text-white">
+            Painel de Correção Automática — Avaliação de Excel Básico
+          </h2>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button
+          type="button"
+          onclick="gradeAllQuestionsTeacher()"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          Corrigir Tudo (15 Questões)
+        </button>
+
+        <button
+          type="button"
+          onclick="printTeacherReport()"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-sky-600 hover:bg-sky-500 text-white transition cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Imprimir / Salvar PDF
+        </button>
+
+        <button
+          type="button"
+          onclick="hideTeacherMode()"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer"
+        >
+          Limpar Correção / Ocultar Painel
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Relatório Final do Professor (Aparece somente após o professor clicar em Corrigir Tudo) -->
+    <section id="teacherReportCard" class="hidden bg-white rounded-2xl shadow-md border-2 border-emerald-600 p-5 sm:p-6 card-print">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">
+            Relatório Oficial de Correção
+          </span>
+          <h2 class="text-xl font-extrabold text-slate-900 mt-1">
+            Resultado da Avaliação Prática de Excel Básico
+          </h2>
+        </div>
+        <div class="text-xs text-slate-500 font-mono" id="reportTimestamp"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+        <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
+          <span class="text-xs font-semibold uppercase text-slate-400 block">Aluno(a)</span>
+          <span id="reportStudentName" class="text-sm font-bold text-slate-900 mt-0.5 block">—</span>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
+          <span class="text-xs font-semibold uppercase text-slate-400 block">Turma / Turno</span>
+          <span id="reportStudentClass" class="text-sm font-bold text-slate-900 mt-0.5 block">—</span>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-3.5 border border-emerald-200">
+          <span class="text-xs font-semibold uppercase text-emerald-700 block">Total de Acertos</span>
+          <span id="reportScoreCount" class="text-2xl font-extrabold text-emerald-800 mt-0.5 block">0 / 15</span>
+        </div>
+        <div class="bg-slate-900 text-white rounded-xl p-3.5">
+          <span class="text-xs font-semibold uppercase text-slate-400 block">Nota Final (0 a 10)</span>
+          <span id="reportFinalGrade" class="text-2xl font-extrabold text-amber-400 mt-0.5 block">0,0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Identificação do Aluno & Instruções -->
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 card-print">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-600 flex items-center gap-2">
+          <svg class="w-4 h-4 text-excel-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          Identificação do Aluno(a)
+        </h2>
+        <span class="text-xs font-medium text-slate-500">
+          Preencha todas as 15 fórmulas e clique em <strong>Salvar Atividade (.HTML)</strong> ao finalizar.
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+        <div class="sm:col-span-6">
+          <label for="studentName" class="block text-xs font-semibold text-slate-700 mb-1">
+            Nome Completo *
+          </label>
+          <input
+            id="studentName"
+            type="text"
+            value=""
+            placeholder="Digite seu nome completo..."
+            oninput="syncStudentMeta()"
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-excel-600 focus:ring-2 focus:ring-excel-600/20 outline-none transition"
+          />
+        </div>
+        <div class="sm:col-span-4">
+          <label for="studentClass" class="block text-xs font-semibold text-slate-700 mb-1">
+            Turma / Turno *
+          </label>
+          <input
+            id="studentClass"
+            type="text"
+            value=""
+            placeholder="Ex: Turma A - Manhã"
+            oninput="syncStudentMeta()"
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-excel-600 focus:ring-2 focus:ring-excel-600/20 outline-none transition"
+          />
+        </div>
+        <div class="sm:col-span-2">
+          <label for="studentDate" class="block text-xs font-semibold text-slate-700 mb-1">
+            Data
+          </label>
+          <input
+            id="studentDate"
+            type="text"
+            value=""
+            placeholder="DD/MM/AAAA"
+            oninput="syncStudentMeta()"
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-excel-600 focus:ring-2 focus:ring-excel-600/20 outline-none transition"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner de Notificação Customizado -->
+    <div id="toastBanner" class="hidden rounded-2xl p-4 border text-sm font-medium flex items-center justify-between gap-4 no-print transition-all">
+      <div class="flex items-center gap-3">
+        <span id="toastIcon"></span>
+        <span id="toastMessage"></span>
+      </div>
+      <button type="button" onclick="hideToast()" class="text-xs font-bold underline cursor-pointer">
+        Fechar
+      </button>
+    </div>
+
+    <!-- Modal de Senha do Professor -->
+    <div id="teacherAuthModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+      <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200">
+        <div class="flex items-center gap-2.5 text-slate-900">
+          <div class="p-2 rounded-xl bg-amber-100 text-amber-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 class="text-base font-bold">Acesso Restrito — Professor</h3>
+        </div>
+        <p class="text-xs text-slate-600 mt-2">
+          Informe a senha do instrutor para liberar o painel de correção automática.
+        </p>
+        <div class="mt-4">
+          <input
+            id="teacherPasswordInput"
+            type="password"
+            placeholder="Digite a senha..."
+            onkeydown="if(event.key === 'Enter'){ event.preventDefault(); verifyTeacherPassword(); }"
+            class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-mono focus:border-excel-600 focus:ring-2 focus:ring-excel-600/20 outline-none"
+          />
+          <p id="teacherAuthError" class="hidden text-xs text-rose-600 font-semibold mt-1.5">
+            Senha incorreta. Tente novamente.
+          </p>
+        </div>
+        <div class="mt-5 flex items-center justify-end gap-2.5">
+          <button
+            type="button"
+            onclick="closeTeacherAuthModal()"
+            class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onclick="verifyTeacherPassword()"
+            class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-excel-600 hover:bg-excel-700 transition cursor-pointer"
+          >
+            Acessar Painel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação para Limpar Tudo -->
+    <div id="confirmClearModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+      <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+        <h3 class="text-lg font-bold text-slate-900">Limpar todas as respostas?</h3>
+        <p class="text-sm text-slate-600 mt-2">
+          Isso apagará todas as 15 fórmulas digitadas nos campos. Deseja continuar?
+        </p>
+        <div class="mt-5 flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onclick="closeClearModal()"
+            class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onclick="confirmClearAll()"
+            class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 transition cursor-pointer"
+          >
+            Sim, limpar campos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Planilha Simulada Interativa (InfoTech Store - Linhas 1 a 15) -->
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden card-print">
+      <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-excel-600"></span>
+            Planilha de Referência: InfoTech Store — Controle de Estoque e Vendas
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Consulte as colunas <strong>A</strong> até <strong>F</strong> e as linhas <strong>1</strong> até <strong>15</strong> para construir suas fórmulas.
+          </p>
+        </div>
+
+        <!-- Barra de Fórmulas fx (Mostra apenas a sintaxe digitada pelo aluno) -->
+        <div class="flex items-center bg-white border border-slate-300 rounded-xl overflow-hidden text-xs font-mono shadow-2xs no-print">
+          <span id="activeCellIndicator" class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 border-r border-slate-300 min-w-[54px] text-center">
+            A1
+          </span>
+          <span class="px-2.5 py-1.5 text-excel-700 font-bold border-r border-slate-200 italic">fx</span>
+          <span id="activeFormulaPreview" class="px-3 py-1.5 text-slate-600 truncate max-w-[230px] sm:max-w-[300px]">
+            Clique em uma questão para visualizar...
+          </span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto excel-scroll">
+        <table class="w-full border-collapse text-sm min-w-[820px]">
+          <thead>
+            <tr class="bg-slate-200/80 text-slate-600 font-mono text-xs select-none">
+              <th class="w-12 border border-slate-300 py-1.5 text-center bg-slate-200"></th>
+              <th class="border border-slate-300 py-1.5 px-3 text-center font-bold w-[25%]">A</th>
+              <th class="border border-slate-300 py-1.5 px-3 text-center font-bold w-[13%]">B</th>
+              <th class="border border-slate-300 py-1.5 px-3 text-center font-bold w-[15%]">C</th>
+              <th class="border border-slate-300 py-1.5 px-3 text-center font-bold w-[14%]">D</th>
+              <th class="border border-slate-300 py-1.5 px-3 text-center font-bold w-[16%]">E</th>
+              <th class="border border-slate-300 py-1.5 px-3 text-center font-bold w-[17%]">F</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            <!-- Linha 1: Cabeçalho -->
+            <tr class="bg-excel-600 text-white font-semibold">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">1</td>
+              <td class="border border-excel-700 px-3 py-2">Produto</td>
+              <td class="border border-excel-700 px-3 py-2 text-center">Qtd. Estoque</td>
+              <td class="border border-excel-700 px-3 py-2 text-right">Preço Unit. (R$)</td>
+              <td class="border border-excel-700 px-3 py-2 text-right">Desconto (R$)</td>
+              <td class="border border-excel-700 px-3 py-2 text-right">Valor Total (R$)</td>
+              <td class="border border-excel-700 px-3 py-2 text-right">Cálculos / Resumo</td>
+            </tr>
+
+            <!-- Linha 2: Notebook Dell -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">2</td>
+              <td id="cell-A2" class="border border-slate-300 px-3 py-2 font-medium">Notebook Dell</td>
+              <td id="cell-B2" class="border border-slate-300 px-3 py-2 text-center font-mono">4</td>
+              <td id="cell-C2" class="border border-slate-300 px-3 py-2 text-right font-mono">3.200,00</td>
+              <td id="cell-D2" class="border border-slate-300 px-3 py-2 text-right font-mono">200,00</td>
+              <td id="cell-E2" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q1: E2]</td>
+              <td id="cell-F2" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q5: F2]</td>
+            </tr>
+
+            <!-- Linha 3: Monitor LED 24" -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">3</td>
+              <td id="cell-A3" class="border border-slate-300 px-3 py-2 font-medium">Monitor LED 24"</td>
+              <td id="cell-B3" class="border border-slate-300 px-3 py-2 text-center font-mono">6</td>
+              <td id="cell-C3" class="border border-slate-300 px-3 py-2 text-right font-mono">900,00</td>
+              <td id="cell-D3" class="border border-slate-300 px-3 py-2 text-right font-mono">50,00</td>
+              <td id="cell-E3" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q2: E3]</td>
+              <td id="cell-F3" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q6: F3]</td>
+            </tr>
+
+            <!-- Linha 4: Impressora Laser -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">4</td>
+              <td id="cell-A4" class="border border-slate-300 px-3 py-2 font-medium">Impressora Laser</td>
+              <td id="cell-B4" class="border border-slate-300 px-3 py-2 text-center font-mono">3</td>
+              <td id="cell-C4" class="border border-slate-300 px-3 py-2 text-right font-mono">1.400,00</td>
+              <td id="cell-D4" class="border border-slate-300 px-3 py-2 text-right font-mono">150,00</td>
+              <td id="cell-E4" class="border border-slate-300 px-3 py-2 text-right font-mono">4.200,00</td>
+              <td id="cell-F4" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q3: F4]</td>
+            </tr>
+
+            <!-- Linha 5: Teclado Mecânico -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">5</td>
+              <td id="cell-A5" class="border border-slate-300 px-3 py-2 font-medium">Teclado Mecânico</td>
+              <td id="cell-B5" class="border border-slate-300 px-3 py-2 text-center font-mono">15</td>
+              <td id="cell-C5" class="border border-slate-300 px-3 py-2 text-right font-mono">250,00</td>
+              <td id="cell-D5" class="border border-slate-300 px-3 py-2 text-right font-mono">25,00</td>
+              <td id="cell-E5" class="border border-slate-300 px-3 py-2 text-right font-mono">3.750,00</td>
+              <td id="cell-F5" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q4: F5]</td>
+            </tr>
+
+            <!-- Linha 6: Mouse Sem Fio -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">6</td>
+              <td id="cell-A6" class="border border-slate-300 px-3 py-2 font-medium">Mouse Sem Fio</td>
+              <td id="cell-B6" class="border border-slate-300 px-3 py-2 text-center font-mono">9</td>
+              <td id="cell-C6" class="border border-slate-300 px-3 py-2 text-right font-mono">80,00</td>
+              <td id="cell-D6" class="border border-slate-300 px-3 py-2 text-right font-mono">10,00</td>
+              <td id="cell-E6" class="border border-slate-300 px-3 py-2 text-right font-mono">720,00</td>
+              <td id="cell-F6" class="border border-slate-300 px-3 py-2 text-right font-mono bg-amber-50/70 text-amber-800 font-semibold">[Q7: F6]</td>
+            </tr>
+
+            <!-- Linha 7: Headset Gamer -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">7</td>
+              <td id="cell-A7" class="border border-slate-300 px-3 py-2 font-medium">Headset Gamer</td>
+              <td id="cell-B7" class="border border-slate-300 px-3 py-2 text-center font-mono">7</td>
+              <td id="cell-C7" class="border border-slate-300 px-3 py-2 text-right font-mono">300,00</td>
+              <td id="cell-D7" class="border border-slate-300 px-3 py-2 text-right font-mono">30,00</td>
+              <td id="cell-E7" class="border border-slate-300 px-3 py-2 text-right font-mono">2.100,00</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+            </tr>
+
+            <!-- Linha 8: Webcam Full HD -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">8</td>
+              <td id="cell-A8" class="border border-slate-300 px-3 py-2 font-medium">Webcam Full HD</td>
+              <td id="cell-B8" class="border border-slate-300 px-3 py-2 text-center font-mono">5</td>
+              <td id="cell-C8" class="border border-slate-300 px-3 py-2 text-right font-mono">200,00</td>
+              <td id="cell-D8" class="border border-slate-300 px-3 py-2 text-right font-mono">15,00</td>
+              <td id="cell-E8" class="border border-slate-300 px-3 py-2 text-right font-mono">1.000,00</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+            </tr>
+
+            <!-- Linha 9: SSD NVMe 1TB -->
+            <tr class="hover:bg-slate-50/80">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">9</td>
+              <td id="cell-A9" class="border border-slate-300 px-3 py-2 font-medium">SSD NVMe 1TB</td>
+              <td id="cell-B9" class="border border-slate-300 px-3 py-2 text-center font-mono">11</td>
+              <td id="cell-C9" class="border border-slate-300 px-3 py-2 text-right font-mono">450,00</td>
+              <td id="cell-D9" class="border border-slate-300 px-3 py-2 text-right font-mono">40,00</td>
+              <td id="cell-E9" class="border border-slate-300 px-3 py-2 text-right font-mono">4.950,00</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+            </tr>
+
+            <!-- Linha 10: Faixa Separadora -->
+            <tr class="bg-slate-100">
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">10</td>
+              <td colspan="6" class="border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-500">
+                Indicadores Gerenciais e Funções (Intervalo Principal: Linhas 2 a 9)
+              </td>
+            </tr>
+
+            <!-- Linha 11: Totais Gerais (Q8 e Q9) -->
+            <tr>
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">11</td>
+              <td class="border border-slate-300 px-3 py-2 font-semibold text-slate-700 bg-slate-50">Total Geral (SOMA)</td>
+              <td id="cell-B11" class="border border-slate-300 px-3 py-2 text-center font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q8: B11]</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+              <td class="border border-slate-300 px-3 py-2 text-right font-semibold text-slate-600 bg-slate-50">Faturamento:</td>
+              <td id="cell-E11" class="border border-slate-300 px-3 py-2 text-right font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q9: E11]</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+            </tr>
+
+            <!-- Linha 12: Médias (Q10 e Q11) -->
+            <tr>
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">12</td>
+              <td class="border border-slate-300 px-3 py-2 font-semibold text-slate-700 bg-slate-50">Médias (MÉDIA)</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+              <td id="cell-C12" class="border border-slate-300 px-3 py-2 text-right font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q10: C12]</td>
+              <td class="border border-slate-300 px-3 py-2 text-right font-semibold text-slate-600 bg-slate-50">Média Total:</td>
+              <td id="cell-E12" class="border border-slate-300 px-3 py-2 text-right font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q11: E12]</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+            </tr>
+
+            <!-- Linha 13: Máximos (Q12 e Q13) -->
+            <tr>
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">13</td>
+              <td class="border border-slate-300 px-3 py-2 font-semibold text-slate-700 bg-slate-50">Maiores Valores (MÁXIMO)</td>
+              <td id="cell-B13" class="border border-slate-300 px-3 py-2 text-center font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q13: B13]</td>
+              <td id="cell-C13" class="border border-slate-300 px-3 py-2 text-right font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q12: C13]</td>
+              <td colspan="3" class="border border-slate-300 px-3 py-2 text-xs text-slate-500 bg-slate-50">
+                * B13: Maior estoque | C13: Maior preço unitário
+              </td>
+            </tr>
+
+            <!-- Linha 14: Mínimo (Q14) -->
+            <tr>
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">14</td>
+              <td class="border border-slate-300 px-3 py-2 font-semibold text-slate-700 bg-slate-50">Menor Preço (MÍNIMO)</td>
+              <td class="border border-slate-300 px-3 py-2 text-center text-slate-400 text-xs">—</td>
+              <td id="cell-C14" class="border border-slate-300 px-3 py-2 text-right font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q14: C14]</td>
+              <td colspan="3" class="border border-slate-300 px-3 py-2 text-xs text-slate-500 bg-slate-50">
+                * C14: Menor preço unitário entre os produtos (C2:C9)
+              </td>
+            </tr>
+
+            <!-- Linha 15: Contagem (Q15) -->
+            <tr>
+              <td class="bg-slate-200/80 text-slate-600 font-mono text-xs text-center border border-slate-300 font-bold">15</td>
+              <td class="border border-slate-300 px-3 py-2 font-semibold text-slate-700 bg-slate-50">Itens Registrados (CONT.NÚM)</td>
+              <td id="cell-B15" class="border border-slate-300 px-3 py-2 text-center font-mono bg-sky-50/80 text-sky-800 font-semibold">[Q15: B15]</td>
+              <td colspan="4" class="border border-slate-300 px-3 py-2 text-xs text-slate-500 bg-slate-50">
+                * B15: Quantidade de produtos com estoque numérico registrado (B2:B9)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Exercícios Divididos em Parte 1 (7 questões) e Parte 2 (8 questões) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- PARTE 1 -->
+      <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-5 card-print">
+        <div class="border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg uppercase tracking-wide">
+              Parte 1 • Questões 1 a 7
+            </span>
+            <h2 class="text-lg font-bold text-slate-900">
+              Operadores Matemáticos Básicos
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1.5">
+            Utilize os operadores <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">+</code>,
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">-</code>,
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">*</code> e
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">/</code>
+            referenciando as células da planilha.
+          </p>
+        </div>
+
+        <div id="part1Container" class="space-y-4"></div>
+      </section>
+
+      <!-- PARTE 2 -->
+      <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-5 card-print">
+        <div class="border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-2">
+            <span class="bg-sky-100 text-sky-800 text-xs font-bold px-2.5 py-1 rounded-lg uppercase tracking-wide">
+              Parte 2 • Questões 8 a 15
+            </span>
+            <h2 class="text-lg font-bold text-slate-900">
+              Funções Essenciais do Excel
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1.5">
+            Escreva a função completa com o intervalo entre parênteses:
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">SOMA</code>,
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">MÉDIA</code>,
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">MÁXIMO</code>,
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">MÍNIMO</code> e
+            <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800">CONT.NÚM</code>.
+          </p>
+        </div>
+
+        <div id="part2Container" class="space-y-4"></div>
+      </section>
+
+    </div>
+
+    <!-- Barra de Entrega do Aluno -->
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
+      <div class="text-xs sm:text-sm text-slate-600 text-center sm:text-left">
+        <strong>Entrega da Atividade:</strong> Ao concluir as 15 questões, clique em <strong>Salvar Atividade (.HTML)</strong> e envie o arquivo baixado ao professor.
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
+        <button
+          type="button"
+          onclick="openClearModal()"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition cursor-pointer"
+        >
+          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Limpar Campos
+        </button>
+
+        <button
+          type="button"
+          onclick="downloadFilledHtml()"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-excel-600 hover:bg-excel-700 shadow-md transition cursor-pointer"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Salvar Atividade (.HTML)
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé Discreto -->
+  <footer class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 text-xs text-slate-400 flex items-center justify-between">
+    <span>Laboratório Prático de Excel Básico • Curso de Operador de Computador</span>
+    <button
+      type="button"
+      ondblclick="openTeacherAuthModal()"
+      title="Área do Professor"
+      class="no-print text-slate-400 hover:text-slate-600 transition p-1 rounded cursor-default select-none"
+      aria-label="Área restrita"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      </svg>
+    </button>
+  </footer>
+
+  <script>
+    const TEACHER_SECRET = 'PROF2026';
+    const STORAGE_KEY = 'excel_basico_15q_v1';
+
+    /**
+     * Banco com as 15 Questões Progressivas
+     */
+    const QUESTIONS = [
+      // ================= PARTE 1: OPERADORES BÁSICOS (Q1 a Q7) =================
+      {
+        id: 'q1',
+        part: 1,
+        number: 1,
+        targetCell: 'E2',
+        defaultPlaceholder: '[Q1: E2]',
+        formattedResult: '12.800,00',
+        expectedDisplay: '=B2*C2',
+        title: 'Multiplicação — Valor Total do Notebook Dell (Célula E2)',
+        contextHint: 'Multiplique a Quantidade em Estoque (B2) pelo Preço Unitário (C2).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=B2*C2' || clean === '=C2*B2';
+        }
+      },
+      {
+        id: 'q2',
+        part: 1,
+        number: 2,
+        targetCell: 'E3',
+        defaultPlaceholder: '[Q2: E3]',
+        formattedResult: '5.400,00',
+        expectedDisplay: '=B3*C3',
+        title: 'Multiplicação — Valor Total do Monitor LED 24" (Célula E3)',
+        contextHint: 'Multiplique a Quantidade em Estoque (B3) pelo Preço Unitário (C3).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=B3*C3' || clean === '=C3*B3';
+        }
+      },
+      {
+        id: 'q3',
+        part: 1,
+        number: 3,
+        targetCell: 'F4',
+        defaultPlaceholder: '[Q3: F4]',
+        formattedResult: '1.250,00',
+        expectedDisplay: '=C4-D4',
+        title: 'Subtração — Preço com Desconto da Impressora Laser (Célula F4)',
+        contextHint: 'Subtraia o valor do Desconto (D4) do Preço Unitário (C4).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=C4-D4';
+        }
+      },
+      {
+        id: 'q4',
+        part: 1,
+        number: 4,
+        targetCell: 'F5',
+        defaultPlaceholder: '[Q4: F5]',
+        formattedResult: '6',
+        expectedDisplay: '=B5-B6',
+        title: 'Subtração — Diferença de Estoque entre Teclado e Mouse (Célula F5)',
+        contextHint: 'Subtraia a quantidade em estoque do Mouse Sem Fio (B6) da quantidade do Teclado Mecânico (B5).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=B5-B6';
+        }
+      },
+      {
+        id: 'q5',
+        part: 1,
+        number: 5,
+        targetCell: 'F2',
+        defaultPlaceholder: '[Q5: F2]',
+        formattedResult: '18.200,00',
+        expectedDisplay: '=E2+E3',
+        title: 'Adição (+) — Soma do Valor Total dos Dois Primeiros Itens (Célula F2)',
+        contextHint: 'Utilize apenas o operador + para somar o Valor Total do Notebook (E2) com o do Monitor (E3).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=E2+E3' || clean === '=E3+E2';
+        }
+      },
+      {
+        id: 'q6',
+        part: 1,
+        number: 6,
+        targetCell: 'F3',
+        defaultPlaceholder: '[Q6: F3]',
+        formattedResult: '950,00',
+        expectedDisplay: '=C7+C8+C9',
+        title: 'Adição (+) — Soma do Preço Unitário de Três Periféricos (Célula F3)',
+        contextHint: 'Some manualmente com o operador + o Preço Unitário do Headset Gamer (C7), Webcam Full HD (C8) e SSD NVMe 1TB (C9).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          if (!clean.startsWith('=')) return false;
+          const expr = clean.slice(1);
+          const terms = expr.split('+');
+          if (terms.length !== 3) return false;
+          const sorted = [...terms].sort();
+          return sorted[0] === 'C7' && sorted[1] === 'C8' && sorted[2] === 'C9';
+        }
+      },
+      {
+        id: 'q7',
+        part: 1,
+        number: 7,
+        targetCell: 'F6',
+        defaultPlaceholder: '[Q7: F6]',
+        formattedResult: '800,00',
+        expectedDisplay: '=C2/4',
+        title: 'Divisão (/) — Parcelamento do Notebook Dell em 4x (Célula F6)',
+        contextHint: 'Divida o Preço Unitário do Notebook Dell (C2) por 4 para calcular o valor de cada parcela sem juros.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=C2/4';
+        }
+      },
+
+      // ================= PARTE 2: FUNÇÕES ESSENCIAIS (Q8 a Q15) =================
+      {
+        id: 'q8',
+        part: 2,
+        number: 8,
+        targetCell: 'B11',
+        defaultPlaceholder: '[Q8: B11]',
+        formattedResult: '60',
+        expectedDisplay: '=SOMA(B2:B9)',
+        title: 'Função SOMA — Total de Itens em Estoque (Célula B11)',
+        contextHint: 'Calcule a soma total da coluna Qtd. Estoque, do primeiro produto (B2) até o último (B9).',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=SOMA(B2:B9)';
+        }
+      },
+      {
+        id: 'q9',
+        part: 2,
+        number: 9,
+        targetCell: 'E11',
+        defaultPlaceholder: '[Q9: E11]',
+        formattedResult: '34.920,00',
+        expectedDisplay: '=SOMA(E2:E9)',
+        title: 'Função SOMA — Faturamento Total Geral (Célula E11)',
+        contextHint: 'Calcule a soma da coluna Valor Total, utilizando o intervalo de E2 até E9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=SOMA(E2:E9)';
+        }
+      },
+      {
+        id: 'q10',
+        part: 2,
+        number: 10,
+        targetCell: 'C12',
+        defaultPlaceholder: '[Q10: C12]',
+        formattedResult: '847,50',
+        expectedDisplay: '=MÉDIA(C2:C9)',
+        title: 'Função MÉDIA — Preço Unitário Médio da Loja (Célula C12)',
+        contextHint: 'Calcule a média aritmética dos preços unitários na coluna C, no intervalo de C2 até C9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=MEDIA(C2:C9)';
+        }
+      },
+      {
+        id: 'q11',
+        part: 2,
+        number: 11,
+        targetCell: 'E12',
+        defaultPlaceholder: '[Q11: E12]',
+        formattedResult: '4.365,00',
+        expectedDisplay: '=MÉDIA(E2:E9)',
+        title: 'Função MÉDIA — Média do Valor Total por Produto (Célula E12)',
+        contextHint: 'Calcule a média aritmética da coluna Valor Total, no intervalo de E2 até E9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=MEDIA(E2:E9)';
+        }
+      },
+      {
+        id: 'q12',
+        part: 2,
+        number: 12,
+        targetCell: 'C13',
+        defaultPlaceholder: '[Q12: C13]',
+        formattedResult: '3.200,00',
+        expectedDisplay: '=MÁXIMO(C2:C9)',
+        title: 'Função MÁXIMO — Maior Preço Unitário (Célula C13)',
+        contextHint: 'Encontre o maior preço unitário registrado na coluna C, considerando o intervalo de C2 até C9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=MAXIMO(C2:C9)';
+        }
+      },
+      {
+        id: 'q13',
+        part: 2,
+        number: 13,
+        targetCell: 'B13',
+        defaultPlaceholder: '[Q13: B13]',
+        formattedResult: '15',
+        expectedDisplay: '=MÁXIMO(B2:B9)',
+        title: 'Função MÁXIMO — Maior Quantidade em Estoque (Célula B13)',
+        contextHint: 'Encontre a maior quantidade em estoque registrada na coluna B, no intervalo de B2 até B9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=MAXIMO(B2:B9)';
+        }
+      },
+      {
+        id: 'q14',
+        part: 2,
+        number: 14,
+        targetCell: 'C14',
+        defaultPlaceholder: '[Q14: C14]',
+        formattedResult: '80,00',
+        expectedDisplay: '=MÍNIMO(C2:C9)',
+        title: 'Função MÍNIMO — Menor Preço Unitário (Célula C14)',
+        contextHint: 'Encontre o menor preço unitário entre os produtos na coluna C, utilizando o intervalo de C2 até C9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=MINIMO(C2:C9)';
+        }
+      },
+      {
+        id: 'q15',
+        part: 2,
+        number: 15,
+        targetCell: 'B15',
+        defaultPlaceholder: '[Q15: B15]',
+        formattedResult: '8',
+        expectedDisplay: '=CONT.NÚM(B2:B9)',
+        title: 'Função CONT.NÚM — Contagem de Produtos com Estoque (Célula B15)',
+        contextHint: 'Conte quantas células possuem valores numéricos na coluna Qtd. Estoque, no intervalo de B2 até B9.',
+        validate(raw) {
+          const clean = normalizeFormula(raw);
+          return clean === '=CONT.NUM(B2:B9)';
+        }
+      }
+    ];
+
+    // Estado em memória
+    const state = {
+      studentName: '',
+      studentClass: '',
+      studentDate: '',
+      answers: {}
+    };
+
+    /**
+     * Normaliza fórmula para validação (remove espaços, converte para maiúsculas e remove acentos)
+     */
+    function normalizeFormula(input) {
+      if (!input) return '';
+      return input
+        .replace(/\s+/g, '')
+        .toUpperCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    /**
+     * Escapa caracteres especiais HTML
+     */
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    /**
+     * Carrega dados embutidos no HTML baixado (prioridade) ou no localStorage
+     */
+    function loadInitialData() {
+      const rootEl = document.getElementById('appRoot');
+      const embeddedRaw = rootEl ? rootEl.getAttribute('data-student-answers') : '';
+
+      if (embeddedRaw && embeddedRaw.trim() !== '') {
+        try {
+          const parsed = JSON.parse(decodeURIComponent(embeddedRaw));
+          state.studentName = parsed.studentName || '';
+          state.studentClass = parsed.studentClass || '';
+          state.studentDate = parsed.studentDate || '';
+          state.answers = parsed.answers || {};
+          return;
+        } catch (e) {
+          console.warn('Falha ao ler dados embutidos no HTML:', e);
+        }
+      }
+
+      // Fallback: localStorage (quando o aluno está respondendo na mesma máquina)
+      try {
+        const localRaw = localStorage.getItem(STORAGE_KEY);
+        if (localRaw) {
+          const parsedLocal = JSON.parse(localRaw);
+          state.studentName = parsedLocal.studentName || '';
+          state.studentClass = parsedLocal.studentClass || '';
+          state.studentDate = parsedLocal.studentDate || '';
+          state.answers = parsedLocal.answers || {};
+        }
+      } catch (e) {
+        console.warn('Falha ao ler localStorage:', e);
+      }
+
+      // Preenche data atual caso esteja vazia
+      if (!state.studentDate) {
+        state.studentDate = new Date().toLocaleDateString('pt-BR');
+      }
+    }
+
+    /**
+     * Sincroniza o estado no DOM (data-student-answers) e no localStorage
+     */
+    function persistState() {
+      const rootEl = document.getElementById('appRoot');
+      if (rootEl) {
+        rootEl.setAttribute('data-student-answers', encodeURIComponent(JSON.stringify(state)));
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        // Ignora bloqueios de storage em modo privado
+      }
+    }
+
+    /**
+     * Sincroniza os campos de identificação do aluno
+     */
+    function syncStudentMeta() {
+      const nameEl = document.getElementById('studentName');
+      const classEl = document.getElementById('studentClass');
+      const dateEl = document.getElementById('studentDate');
+
+      state.studentName = nameEl.value;
+      state.studentClass = classEl.value;
+      state.studentDate = dateEl.value;
+
+      nameEl.setAttribute('value', state.studentName);
+      classEl.setAttribute('value', state.studentClass);
+      dateEl.setAttribute('value', state.studentDate);
+
+      persistState();
+    }
+
+    /**
+     * Renderiza os cards das 15 questões (sem botão Verificar e sem feedback ao aluno)
+     */
+    function renderQuestions() {
+      const part1El = document.getElementById('part1Container');
+      const part2El = document.getElementById('part2Container');
+
+      part1El.innerHTML = '';
+      part2El.innerHTML = '';
+
+      QUESTIONS.forEach((q) => {
+        const savedVal = state.answers[q.id] || '';
+        const card = document.createElement('div');
+        card.id = `card-${q.id}`;
+        card.className = 'rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition-all';
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold text-excel-700 bg-excel-100 px-2 py-0.5 rounded-md">
+                Questão ${q.number} • Célula ${q.targetCell}
+              </span>
+              <h3 class="text-sm font-bold text-slate-900 mt-1.5">${q.title}</h3>
+            </div>
+            <span id="teacher-badge-${q.id}" class="hidden text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0"></span>
+          </div>
+
+          <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">${q.contextHint}</p>
+
+          <div class="mt-3 relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono font-bold text-slate-400 select-none">fx</span>
+            <input
+              id="input-${q.id}"
+              type="text"
+              value="${escapeHtml(savedVal)}"
+              placeholder="Digite a fórmula aqui (comece com =)..."
+              autocomplete="off"
+              spellcheck="false"
+              onfocus="highlightTargetCell('${q.targetCell}', '${q.id}')"
+              onblur="clearTargetCellHighlight('${q.targetCell}')"
+              oninput="handleFormulaInput('${q.id}', this.value)"
+              class="w-full font-mono text-sm rounded-xl border border-slate-300 bg-white pl-9 pr-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-excel-600 focus:ring-2 focus:ring-excel-600/20 outline-none transition"
+            />
+          </div>
+
+          <!-- Gabarito exibido SOMENTE no Modo Professor -->
+          <div id="teacher-feedback-${q.id}" class="hidden mt-2.5 text-xs rounded-lg px-3 py-2 leading-relaxed"></div>
+        `;
+
+        if (q.part === 1) {
+          part1El.appendChild(card);
+        } else {
+          part2El.appendChild(card);
+        }
+      });
+    }
+
+    /**
+     * Atualiza a sintaxe na barra fx ao digitar e sincroniza o atributo value no DOM
+     */
+    function handleFormulaInput(questionId, value) {
+      state.answers[questionId] = value;
+
+      const inputEl = document.getElementById(`input-${questionId}`);
+      if (inputEl) {
+        inputEl.setAttribute('value', value);
+      }
+
+      const preview = document.getElementById('activeFormulaPreview');
+      if (preview) {
+        preview.textContent = value.trim() !== '' ? value : 'Digite a fórmula no campo da questão...';
+      }
+
+      persistState();
+    }
+
+    /**
+     * Destaca célula-alvo na planilha e exibe apenas a sintaxe digitada na barra fx
+     */
+    function highlightTargetCell(cellId, questionId) {
+      const cell = document.getElementById(`cell-${cellId}`);
+      if (cell) cell.classList.add('cell-target-highlight');
+
+      const indicator = document.getElementById('activeCellIndicator');
+      const preview = document.getElementById('activeFormulaPreview');
+      const currentVal = state.answers[questionId] || '';
+
+      if (indicator) indicator.textContent = cellId;
+      if (preview) {
+        preview.textContent = currentVal.trim() !== '' ? currentVal : 'Digite a fórmula no campo da questão...';
+      }
+    }
+
+    function clearTargetCellHighlight(cellId) {
+      const cell = document.getElementById(`cell-${cellId}`);
+      if (cell) cell.classList.remove('cell-target-highlight');
+    }
+
+    /**
+     * Gera e baixa o arquivo .HTML autocontido com todas as respostas do aluno
+     */
+    function downloadFilledHtml() {
+      const nameVal = document.getElementById('studentName').value.trim();
+      const classVal = document.getElementById('studentClass').value.trim();
+
+      if (!nameVal || !classVal) {
+        showToast('warning', 'Por favor, preencha seu Nome Completo e sua Turma no topo da página antes de salvar o arquivo.');
+        document.getElementById(!nameVal ? 'studentName' : 'studentClass').focus();
+        return;
+      }
+
+      // Garante que todos os atributos value e o JSON embutido estejam sincronizados no DOM antes de serializar
+      syncStudentMeta();
+      QUESTIONS.forEach((q) => {
+        const inp = document.getElementById(`input-${q.id}`);
+        if (inp) {
+          state.answers[q.id] = inp.value;
+          inp.setAttribute('value', inp.value);
+        }
+      });
+      persistState();
+
+      // Garante que o arquivo baixado seja salvo limpo (sem painéis do professor abertos)
+      const wasTeacherOpen = !document.getElementById('teacherControlBar').classList.contains('hidden');
+      if (wasTeacherOpen) {
+        hideTeacherMode();
+      }
+
+      // Serializa o documento HTML completo
+      const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      // Formata nome seguro para o arquivo
+      const safeName = nameVal
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9\s_-]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+
+      const fileName = safeName ? `Atividade_Excel_${safeName}.html` : 'Atividade_Excel_Aluno.html';
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast('success', `Arquivo "${fileName}" salvo com sucesso! Envie este arquivo ao seu professor.`);
+    }
+
+    // ==================== CONTROLES DO MODO PROFESSOR ====================
+
+    // Atalho de teclado: Ctrl + Shift + P (ou Cmd + Shift + P no Mac)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toUpperCase() === 'P') {
+        e.preventDefault();
+        const bar = document.getElementById('teacherControlBar');
+        if (bar.classList.contains('hidden')) {
+          activateTeacherMode();
+        } else {
+          hideTeacherMode();
+        }
+      }
+    });
+
+    function openTeacherAuthModal() {
+      document.getElementById('teacherAuthError').classList.add('hidden');
+      const pwdInput = document.getElementById('teacherPasswordInput');
+      pwdInput.value = '';
+      document.getElementById('teacherAuthModal').classList.remove('hidden');
+      setTimeout(() => pwdInput.focus(), 50);
+    }
+
+    function closeTeacherAuthModal() {
+      document.getElementById('teacherAuthModal').classList.add('hidden');
+    }
+
+    function verifyTeacherPassword() {
+      const val = document.getElementById('teacherPasswordInput').value.trim();
+      if (val === TEACHER_SECRET) {
+        closeTeacherAuthModal();
+        activateTeacherMode();
+      } else {
+        document.getElementById('teacherAuthError').classList.remove('hidden');
+      }
+    }
+
+    function activateTeacherMode() {
+      const bar = document.getElementById('teacherControlBar');
+      bar.classList.remove('hidden');
+      bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /**
+     * Corrige todas as 15 questões e exibe o relatório oficial do professor
+     */
+    function gradeAllQuestionsTeacher() {
+      let correctCount = 0;
+
+      QUESTIONS.forEach((q) => {
+        const inputEl = document.getElementById(`input-${q.id}`);
+        const rawVal = inputEl ? inputEl.value : (state.answers[q.id] || '');
+        const isCorrect = rawVal.trim() !== '' && q.validate(rawVal);
+
+        const card = document.getElementById(`card-${q.id}`);
+        const badge = document.getElementById(`teacher-badge-${q.id}`);
+        const feedback = document.getElementById(`teacher-feedback-${q.id}`);
+        const cellEl = document.getElementById(`cell-${q.targetCell}`);
+
+        badge.classList.remove('hidden');
+
+        if (isCorrect) {
+          correctCount++;
+          card.className = 'rounded-xl border-2 border-emerald-500 bg-emerald-50/60 p-4 transition-all';
+          inputEl.className = 'w-full font-mono text-sm rounded-xl border border-emerald-500 bg-white pl-9 pr-3.5 py-2.5 text-emerald-900 font-bold outline-none';
+
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-600 text-white flex-shrink-0';
+          badge.textContent = '✓ Correto';
+
+          feedback.classList.add('hidden');
+
+          if (cellEl) {
+            cellEl.textContent = q.formattedResult;
+            cellEl.className = 'border border-emerald-400 px-3 py-2 text-right font-mono bg-emerald-100 text-emerald-900 font-bold';
+          }
+        } else {
+          card.className = 'rounded-xl border-2 border-rose-500 bg-rose-50/60 p-4 transition-all';
+          inputEl.className = 'w-full font-mono text-sm rounded-xl border border-rose-500 bg-white pl-9 pr-3.5 py-2.5 text-rose-900 font-semibold outline-none';
+
+          badge.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-600 text-white flex-shrink-0';
+          badge.textContent = '✕ Incorreto';
+
+          feedback.classList.remove('hidden');
+          feedback.className = 'mt-2.5 text-xs rounded-lg px-3 py-2 bg-rose-100 text-rose-950 border border-rose-300 font-medium';
+          feedback.innerHTML = `<strong>Gabarito esperado:</strong> <code class="font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-rose-200">${q.expectedDisplay}</code> (Resultado: ${q.formattedResult})`;
+
+          if (cellEl) {
+            cellEl.textContent = q.defaultPlaceholder;
+            const baseColor = q.part === 1 ? 'bg-amber-50/70 text-amber-800' : 'bg-sky-50/80 text-sky-800';
+            cellEl.className = `border border-slate-300 px-3 py-2 text-right font-mono ${baseColor} font-semibold`;
+          }
+        }
+      });
+
+      // Atualiza Relatório Final do Professor
+      const studentName = document.getElementById('studentName').value.trim() || 'Não informado';
+      const studentClass = document.getElementById('studentClass').value.trim() || 'Não informada';
+      const gradeNum = (correctCount / QUESTIONS.length) * 10;
+      const gradeFormatted = gradeNum.toFixed(1).replace('.', ',');
+
+      document.getElementById('reportStudentName').textContent = studentName;
+      document.getElementById('reportStudentClass').textContent = studentClass;
+      document.getElementById('reportScoreCount').textContent = `${correctCount} / ${QUESTIONS.length}`;
+      document.getElementById('reportFinalGrade').textContent = gradeFormatted;
+      document.getElementById('reportTimestamp').textContent = `Corrigido em: ${new Date().toLocaleString('pt-BR')}`;
+
+      const reportCard = document.getElementById('teacherReportCard');
+      reportCard.classList.remove('hidden');
+      reportCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    /**
+     * Limpa a visualização de correção e oculta o Modo Professor
+     */
+    function hideTeacherMode() {
+      document.getElementById('teacherControlBar').classList.add('hidden');
+      document.getElementById('teacherReportCard').classList.add('hidden');
+
+      QUESTIONS.forEach((q) => {
+        const card = document.getElementById(`card-${q.id}`);
+        const badge = document.getElementById(`teacher-badge-${q.id}`);
+        const feedback = document.getElementById(`teacher-feedback-${q.id}`);
+        const inputEl = document.getElementById(`input-${q.id}`);
+        const cellEl = document.getElementById(`cell-${q.targetCell}`);
+
+        if (card) card.className = 'rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition-all';
+        if (badge) badge.classList.add('hidden');
+        if (feedback) feedback.classList.add('hidden');
+        if (inputEl) {
+          inputEl.className = 'w-full font-mono text-sm rounded-xl border border-slate-300 bg-white pl-9 pr-3.5 py-2.5 text-slate-900 placeholder-slate-400 focus:border-excel-600 focus:ring-2 focus:ring-excel-600/20 outline-none transition';
+        }
+        if (cellEl) {
+          cellEl.textContent = q.defaultPlaceholder;
+          const baseColor = q.part === 1 ? 'bg-amber-50/70 text-amber-800' : 'bg-sky-50/80 text-sky-800';
+          cellEl.className = `border border-slate-300 px-3 py-2 text-right font-mono ${baseColor} font-semibold`;
+        }
+      });
+    }
+
+    function printTeacherReport() {
+      if (document.getElementById('teacherReportCard').classList.contains('hidden')) {
+        gradeAllQuestionsTeacher();
+      }
+      window.print();
+    }
+
+    // ==================== UTILITÁRIOS DE UI ====================
+
+    function toggleQuickGuide() {
+      const drawer = document.getElementById('quickGuideDrawer');
+      const label = document.getElementById('btnGuideLabel');
+      const isHidden = drawer.classList.contains('hidden');
+
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        label.textContent = 'Fechar Guia Rápido';
+      } else {
+        drawer.classList.add('hidden');
+        label.textContent = 'Guia Rápido de Sintaxe';
+      }
+    }
+
+    function openClearModal() {
+      document.getElementById('confirmClearModal').classList.remove('hidden');
+    }
+
+    function closeClearModal() {
+      document.getElementById('confirmClearModal').classList.add('hidden');
+    }
+
+    function confirmClearAll() {
+      state.answers = {};
+      persistState();
+      closeClearModal();
+      renderQuestions();
+      showToast('info', 'Todos os campos de fórmulas foram limpos.');
+    }
+
+    function showToast(type, message) {
+      const banner = document.getElementById('toastBanner');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+
+      banner.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-300', 'text-emerald-900', 'bg-amber-50', 'border-amber-300', 'text-amber-900', 'bg-sky-50', 'border-sky-300', 'text-sky-900');
+
+      if (type === 'success') {
+        banner.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900');
+        iconEl.textContent = '✅';
+      } else if (type === 'warning') {
+        banner.classList.add('bg-amber-50', 'border-amber-300', 'text-amber-900');
+        iconEl.textContent = '⚠️';
+      } else {
+        banner.classList.add('bg-sky-50', 'border-sky-300', 'text-sky-900');
+        iconEl.textContent = 'ℹ️';
+      }
+
+      msgEl.textContent = message;
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideToast() {
+      document.getElementById('toastBanner').classList.add('hidden');
+    }
+
+    // Inicialização
+    window.addEventListener('DOMContentLoaded', () => {
+      loadInitialData();
+
+      const nameEl = document.getElementById('studentName');
+      const classEl = document.getElementById('studentClass');
+      const dateEl = document.getElementById('studentDate');
+
+      nameEl.value = state.studentName;
+      classEl.value = state.studentClass;
+      dateEl.value = state.studentDate;
+
+      nameEl.setAttribute('value', state.studentName);
+      classEl.setAttribute('value', state.studentClass);
+      dateEl.setAttribute('value', state.studentDate);
+
+      renderQuestions();
+    });
+  </script>
+</body>
+</html>

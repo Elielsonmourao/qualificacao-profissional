@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atividade – Excel Básico | Operador de Computador</title>
+<style>
+:root{--blue:#075985;--blue2:#0e7490;--ink:#172033;--muted:#64748b;--line:#dbe3ec;--bg:#f3f7fb;--white:#fff;--green:#15803d;--red:#b91c1c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(120deg,#083344,#0369a1);color:#fff;padding:34px 18px}
+.head{max-width:980px;margin:auto}
+.kicker{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:#bae6fd;font-weight:700}
+h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.15;margin:8px 0}
+header p{margin:6px 0;color:#e0f2fe}
+main{max-width:980px;margin:24px auto;padding:0 16px 50px}
+.panel,.question,.student-box,.result{background:var(--white);border:1px solid var(--line);border-radius:14px;box-shadow:0 5px 18px #0f172a0a}
+.student-box{padding:18px;margin-bottom:18px}
+.student-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
+label.field{display:block;font-weight:650;font-size:.9rem}
+input[type=text]{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;margin-top:5px}
+.instructions{padding:17px 20px;margin-bottom:22px}
+.instructions h2{font-size:1.05rem;margin:0 0 6px}
+.instructions ul{margin:8px 0 0;padding-left:20px;color:#475569}
+.progress-wrap{position:sticky;top:0;z-index:5;background:#f3f7fbeF;padding:10px 0 12px;backdrop-filter:blur(8px)}
+.progress-line{height:9px;background:#dbeafe;border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#0284c7,#14b8a6);transition:width .2s}
+.progress-text{display:flex;justify-content:space-between;color:#475569;font-size:.86rem;margin-bottom:6px}
+.section-title{margin:30px 0 12px;color:#075985;font-size:1.2rem}
+.question{padding:20px;margin:12px 0;scroll-margin-top:85px;border-left:5px solid transparent}
+.question.question-correct{border-left-color:#16a34a;background:#f0fdf4}
+.question.question-incorrect{border-left-color:#dc2626;background:#fef2f2}
+.qtop{display:flex;gap:10px;align-items:flex-start}
+.qnum{flex:none;background:#e0f2fe;color:#075985;font-weight:800;border-radius:8px;padding:3px 9px}
+.qtitle{font-weight:700;margin:0 0 8px}
+.qtext{margin:0 0 14px}
+.options{display:grid;gap:8px}
+.option{display:flex;gap:10px;align-items:flex-start;border:1px solid #e2e8f0;border-radius:9px;padding:10px 12px;cursor:pointer;transition:.15s}
+.option:hover{background:#f0f9ff;border-color:#7dd3fc}
+.option:has(input:checked){background:#ecfeff;border-color:#0891b2}
+.option input{margin-top:5px;accent-color:#087eaa;flex:none}
+.option span{flex:1}
+.option.correct{background:#f0fdf4;border-color:#22c55e}
+.option.incorrect{background:#fef2f2;border-color:#ef4444}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:28px 0}
+button{border:0;border-radius:10px;padding:13px 20px;font:700 1rem inherit;cursor:pointer}
+.primary{background:#0369a1;color:#fff}
+.secondary{background:#e2e8f0;color:#1e293b}
+button:hover{filter:brightness(.96)}
+.result{padding:20px;margin:18px 0;display:none}
+.result h2{margin:0 0 8px}
+.score{font-size:2rem;font-weight:850;color:#0369a1}
+.teacher{display:none;border:2px dashed #0e7490;padding:18px;margin:24px 0;background:#ecfeff;border-radius:14px}
+.teacher h2{margin-top:0}
+.teacher-note{font-size:.9rem;color:#475569}
+.result-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin-top:14px}
+.result-item{background:white;border:1px solid var(--line);border-radius:8px;padding:9px;font-size:.9rem}
+.result-item.result-correct{background:#dcfce7;border-color:#16a34a;color:#166534}
+.result-item.result-incorrect{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+.result-item.result-unanswered{background:#fef3c7;border-color:#d97706;color:#92400e}
+footer{text-align:center;color:#64748b;font-size:.85rem;padding:20px}
+@media(max-width:650px){.student-grid{grid-template-columns:1fr}.question{padding:16px}}
+@media print{.actions,.teacher,.progress-wrap{display:none!important}body{background:white}.question,.student-box{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="head">
+<div class="kicker">SENAI • Operador de Computador</div>
+<h1>Atividade avaliativa – Excel Básico</h1>
+<p>30 questões objetivas sobre operações matemáticas e funções do Excel.</p>
+<p><strong>Instrutor:</strong> Elielson Mourão</p>
+</div></header>
+<main>
+<section class="student-box">
+<div class="student-grid">
+<label class="field">Nome completo<input id="studentName" type="text" autocomplete="off" placeholder="Digite seu nome"></label>
+<label class="field">Turma<input id="studentClass" type="text" autocomplete="off" placeholder="Turma"></label>
+<label class="field">Data<input id="studentDate" type="text" autocomplete="off" placeholder="____/____/______"></label>
+</div>
+</section>
+<section class="panel instructions">
+<h2>Orientações</h2>
+<ul>
+<li>Leia atentamente cada situação-problema.</li>
+<li>Marque uma única alternativa diretamente em cada questão.</li>
+<li>Responda às 30 questões antes de finalizar.</li>
+<li>Ao terminar, aguarde a orientação do instrutor para a correção.</li>
+</ul>
+</section>
+<div class="progress-wrap">
+<div class="progress-text"><span>Progresso da atividade</span><strong id="progressLabel">0 de 30 respondidas</strong></div>
+<div class="progress-line"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+<div id="questions"></div>
+<div class="actions">
+<button class="primary" id="finishBtn" type="button">Finalizar atividade</button>
+<button class="primary" id="downloadBtn" type="button">Baixar atividade respondida</button>
+<button class="secondary" id="clearBtn" type="button">Limpar respostas</button>
+</div>
+<section class="result" id="studentResult" aria-live="polite">
+<h2>Atividade finalizada</h2>
+<p id="finishMessage"></p>
+<p>Suas respostas foram registradas nesta página. Chame o instrutor para realizar a correção.</p>
+</section>
+<section class="teacher" id="teacherPanel">
+<h2>Painel de correção do instrutor</h2>
+<p class="teacher-note">Painel aberto pelo atalho Ctrl + Shift + P. A correção é calculada neste navegador.</p>
+<div id="teacherSummary"></div>
+<div class="result-list" id="teacherDetails"></div>
+<div class="actions"><button class="primary" type="button" id="regradeBtn">Corrigir novamente</button><button class="secondary" type="button" id="hideTeacherBtn">Ocultar painel</button></div>
+</section>
+</main>
+<footer>Atividade de Excel Básico • SENAI • Operador de Computador</footer>
+<script>
+const sections = [
+{title:"Parte 1 – Operações matemáticas no Excel", qs:[
+["Controle de vendas","Uma papelaria registrou as seguintes vendas durante uma manhã: cadernos R$ 150,00; canetas R$ 85,00; borrachas R$ 35,00. Para descobrir o valor total vendido, qual fórmula deve ser utilizada, considerando os valores nas células B2, B3 e B4?",["=B2-B3-B4","=B2+B3+B4","=B2*B3*B4","=B2/B3/B4"],1],
+["Controle financeiro","Um funcionário recebeu R$ 2.500,00 de salário e teve R$ 350,00 descontados referentes a despesas e contribuições. Qual fórmula calcula o valor restante?",["=2500+350","=2500*350","=2500-350","=2500/350"],2],
+["Compra de materiais","Uma empresa comprou 12 caixas de papel, sendo que cada caixa custa R$ 28,00. Qual fórmula calcula o valor total da compra?",["=12+28","=12-28","=12/28","=12*28"],3],
+["Divisão de despesas","Quatro funcionários dividiram igualmente uma despesa de R$ 480,00. Qual fórmula descobre quanto cada funcionário deverá pagar?",["=480/4","=480*4","=480+4","=480-4"],0],
+["Estoque de produtos","Uma loja possuía 350 unidades em estoque. Durante a semana, vendeu 125 unidades e recebeu mais 80 unidades. Qual fórmula representa corretamente o estoque atual?",["=350+125-80","=350-125+80","=350*125+80","=350/125+80"],1],
+["Pagamento de horas extras","Um funcionário recebe R$ 18,00 por hora extra trabalhada. Em determinado mês, realizou 7 horas extras. Qual fórmula calcula o valor a receber?",["=18+7","=18-7","=18*7","=18/7"],2],
+["Orçamento de uma viagem","Uma pessoa possui R$ 1.200,00 reservados para uma viagem. Gastou R$ 350,00 com hospedagem, R$ 280,00 com alimentação e R$ 170,00 com transporte. Qual fórmula calcula o saldo restante?",["=1200+350+280+170","=1200-350-280-170","=1200*350*280*170","=1200/350/280/170"],1],
+["Produção diária","Uma fábrica produz 85 peças por dia. Considerando 6 dias de produção, sem interrupções, quantas peças serão produzidas? Qual fórmula deve ser utilizada?",["=85+6","=85-6","=85/6","=85*6"],3]
+]},
+{title:"Parte 2 – Função SOMA",qs:[
+["Despesas domésticas","Uma família registrou: água R$ 95,00; energia R$ 210,00; internet R$ 100,00; gás R$ 120,00. Considerando os valores em B2 até B5, qual função calcula o total das despesas?",["=MÉDIA(B2:B5)","=SOMA(B2:B5)","=MÁXIMO(B2:B5)","=MÍNIMO(B2:B5)"],1],
+["Relatório de vendas","Um vendedor registrou as vendas de cinco dias: R$ 200,00, R$ 350,00, R$ 180,00, R$ 420,00 e R$ 250,00. Qual foi o total vendido?",["R$ 1.200,00","R$ 1.300,00","R$ 1.400,00","R$ 1.500,00"],2],
+["Arrecadação de evento","Uma instituição registrou a arrecadação de quatro equipes: R$ 450,00, R$ 380,00, R$ 520,00 e R$ 650,00. Qual função obtém a arrecadação total, considerando os dados em C2 até C5?",["=SOMA(C2:C5)","=MÉDIA(C2:C5)","=MÍNIMO(C2:C5)","=MÁXIMO(C2:C5)"],0]
+]},
+{title:"Parte 3 – Função MÉDIA",qs:[
+["Desempenho escolar","Um aluno obteve as seguintes notas em quatro avaliações: 7,0; 8,0; 6,0 e 9,0. Qual é a média aritmética?",["6,5","7,0","7,5","8,0"],2],
+["Produtividade de funcionários","Uma empresa avalia os atendimentos realizados em cinco dias: 20, 25, 30, 15 e 10. Qual função calcula a média diária, considerando os valores em B2 até B6?",["=SOMA(B2:B6)","=MÉDIA(B2:B6)","=MÁXIMO(B2:B6)","=MÍNIMO(B2:B6)"],1],
+["Consumo de energia","Uma residência registrou o consumo de 180 kWh, 200 kWh, 220 kWh e 240 kWh durante quatro meses. Qual foi o consumo médio mensal?",["190 kWh","200 kWh","205 kWh","210 kWh"],3],
+["Média de vendas","Um vendedor realizou vendas de R$ 600,00, R$ 900,00 e R$ 1.200,00 durante três dias. Qual foi a média diária?",["R$ 800,00","R$ 850,00","R$ 900,00","R$ 1.000,00"],2]
+]},
+{title:"Parte 4 – Funções MÍNIMO e MÁXIMO",qs:[
+["Menor despesa","Uma família registrou gastos semanais com alimentação: R$ 320,00, R$ 280,00, R$ 350,00, R$ 290,00 e R$ 310,00. Qual função identifica o menor gasto, considerando B2:B6?",["=MÁXIMO(B2:B6)","=MÉDIA(B2:B6)","=MÍNIMO(B2:B6)","=SOMA(B2:B6)"],2],
+["Maior venda","Uma loja registrou vendas diárias de R$ 450,00, R$ 780,00, R$ 620,00, R$ 950,00 e R$ 500,00. Qual foi o maior valor?",["R$ 450,00","R$ 780,00","R$ 620,00","R$ 950,00"],3],
+["Controle de temperaturas","Um técnico registrou 25°C, 28°C, 31°C, 24°C e 29°C. Qual fórmula identifica a temperatura máxima, considerando A2:A6?",["=MÁXIMO(A2:A6)","=MÍNIMO(A2:A6)","=MÉDIA(A2:A6)","=SOMA(A2:A6)"],0],
+["Controle de estoque","Uma empresa possui produtos com 120, 85, 200, 45 e 160 unidades em estoque. Qual fórmula identifica a menor quantidade, considerando B2:B6?",["=SOMA(B2:B6)","=MÁXIMO(B2:B6)","=MÍNIMO(B2:B6)","=MÉDIA(B2:B6)"],2],
+["Relatório de desempenho","Um supervisor registrou 32, 45, 28, 51 e 39 atendimentos realizados por funcionários. Qual função identifica o maior número de atendimentos?",["=MÍNIMO(B2:B6)","=MÁXIMO(B2:B6)","=MÉDIA(B2:B6)","=SOMA(B2:B6)"],1]
+]},
+{title:"Parte 5 – Função SE",qs:[
+["Aprovação de aluno","A média mínima para aprovação é 7,0. Se a nota estiver em B2, qual fórmula retorna “Aprovado” quando a nota for maior ou igual a 7 e “Reprovado” caso contrário?",["=SE(B2<7;\"Aprovado\";\"Reprovado\")","=SE(B2=7;\"Reprovado\";\"Aprovado\")","=SE(B2>=7;\"Aprovado\";\"Reprovado\")","=SE(B2>7;\"Reprovado\";\"Aprovado\")"],2],
+["Controle de estoque mínimo","Uma loja definiu estoque mínimo de 20 unidades. Se a quantidade for inferior a 20, deve aparecer “Repor estoque”; caso contrário, “Estoque adequado”. Considerando C2, qual fórmula está correta?",["=SE(C2<20;\"Repor estoque\";\"Estoque adequado\")","=SE(C2>20;\"Repor estoque\";\"Estoque adequado\")","=SE(C2=20;\"Estoque adequado\";\"Repor estoque\")","=SE(C2<20;\"Estoque adequado\";\"Repor estoque\")"],0],
+["Meta de vendas","Uma empresa estabeleceu meta de R$ 5.000,00. Se as vendas em B2 alcançarem ou ultrapassarem esse valor, deve aparecer “Meta atingida”; caso contrário, “Meta não atingida”. Qual fórmula atende à necessidade?",["=SE(B2<5000;\"Meta atingida\";\"Meta não atingida\")","=SE(B2>=5000;\"Meta atingida\";\"Meta não atingida\")","=SE(B2=5000;\"Meta não atingida\";\"Meta atingida\")","=SE(B2>5000;\"Meta não atingida\";\"Meta atingida\")"],1],
+["Desconto em compras","Uma loja oferece desconto de 10% para compras iguais ou superiores a R$ 500,00. Se o valor estiver em B2, qual fórmula informa se o cliente tem direito ao desconto?",["=SE(B2<500;\"Tem desconto\";\"Sem desconto\")","=SE(B2=500;\"Sem desconto\";\"Tem desconto\")","=SE(B2>500;\"Sem desconto\";\"Tem desconto\")","=SE(B2>=500;\"Tem desconto\";\"Sem desconto\")"],3],
+["Situação de pagamento","Se a célula C2 contiver o valor 1, deverá aparecer “Pago”. Caso contrário, deverá aparecer “Pendente”. Qual fórmula deve ser utilizada?",["=SE(C2=1;\"Pago\";\"Pendente\")","=SE(C2=0;\"Pago\";\"Pendente\")","=SE(C2>1;\"Pendente\";\"Pago\")","=SE(C2<1;\"Pendente\";\"Pago\")"],0]
+]},
+{title:"Parte 6 – Interpretação e aplicação prática",qs:[
+["Planejamento de orçamento","Uma pessoa possui orçamento de R$ 3.000,00. Despesas: aluguel R$ 900,00; alimentação R$ 650,00; energia R$ 180,00; água R$ 90,00; internet R$ 100,00. Qual fórmula calcula quanto sobrou, considerando despesas em B2:B6?",["=SOMA(B2:B6)-3000","=3000-SOMA(B2:B6)","=MÉDIA(B2:B6)","=MÁXIMO(B2:B6)"],1],
+["Cálculo de comissão","Uma empresa paga comissão de 5% sobre as vendas. Se um vendedor realizou R$ 8.000,00 em vendas, qual fórmula calcula sua comissão?",["=8000+5%","=8000-5%","=8000*5%","=8000/5%"],2],
+["Controle de frequência","Um aluno teve 40 aulas e compareceu a 36. Para calcular o percentual de presença, qual fórmula deve ser utilizada?",["=36/40*100","=36+40","=40-36","=36*40"],0],
+["Análise de resultados","Um gerente registrou vendas de R$ 2.000,00, R$ 3.500,00, R$ 1.800,00, R$ 4.200,00 e R$ 2.500,00. Deseja identificar total, média, menor e maior venda. Qual sequência de funções está correta?",["SOMA, MÍNIMO, MÉDIA e MÁXIMO","MÉDIA, SOMA, MÁXIMO e MÍNIMO","SOMA, MÉDIA, MÍNIMO e MÁXIMO","MÁXIMO, MÉDIA, SOMA e MÍNIMO"],2],
+["Avaliação de desempenho","Uma empresa classifica o funcionário como “Excelente” se a média em B2 for igual ou superior a 90. Caso contrário, será “Regular”. Qual fórmula deve ser utilizada?",["=SE(B2<90;\"Excelente\";\"Regular\")","=SE(B2>=90;\"Excelente\";\"Regular\")","=SE(B2=90;\"Regular\";\"Excelente\")","=SE(B2>90;\"Regular\";\"Excelente\")"],1]
+]}
+];
+let questionNumber=0;
+const root=document.getElementById('questions');
+sections.forEach(section=>{
+ const h=document.createElement('h2');h.className='section-title';h.textContent=section.title;root.appendChild(h);
+ section.qs.forEach(q=>{
+  questionNumber++;
+  const card=document.createElement('article');card.className='question';card.id='q'+questionNumber;
+  const top=document.createElement('div');top.className='qtop';
+  const num=document.createElement('span');num.className='qnum';num.textContent=String(questionNumber).padStart(2,'0');
+  const body=document.createElement('div');body.style.flex='1';
+  const title=document.createElement('p');title.className='qtitle';title.textContent=q[0];
+  const text=document.createElement('p');text.className='qtext';text.textContent=q[1];
+  const opts=document.createElement('div');opts.className='options';
+  q[2].forEach((option,i)=>{
+   const label=document.createElement('label');label.className='option';
+   const radio=document.createElement('input');radio.type='radio';radio.name='q'+questionNumber;radio.value=i;
+   radio.addEventListener('change',updateProgress);
+   const span=document.createElement('span');span.textContent=String.fromCharCode(65+i)+') '+option;
+   label.append(radio,span);opts.appendChild(label);
+  });
+  body.append(title,text,opts);top.append(num,body);card.appendChild(top);root.appendChild(card);
+ });
+});
+function updateProgress(){
+ const answered=document.querySelectorAll('.question input:checked').length;
+ document.getElementById('progressLabel').textContent=answered+' de 30 respondidas';
+ document.getElementById('progressFill').style.width=(answered/30*100)+'%';
+}
+function getAnswers(){return Array.from({length:30},(_,i)=>{const el=document.querySelector('input[name="q'+(i+1)+'"]:checked');return el?Number(el.value):null})}
+function grade(){
+ const answers=getAnswers();
+ let score=0,answered=0;
+ const details=document.getElementById('teacherDetails');details.innerHTML='';
+ const flat=sections.flatMap(s=>s.qs);
+ flat.forEach((q,i)=>{
+  const selected=answers[i],correct=q[3];
+  if(selected!==null)answered++;
+  if(selected===correct)score++;
+  const card=document.querySelector('#q'+(i+1));
+  card.classList.remove('question-correct','question-incorrect');
+  card.classList.add(selected===correct?'question-correct':'question-incorrect');
+  card.querySelectorAll('.option').forEach((el,j)=>{
+   el.classList.remove('correct','incorrect');
+   if(j===correct)el.classList.add('correct');
+   if(selected===j&&selected!==correct)el.classList.add('incorrect');
+  });
+  const item=document.createElement('div');
+  item.className='result-item '+(selected===null?'result-unanswered':selected===correct?'result-correct':'result-incorrect');
+  item.textContent='Questão '+(i+1)+': '+(selected===null?'Não respondida':selected===correct?'Correta':'Incorreta')+' • Resposta: '+String.fromCharCode(65+correct);
+  details.appendChild(item);
+ });
+ const name=document.getElementById('studentName').value.trim()||'Não informado';
+ document.getElementById('teacherSummary').innerHTML='<p><strong>Aluno(a):</strong> '+escapeHTML(name)+'</p><div class="score">'+score+'/30</div><p><strong>Nota:</strong> '+(score/3).toFixed(2).replace('.',',')+' / 10,00 &nbsp; | &nbsp; <strong>Respondidas:</strong> '+answered+'/30</p>';
+ document.getElementById('studentResult').style.display='block';
+ document.getElementById('finishMessage').textContent='Você respondeu '+answered+' de 30 questões. A correção será apresentada pelo instrutor.';
+ document.getElementById('teacherPanel').style.display='block';
+ document.getElementById('teacherPanel').scrollIntoView({behavior:'smooth'});
+}
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.getElementById('finishBtn').addEventListener('click',()=>{
+ const missing=30-document.querySelectorAll('.question input:checked').length;
+ if(missing>0&&!confirm('Ainda há '+missing+' questão(ões) sem resposta. Deseja finalizar mesmo assim?'))return;
+ document.getElementById('studentResult').style.display='block';
+ document.getElementById('finishMessage').textContent='Você respondeu '+(30-missing)+' de 30 questões. Chame o instrutor para realizar a correção.';
+ document.getElementById('studentResult').scrollIntoView({behavior:'smooth'});
+});
+document.getElementById('clearBtn').addEventListener('click',()=>{
+ if(!confirm('Deseja apagar todas as respostas marcadas?'))return;
+ document.querySelectorAll('.question input:checked').forEach(x=>x.checked=false);
+ document.querySelectorAll('.option').forEach(x=>x.classList.remove('correct','incorrect'));
+ document.querySelectorAll('.question').forEach(x=>x.classList.remove('question-correct','question-incorrect'));
+ document.getElementById('studentResult').style.display='none';
+ updateProgress();
+});
+document.getElementById('regradeBtn').addEventListener('click',grade);
+document.getElementById('hideTeacherBtn').addEventListener('click',()=>document.getElementById('teacherPanel').style.display='none');
+document.addEventListener('keydown',e=>{
+ if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='p'){
+  e.preventDefault();grade();
+ }
+ if((e.ctrlKey||e.metaKey)&&['c','v','x','a','s','u'].includes(e.key.toLowerCase()))e.preventDefault();
+});
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('paste',e=>e.preventDefault());
+document.addEventListener('dragstart',e=>e.preventDefault());
+
+document.getElementById('downloadBtn').addEventListener('click',()=>{
+ const unanswered=30-document.querySelectorAll('.question input:checked').length;
+ if(unanswered>0&&!confirm('Você ainda deixou '+unanswered+' questão(ões) sem resposta. Deseja baixar mesmo assim?'))return;
+
+ // Clone the current page and persist the student's fields and selected alternatives
+ // into the downloaded standalone HTML file.
+ const clone=document.documentElement.cloneNode(true);
+ const originalInputs=document.querySelectorAll('input');
+ const clonedInputs=clone.querySelectorAll('input');
+ originalInputs.forEach((original,i)=>{
+  const copy=clonedInputs[i];
+  if(!copy)return;
+  if(original.type==='radio'){
+   if(original.checked)copy.setAttribute('checked','checked');
+   else copy.removeAttribute('checked');
+  }else{
+   copy.setAttribute('value',original.value);
+  }
+ });
+ // Carry over typed student identification.
+ ['studentName','studentClass','studentDate'].forEach(id=>{
+  const original=document.getElementById(id);
+  const copy=clone.querySelector('#'+id);
+  if(original&&copy)copy.setAttribute('value',original.value);
+ });
+ // Hide any correction/result panel in the student's exported copy.
+ const panel=clone.querySelector('#teacherPanel');
+ if(panel)panel.style.display='none';
+ const result=clone.querySelector('#studentResult');
+ if(result)result.style.display='none';
+
+ const output='<!DOCTYPE html>\\n'+clone.outerHTML;
+ const blob=new Blob([output],{type:'text/html;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ const student=(document.getElementById('studentName').value.trim()||'aluno')
+  .normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')
+  .replace(/[^a-zA-Z0-9_-]+/g,'_').replace(/^_+|_+$/g,'');
+ a.href=url;
+ a.download='atividade_excel_basico_'+student+'.html';
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ URL.revokeObjectURL(url);
+});
+
+</script>
+</body></html>
